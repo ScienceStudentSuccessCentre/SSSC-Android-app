@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">SSSC-Android-app</string>
+    <string name="title_events">Events</string>
+    <string name="title_grades">Grades</string>
+    <string name="title_resources">Resources</string>
+</resources>
