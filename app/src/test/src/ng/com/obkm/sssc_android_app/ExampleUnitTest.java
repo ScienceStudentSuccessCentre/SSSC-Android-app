@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app;
+package ng.com.obkm.sssc_android_app;
 
 import org.junit.Test;
 
