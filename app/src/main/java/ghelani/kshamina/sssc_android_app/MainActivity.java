@@ -11,12 +11,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import ghelani.kshamina.sssc_android_app.home.HomeFragment;
-
 public class MainActivity extends AppCompatActivity {
 
 
-    final Fragment fragment1 = new HomeFragment();
+    final Fragment fragment1 = new EventsFragment();
     final Fragment fragment2 = new GradesFragment();
     final Fragment fragment3 = new ResourcesFragment();
     final FragmentManager fm = getSupportFragmentManager();
