@@ -1,12 +1,13 @@
 package ghelani.kshamina.sssc_android_app.event;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class Event {
+public class Event implements Serializable {
     private String event;
     private Date date;
 
@@ -54,7 +55,9 @@ public class Event {
         cal.setTime(this.date);
 
         String month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
-        int day = cal.get(Calendar.DAY_OF_MONTH);
+        String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+
+        if(day.length() == 1) day = "0" + day;
 
         return month.substring(0, 3) + " " + day;
     }

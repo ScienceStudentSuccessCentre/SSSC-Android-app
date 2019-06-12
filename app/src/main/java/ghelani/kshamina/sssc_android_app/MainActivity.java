@@ -1,6 +1,7 @@
 package ghelani.kshamina.sssc_android_app;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -21,13 +22,14 @@ public class MainActivity extends AppCompatActivity {
     final Fragment fragment3 = new ResourcesFragment();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment active = fragment1;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -50,12 +52,14 @@ public class MainActivity extends AppCompatActivity {
                     fm.beginTransaction().hide(active).show(fragment1).commit();
                     active = fragment1;
                     getSupportActionBar().show();
+                    toolbar.setTitle("Upcoming Events");
                     return true;
 
                 case R.id.navigation_dashboard:
                     fm.beginTransaction().hide(active).show(fragment2).commit();
                     active = fragment2;
                     getSupportActionBar().show();
+                    toolbar.setTitle("Terms");
                     return true;
 
                 case R.id.navigation_notifications:
@@ -85,6 +89,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 }

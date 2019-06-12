@@ -8,7 +8,7 @@
     <TextView
         android:id="@+id/dates"
         android:layout_width="77dp"
-        android:layout_height="75dp"
+        android:layout_height="83dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:background="@color/red"
