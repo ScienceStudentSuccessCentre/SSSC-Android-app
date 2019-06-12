@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_bottom"
+    android:paddingBottom="10dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/dates"
+        android:layout_width="77dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/red"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="17sp" />
 
-        <TextView
-            android:id="@+id/dates"
-            android:layout_width="91dp"
-            android:layout_height="82dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:backgroundTint="@color/red"
-            android:textSize="17sp" />
+    <TextView
+        android:id="@+id/result"
+        android:layout_width="603dp"
+        android:layout_height="72dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="-299dp"
+        android:gravity="center_vertical"
+        android:textSize="17sp" />
 
-        <TextView
-            android:id="@+id/result"
-            android:layout_width="700dp"
-            android:layout_height="77dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="30dp"
-            android:textSize="17sp" />
-
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

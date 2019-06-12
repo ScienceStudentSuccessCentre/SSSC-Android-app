@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import java.util.List;
 
 import ghelani.kshamina.sssc_android_app.R;
@@ -39,7 +38,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.MyViewHold
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Event event = eventsList.get(position);
         holder.event.setText(event.getEvent());
-        holder.date.setText(event.getDate());
+        holder.date.setText(event.getDateDisplayString());
     }
 
     @Override

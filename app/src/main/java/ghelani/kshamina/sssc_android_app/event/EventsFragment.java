@@ -14,6 +14,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +74,7 @@ public class EventsFragment extends Fragment {
                     for (Element event : events) {
                         builder.append("\n").append(event.text());
                         builderDates.append("\n").append(dates.get(i).text());
-                        eventList.add(new Event(event.text(), dates.get(i).text()));
+                        eventList.add(new Event(event.text(), Event.stringToDate(dates.get(i).text())));
                         i++;
                     }
 

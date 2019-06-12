@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -50,16 +49,19 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     fm.beginTransaction().hide(active).show(fragment1).commit();
                     active = fragment1;
+                    getSupportActionBar().show();
                     return true;
 
                 case R.id.navigation_dashboard:
                     fm.beginTransaction().hide(active).show(fragment2).commit();
                     active = fragment2;
+                    getSupportActionBar().show();
                     return true;
 
                 case R.id.navigation_notifications:
                     fm.beginTransaction().hide(active).show(fragment3).commit();
                     active = fragment3;
+                    getSupportActionBar().hide();
                     return true;
             }
             return false;

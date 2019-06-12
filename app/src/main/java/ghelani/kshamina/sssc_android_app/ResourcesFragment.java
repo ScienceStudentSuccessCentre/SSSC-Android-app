@@ -3,6 +3,7 @@ package ghelani.kshamina.sssc_android_app;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +27,10 @@ public class ResourcesFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_resources, container, false);
+
         WebView webView = (WebView) view.findViewById(R.id.webView);
         webView.loadUrl("https://sssc.carleton.ca/resources");
+
         // Enable Javascript
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -37,5 +40,7 @@ public class ResourcesFragment extends Fragment {
 
         return view;
     }
+
+
 
 }
