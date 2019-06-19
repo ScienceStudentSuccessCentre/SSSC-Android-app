@@ -23,8 +23,6 @@
         </activity>
         <activity android:name=".SettingsActivity"
             android:label="Settings"></activity>
-        <activity android:name=".event.EventSingleActivity"
-            android:label="Events"></activity>
     </application>
 
 </manifest>

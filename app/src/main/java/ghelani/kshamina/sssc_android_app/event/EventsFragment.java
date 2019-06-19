@@ -1,6 +1,5 @@
 package ghelani.kshamina.sssc_android_app.event;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -102,12 +101,9 @@ public class EventsFragment extends Fragment {
 
     private void openEventSingle(Event event) {
         Toast.makeText(getContext(), "You Clicked: " + event.getEvent(), Toast.LENGTH_SHORT).show();
-//        EventSingleFragment eventSingle = new EventSingleFragment();
-//        getActivity().getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.main_container, eventSingle).addToBackStack(null).commit();
-        Intent intent = new Intent(getContext(), EventSingleActivity.class);
-        intent.putExtra("event", event);
-        startActivity(intent);
+        Fragment eventSingle = new EventSingleFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .hide(this).show(eventSingle).commit();
     }
 }
 

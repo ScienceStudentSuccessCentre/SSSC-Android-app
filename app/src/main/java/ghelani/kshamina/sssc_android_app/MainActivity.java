@@ -15,8 +15,6 @@ import android.view.MenuItem;
 import ghelani.kshamina.sssc_android_app.event.EventsFragment;
 
 public class MainActivity extends AppCompatActivity {
-
-
     final Fragment fragment1 = new EventsFragment();
     final Fragment fragment2 = new GradesFragment();
     final Fragment fragment3 = new ResourcesFragment();
