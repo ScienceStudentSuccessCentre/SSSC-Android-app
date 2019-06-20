@@ -15,11 +15,9 @@ import android.webkit.WebViewClient;
  */
 public class ResourcesFragment extends Fragment {
 
-
     public ResourcesFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,7 +37,4 @@ public class ResourcesFragment extends Fragment {
 
         return view;
     }
-
-
-
 }

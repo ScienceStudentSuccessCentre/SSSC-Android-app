@@ -10,14 +10,16 @@ import java.util.Locale;
 public class Event implements Serializable {
     private String event;
     private Date date;
+    private String description;
 
     public Event() {
 
     }
 
-    public Event(String event, Date date) {
+    public Event(String event, Date date, String description) {
         this.event = event;
         this.date = date;
+        this.description = description;
     }
 
     public Date getDate() {
@@ -34,6 +36,14 @@ public class Event implements Serializable {
 
     public void setEvent(String event) {
         this.event = event;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /*

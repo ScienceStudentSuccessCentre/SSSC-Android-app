@@ -1,7 +1,9 @@
 package ghelani.kshamina.sssc_android_app.event;
 
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,7 +37,7 @@ public class EventsFragment extends Fragment {
             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
             int position = viewHolder.getAdapterPosition();
             Event event = eventList.get(position);
-            openEventSingle(event);
+            openEventSingle(event, view);
         }
     };
 
@@ -76,11 +78,16 @@ public class EventsFragment extends Fragment {
                     String title = doc.title();
                     Elements events = doc.select(".event-details--title");
                     Elements dates = doc.select(".event-details--date");
+                    Elements eventUrl = doc.select(".event-listing--list-item a");
 
                     int i = 0;
                     for (Element event : events) {
                         if(!eventList.contains(event)) {
-                            eventList.add(new Event(event.text(), Event.stringToDate(dates.get(i).text())));
+                            Event newEvent = new Event();
+                            newEvent.setEvent(event.text());
+                            newEvent.setDate(Event.stringToDate(dates.get(i).text()));
+                            newEvent.setDescription(getEventDescription("https://sssc.carleton.ca/" + eventUrl.get(i).attr("href")));
+                            eventList.add(newEvent);
                         }
                         i++;
                     }
@@ -99,11 +106,29 @@ public class EventsFragment extends Fragment {
         }).start();
     }
 
-    private void openEventSingle(Event event) {
+    private void openEventSingle(Event event, View view) {
         Toast.makeText(getContext(), "You Clicked: " + event.getEvent(), Toast.LENGTH_SHORT).show();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("event", event);
         Fragment eventSingle = new EventSingleFragment();
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .hide(this).show(eventSingle).commit();
+        eventSingle.setArguments(bundle);
+        AppCompatActivity activity = (AppCompatActivity) view.getContext();
+        activity.getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_container, eventSingle).addToBackStack(null).commit();
+    }
+
+    private String getEventDescription(String url) {
+        String description = "";
+        try {
+            Document doc = Jsoup.connect(url).get();
+            Element desc = doc.select(".event-full .event--description").first();
+            description = desc.text();
+
+        } catch(IOException e){
+            System.out.println(url);
+        }
+        return description;
+
     }
 }
 

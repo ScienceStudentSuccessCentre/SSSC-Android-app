@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            fm.popBackStack();
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     fm.beginTransaction().hide(active).show(fragment1).commit();
