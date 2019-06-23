@@ -1,7 +1,6 @@
 package ghelani.kshamina.sssc_android_app.event;
 
 import android.os.Bundle;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,11 +11,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import java.io.IOException;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +34,8 @@ public class EventsFragment extends Fragment {
     private RecyclerView recyclerView;
     private EventsAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+
+    final String url = "http://sssc-carleton-app-server.herokuapp.com/events";
 
     private View.OnClickListener onItemClickListener = new View.OnClickListener() {
         @Override
@@ -62,39 +68,44 @@ public class EventsFragment extends Fragment {
         result = (TextView) view.findViewById(R.id.result);
         dates = (TextView) view.findViewById(R.id.dates);
 
-        getWebsite();
+        getEventData();
+
         return view;
     }
 
-    private void getWebsite() {
+    private void getEventData() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 eventList.clear();
-                String url = "https://sssc.carleton.ca/events";
 
-                try {
-                    Document doc = Jsoup.connect(url).get();
-                    String title = doc.title();
-                    Elements events = doc.select(".event-details--title");
-                    Elements dates = doc.select(".event-details--date");
-                    Elements eventUrl = doc.select(".event-listing--list-item a");
-
-                    int i = 0;
-                    for (Element event : events) {
-                        if(!eventList.contains(event)) {
-                            Event newEvent = new Event();
-                            newEvent.setEvent(event.text());
-                            newEvent.setDate(Event.stringToDate(dates.get(i).text()));
-                            newEvent.setDescription(getEventDescription("https://sssc.carleton.ca/" + eventUrl.get(i).attr("href")));
-                            eventList.add(newEvent);
+                RequestQueue ExampleRequestQueue = Volley.newRequestQueue(getContext());
+                StringRequest ExampleStringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //This code is executed if the server responds, whether or not the response contains data.
+                        //The String 'response' contains the server's response.
+                        //You can test it by printing response.substring(0,500) to the screen.
+                        System.out.println("*****" + response.substring(0,500));
+                        try {
+                            // Convert response string to JSON array
+                            JSONArray jsonArray = new JSONArray(response);
+                            for(int i = 0; i < jsonArray.length(); i++) {
+                                eventList.add(new Event(jsonArray.getJSONObject(i)));
+                            }
+                        } catch (JSONException e) {
+                            System.out.println("ERROR");
                         }
-                        i++;
+                        adapter.notifyDataSetChanged();
                     }
+                }, new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //This code is executed if there is an error.
+                    }
+                });
 
-                } catch (IOException e) {
-
-                }
+                ExampleRequestQueue.add(ExampleStringRequest);
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -107,7 +118,7 @@ public class EventsFragment extends Fragment {
     }
 
     private void openEventSingle(Event event, View view) {
-        Toast.makeText(getContext(), "You Clicked: " + event.getEvent(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "You Clicked: " + event.getName(), Toast.LENGTH_SHORT).show();
         Bundle bundle = new Bundle();
         bundle.putSerializable("event", event);
         Fragment eventSingle = new EventSingleFragment();
@@ -117,18 +128,5 @@ public class EventsFragment extends Fragment {
                 .replace(R.id.main_container, eventSingle).addToBackStack(null).commit();
     }
 
-    private String getEventDescription(String url) {
-        String description = "";
-        try {
-            Document doc = Jsoup.connect(url).get();
-            Element desc = doc.select(".event-full .event--description").first();
-            description = desc.text();
-
-        } catch(IOException e){
-            System.out.println(url);
-        }
-        return description;
-
-    }
 }
 

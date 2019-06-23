@@ -6,17 +6,21 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ghelani.kshamina.sssc_android_app.event.EventSingleActivity">
+    tools:context="ghelani.kshamina.sssc_android_app.name.EventSingleActivity">
 
     <TextView
         android:id="@+id/eventTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:autoSizeTextType="uniform"
+        android:background="@color/lightGrey"
+        android:gravity="center"
+        android:padding="10dp"/>
 
     <TextView
         android:id="@+id/eventDescription"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="100dp"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/eventTitle"/>
 
 </RelativeLayout>

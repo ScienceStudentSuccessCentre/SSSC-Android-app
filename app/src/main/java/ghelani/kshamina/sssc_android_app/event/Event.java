@@ -1,6 +1,10 @@
 package ghelani.kshamina.sssc_android_app.event;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -8,34 +12,73 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Event implements Serializable {
-    private String event;
-    private Date date;
+    private int id;
+    private String name;
+    private URL url;
     private String description;
+    private Date dateTime;
+    private String rawTime;
+    private String location;
+    private URL imageURL;
+    private URL actionUrl;
 
     public Event() {
 
     }
 
     public Event(String event, Date date, String description) {
-        this.event = event;
-        this.date = date;
+        this.name = event;
+        this.dateTime = date;
         this.description = description;
     }
 
-    public Date getDate() {
-        return date;
+    public Event(int id, String name, URL url, String description, Date dateTime, String rawTime, String location, URL imageURL, URL actionUrl) {
+        this.id = id;
+        this.name = name;
+        this.url = url;
+        this.description = description;
+        this.dateTime = dateTime;
+        this.rawTime = rawTime;
+        this.location = location;
+        this.imageURL = imageURL;
+        this.actionUrl = actionUrl;
     }
 
-    public String getEvent() {
-        return event;
+    public Event(JSONObject json) {
+        try {
+            this.id = Integer.parseInt((String) json.get("id"));
+            this.name = (String) json.get("name");
+//            this.url = (URL) json.get("url");
+            this.description = (String) json.get("description");
+            this.description = this.description.replaceAll("<br />", "\n");
+            System.out.println(this.description);
+            this.dateTime = new Date();
+//            this.dateTime = (Date) json.get("dateTime");
+//            this.rawTime = (String) json.get("rawTime");
+//            this.location = (String) json.get("location");
+//            this.imageURL = (URL) json.get("imageURL");
+//            this.actionUrl = (URL) json.get("actionURL");
+
+        } catch (JSONException e) {
+            System.out.println("ERROR2");
+        }
+
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public Date getDateTime() {
+        return dateTime;
     }
 
-    public void setEvent(String event) {
-        this.event = event;
+    public String getName() {
+        return name;
+    }
+
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -47,7 +90,7 @@ public class Event implements Serializable {
     }
 
     /*
-    *   Convert string date format from https://sssc.carleton.ca/events to Date
+    *   Convert string dateTime format from https://sssc.carleton.ca/events to Date
     *   Format: Wednesday, September 18, 2019
      */
     public static Date stringToDate(String stringDate) {
@@ -62,7 +105,7 @@ public class Event implements Serializable {
 
     public String getDateDisplayString() {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(this.date);
+        cal.setTime(this.dateTime);
 
         String month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
         String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
@@ -71,4 +114,53 @@ public class Event implements Serializable {
 
         return month.substring(0, 3) + " " + day;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public URL getUrl() {
+        return url;
+    }
+
+    public void setUrl(URL url) {
+        this.url = url;
+    }
+
+    public String getRawTime() {
+        return rawTime;
+    }
+
+    public void setRawTime(String rawTime) {
+        this.rawTime = rawTime;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public URL getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(URL imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public URL getActionUrl() {
+        return actionUrl;
+    }
+
+    public void setActionUrl(URL actionUrl) {
+        this.actionUrl = actionUrl;
+    }
+
 }
