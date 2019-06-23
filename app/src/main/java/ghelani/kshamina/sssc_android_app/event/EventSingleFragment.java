@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,6 +24,7 @@ public class EventSingleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.event_single, container, false);
+        setHasOptionsMenu(true);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
@@ -41,6 +45,21 @@ public class EventSingleFragment extends Fragment {
         location.setText(event.getLocation());
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.actionURL) {
+            // do something here
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

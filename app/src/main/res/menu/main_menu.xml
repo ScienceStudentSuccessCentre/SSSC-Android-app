@@ -2,4 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <group
+        android:id="@+id/event_single_menu">
+        <item android:id="@+id/actionURL"
+            android:title=""
+            android:icon="@drawable/ic_link_white_24dp"
+            app:showAsAction="always"/>
+
+        <item android:id="@+id/notification"
+            android:title=""
+            android:icon="@drawable/ic_notifications_none_white_24dp"
+            android:iconTint="@android:color/white"
+            app:showAsAction="always"/>
+
+        <item android:id="@+id/share"
+            android:title=""
+            android:icon="@drawable/ic_share_white_24dp"
+            app:showAsAction="always"/>
+    </group>
+
 </menu>
