@@ -1,11 +1,16 @@
 package ghelani.kshamina.sssc_android_app.event;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,7 +29,9 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
+import ghelani.kshamina.sssc_android_app.SettingsActivity;
 
 public class EventsFragment extends Fragment {
     private TextView result;
@@ -55,7 +62,10 @@ public class EventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_events, container, false);
+
         recyclerView = (RecyclerView) view.findViewById(R.id.eventsList);
         recyclerView.setHasFixedSize(true);
 
@@ -127,6 +137,12 @@ public class EventsFragment extends Fragment {
         activity.getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_container, eventSingle).addToBackStack(null).commit();
     }
+
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.event_menu, menu);
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
 
 }
 

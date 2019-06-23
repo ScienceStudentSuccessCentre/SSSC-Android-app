@@ -2,6 +2,8 @@ package ghelani.kshamina.sssc_android_app.event;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,12 @@ public class EventSingleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.event_single, container, false);
+
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+
         Event event = (Event) getArguments().getSerializable("event");
         TextView title = view.findViewById(R.id.eventTitle);
         title.setText(event.getName());
@@ -34,4 +42,5 @@ public class EventSingleFragment extends Fragment {
 
         return view;
     }
+
 }
