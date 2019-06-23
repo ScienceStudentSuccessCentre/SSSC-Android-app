@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,14 +49,23 @@ public class Event implements Serializable {
         try {
             this.id = Integer.parseInt((String) json.get("id"));
             this.name = (String) json.get("name");
-//            this.url = (URL) json.get("url");
+
+            if(json.has("url")) this.url = stringToURL((String) json.get("url"));
+            if(json.has("imageURL")) this.imageURL = stringToURL((String) json.get("imageURL"));
+            if(json.has("actionURL")) this.actionUrl = stringToURL((String) json.get("actionURL"));
+
             this.description = (String) json.get("description");
             this.description = this.description.replaceAll("<br />", "\n");
-            System.out.println(this.description);
-            this.dateTime = new Date();
-//            this.dateTime = (Date) json.get("dateTime");
-//            this.rawTime = (String) json.get("rawTime");
-//            this.location = (String) json.get("location");
+
+            SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000Z'");
+            try {
+                this.dateTime = format.parse((String) json.get("dateTime"));
+            } catch (ParseException e){
+
+            }
+
+            this.rawTime = (String) json.get("rawTime");
+            this.location = (String) json.get("location");
 //            this.imageURL = (URL) json.get("imageURL");
 //            this.actionUrl = (URL) json.get("actionURL");
 
@@ -161,6 +171,16 @@ public class Event implements Serializable {
 
     public void setActionUrl(URL actionUrl) {
         this.actionUrl = actionUrl;
+    }
+
+    public URL stringToURL(String string) {
+        URL url = null;
+        try {
+            url = new URL("https://sssc.carleton.ca" + string);
+        } catch(MalformedURLException e) {
+
+        }
+        return url;
     }
 
 }

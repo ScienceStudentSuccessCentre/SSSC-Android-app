@@ -86,7 +86,7 @@ public class EventsFragment extends Fragment {
                         //This code is executed if the server responds, whether or not the response contains data.
                         //The String 'response' contains the server's response.
                         //You can test it by printing response.substring(0,500) to the screen.
-                        System.out.println("*****" + response.substring(0,500));
+                        System.out.println("*****" + response);
                         try {
                             // Convert response string to JSON array
                             JSONArray jsonArray = new JSONArray(response);

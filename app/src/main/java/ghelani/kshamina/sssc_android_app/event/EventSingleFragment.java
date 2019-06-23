@@ -26,6 +26,12 @@ public class EventSingleFragment extends Fragment {
         TextView description = view.findViewById(R.id.eventDescription);
         description.setText(event.getDescription());
 
+        TextView rawTime = view.findViewById(R.id.rawTime);
+        rawTime.setText(event.getDateDisplayString() + "\n" + event.getRawTime());
+
+        TextView location = view.findViewById(R.id.location);
+        location.setText(event.getLocation());
+
         return view;
     }
 }
