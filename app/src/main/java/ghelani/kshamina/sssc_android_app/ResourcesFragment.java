@@ -14,6 +14,7 @@ import android.webkit.WebViewClient;
  * A simple {@link Fragment} subclass.
  */
 public class ResourcesFragment extends Fragment {
+    private WebView webView;
 
     public ResourcesFragment() {
         // Required empty public constructor
@@ -25,12 +26,12 @@ public class ResourcesFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_resources, container, false);
 
-        WebView webView = (WebView) view.findViewById(R.id.webView);
+        webView = view.findViewById(R.id.webView);
         webView.loadUrl("https://sssc.carleton.ca/resources");
 
         // Enable Javascript
         WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
+//        webSettings.setJavaScriptEnabled(true);
 
         // Force links and redirects to open in the WebView instead of in a browser
         webView.setWebViewClient(new WebViewClient());

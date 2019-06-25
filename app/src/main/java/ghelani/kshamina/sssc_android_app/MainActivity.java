@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
 
 import ghelani.kshamina.sssc_android_app.event.EventsFragment;
 
@@ -97,6 +98,13 @@ public class MainActivity extends AppCompatActivity {
         if(menu == null)
             return;
         menu.setGroupVisible(R.id.event_single_menu, showMenu);
+    }
+
+    @Override
+    public void onBackPressed (){
+        WebView webView = findViewById(R.id.webView);
+        if(webView.canGoBack()) webView.goBack();
+        else super.onBackPressed();
     }
 
 }

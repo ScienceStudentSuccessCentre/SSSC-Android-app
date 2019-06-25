@@ -1,10 +1,12 @@
 package ghelani.kshamina.sssc_android_app.event;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,7 +17,10 @@ import android.widget.TextView;
 
 import ghelani.kshamina.sssc_android_app.R;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class EventSingleFragment extends Fragment {
+    private Event event;
 
     public EventSingleFragment() {
         // Required empty public constructor
@@ -32,7 +37,7 @@ public class EventSingleFragment extends Fragment {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        Event event = (Event) getArguments().getSerializable("event");
+        event = (Event) getArguments().getSerializable("event");
         TextView title = view.findViewById(R.id.eventTitle);
         title.setText(event.getName());
 
@@ -59,8 +64,19 @@ public class EventSingleFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.actionURL) {
-            // do something here
+        if (id == R.id.share) {
+            ShareCompat.IntentBuilder.from(getActivity())
+                    .setType("text/plain")
+                    .setChooserTitle("Share event link!")
+                    .setText(event.getUrl().toString())
+                    .startChooser();
+
+
+//            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+//            shareIntent.setType("text/plain*");// You Can set source type here like video, image text, etc.
+//            shareIntent.putExtra(Intent.EXTRA_STREAM, );
+//            shareIntent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(Intent.createChooser(shareIntent, "Share event!"));
         }
         return super.onOptionsItemSelected(item);
     }
