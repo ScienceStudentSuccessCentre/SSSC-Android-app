@@ -24,9 +24,9 @@ public class Event implements Serializable {
     private String rawTime;
     private String location;
     private URL imageURL;
-    private URL actionUrl;
+    private String actionUrl;
 
-    public Event(int id, String name, URL url, String description, Date dateTime, String rawTime, String location, URL imageURL, URL actionUrl) {
+    public Event(int id, String name, URL url, String description, Date dateTime, String rawTime, String location, URL imageURL, String actionUrl) {
         this.id = id;
         this.name = name;
         this.url = url;
@@ -45,7 +45,7 @@ public class Event implements Serializable {
 
             if(json.has("url")) this.url = stringToURL((String) json.get("url"));
             if(json.has("imageURL")) this.imageURL = stringToURL((String) json.get("imageURL"));
-            if(json.has("actionURL")) this.actionUrl = stringToURL((String) json.get("actionURL"));
+            if(json.has("actionUrl")) this.actionUrl = (String) json.get("actionUrl");
 
             this.description = (String) json.get("description");
             this.description = this.description.replaceAll("<br />", "\n");
@@ -168,11 +168,11 @@ public class Event implements Serializable {
         this.imageURL = imageURL;
     }
 
-    public URL getActionUrl() {
+    public String getActionUrl() {
         return actionUrl;
     }
 
-    public void setActionUrl(URL actionUrl) {
+    public void setActionUrl(String actionUrl) {
         this.actionUrl = actionUrl;
     }
 

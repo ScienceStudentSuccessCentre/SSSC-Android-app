@@ -70,13 +70,11 @@ public class EventSingleFragment extends Fragment {
                     .setChooserTitle("Share event link!")
                     .setText(event.getUrl().toString())
                     .startChooser();
-
-
-//            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-//            shareIntent.setType("text/plain*");// You Can set source type here like video, image text, etc.
-//            shareIntent.putExtra(Intent.EXTRA_STREAM, );
-//            shareIntent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(Intent.createChooser(shareIntent, "Share event!"));
+        }
+        else if (id == R.id.actionURL) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(event.getActionUrl()));
+            startActivity(browserIntent);
         }
         return super.onOptionsItemSelected(item);
     }

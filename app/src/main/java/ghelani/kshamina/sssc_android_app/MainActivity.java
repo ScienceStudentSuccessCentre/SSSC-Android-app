@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed (){
         WebView webView = findViewById(R.id.webView);
-        if(webView.canGoBack()) webView.goBack();
+        if(webView != null && webView.canGoBack()) webView.goBack();
         else super.onBackPressed();
     }
 
