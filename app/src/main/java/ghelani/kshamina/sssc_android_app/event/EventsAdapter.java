@@ -1,6 +1,8 @@
 package ghelani.kshamina.sssc_android_app.event;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +30,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.MyViewHold
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Event event = eventsList.get(position);
         holder.event.setText(event.getName());
-        holder.date.setText(event.getDateDisplayString());
-//        holder.bind(eventsList.get(position), onItemClickListener) ;
+
+        String date = event.getDateDisplayString();
+        SpannableString dateSize = new SpannableString(date);
+        dateSize.setSpan(new RelativeSizeSpan(1.4f), dateSize.length() - 2, dateSize.length(), 0);
+        holder.date.setText(dateSize);
     }
 
     @Override

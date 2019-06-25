@@ -1,5 +1,8 @@
 package ghelani.kshamina.sssc_android_app.event;
 
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,16 +25,6 @@ public class Event implements Serializable {
     private String location;
     private URL imageURL;
     private URL actionUrl;
-
-    public Event() {
-
-    }
-
-    public Event(String event, Date date, String description) {
-        this.name = event;
-        this.dateTime = date;
-        this.description = description;
-    }
 
     public Event(int id, String name, URL url, String description, Date dateTime, String rawTime, String location, URL imageURL, URL actionUrl) {
         this.id = id;
@@ -66,8 +59,6 @@ public class Event implements Serializable {
 
             this.rawTime = (String) json.get("rawTime");
             this.location = (String) json.get("location");
-//            this.imageURL = (URL) json.get("imageURL");
-//            this.actionUrl = (URL) json.get("actionURL");
 
         } catch (JSONException e) {
             System.out.println("ERROR2");
@@ -114,6 +105,18 @@ public class Event implements Serializable {
     }
 
     public String getDateDisplayString() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(this.dateTime);
+
+        String month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+        String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+
+        if(day.length() == 1) day = "0" + day;
+
+        return month.substring(0, 3).toUpperCase() + "\n" + day;
+    }
+
+    public String getDateDisplayStringSingle() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(this.dateTime);
 

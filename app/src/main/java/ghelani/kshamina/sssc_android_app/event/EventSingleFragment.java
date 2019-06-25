@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,9 +38,11 @@ public class EventSingleFragment extends Fragment {
 
         TextView description = view.findViewById(R.id.eventDescription);
         description.setText(event.getDescription());
+//        description.setMovementMethod(new ScrollingMovementMethod());
 
         TextView rawTime = view.findViewById(R.id.rawTime);
-        rawTime.setText(event.getDateDisplayString() + "\n" + event.getRawTime());
+        String time = event.getDateDisplayStringSingle() + "\n" + event.getRawTime();
+        rawTime.setText(time);
 
         TextView location = view.findViewById(R.id.location);
         location.setText(event.getLocation());

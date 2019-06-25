@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="ghelani.kshamina.sssc_android_app.name.EventSingleActivity">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/eventTitle"
@@ -15,18 +12,33 @@
         android:autoSizeTextType="uniform"
         android:background="@color/lightGrey"
         android:gravity="center"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:textColor="@android:color/black"
+        android:layout_alignParentTop="true"/>
 
-    <TextView
-        android:id="@+id/eventDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/eventTitle"/>
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/footer"
+        android:layout_below="@+id/eventTitle">
+
+        <TextView
+            android:id="@+id/eventDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="17sp"
+            android:padding="10dp" />
+
+    </ScrollView>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="88dp"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:id="@+id/footer">
 
         <TextView
             android:id="@+id/rawTime"
@@ -44,7 +56,8 @@
             android:layout_height="match_parent"
             android:background="@color/lightGrey"
             android:textSize="17sp"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textColor="@android:color/black"/>
 
     </LinearLayout>
 

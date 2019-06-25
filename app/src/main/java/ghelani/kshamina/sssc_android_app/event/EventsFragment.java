@@ -66,7 +66,7 @@ public class EventsFragment extends Fragment {
 //        setHasOptionsMenu(false);
         View view = inflater.inflate(R.layout.fragment_events, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.eventsList);
+        recyclerView = view.findViewById(R.id.eventsList);
         recyclerView.setHasFixedSize(true);
 
         adapter = new EventsAdapter(eventList);
@@ -75,8 +75,8 @@ public class EventsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(onItemClickListener);
 
-        result = (TextView) view.findViewById(R.id.result);
-        dates = (TextView) view.findViewById(R.id.dates);
+        result = view.findViewById(R.id.result);
+        dates = view.findViewById(R.id.dates);
 
         getEventData();
 

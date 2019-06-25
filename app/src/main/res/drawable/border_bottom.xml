@@ -12,7 +12,7 @@
     <item>
         <shape android:shape="rectangle">
             <!-- draw a 1 dp width border around the rectangle shape -->
-            <stroke android:color="@color/grey" android:width="1dp"/>
+            <stroke android:color="@color/lightGrey" android:width="1dp"/>
         </shape>
     </item>
     <!--
