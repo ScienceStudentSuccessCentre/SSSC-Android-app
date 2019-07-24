@@ -27,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import ghelani.kshamina.sssc_android_app.MainActivity;
@@ -106,6 +107,7 @@ public class EventsFragment extends Fragment {
                         } catch (JSONException e) {
                             System.out.println("ERROR");
                         }
+                        Collections.sort(eventList);
                         adapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() { //Create an error listener to handle errors appropriately.

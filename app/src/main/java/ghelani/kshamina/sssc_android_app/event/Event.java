@@ -1,8 +1,5 @@
 package ghelani.kshamina.sssc_android_app.event;
 
-import android.text.SpannableString;
-import android.text.style.RelativeSizeSpan;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,8 +12,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class Event implements Serializable {
-    private int id;
+public class Event implements Serializable, Comparable<Event>{
+    private String id;
     private String name;
     private URL url;
     private String description;
@@ -26,7 +23,7 @@ public class Event implements Serializable {
     private URL imageURL;
     private String actionUrl;
 
-    public Event(int id, String name, URL url, String description, Date dateTime, String rawTime, String location, URL imageURL, String actionUrl) {
+    public Event(String id, String name, URL url, String description, Date dateTime, String rawTime, String location, URL imageURL, String actionUrl) {
         this.id = id;
         this.name = name;
         this.url = url;
@@ -40,7 +37,7 @@ public class Event implements Serializable {
 
     public Event(JSONObject json) {
         try {
-            this.id = Integer.parseInt((String) json.get("id"));
+            this.id = (String) json.get("id");
             this.name = (String) json.get("name");
 
             if(json.has("url")) this.url = stringToURL((String) json.get("url"));
@@ -48,9 +45,8 @@ public class Event implements Serializable {
             if(json.has("actionUrl")) this.actionUrl = (String) json.get("actionUrl");
 
             this.description = (String) json.get("description");
-            this.description = this.description.replaceAll("<br />", "\n");
 
-            SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000Z'");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000Z'");
             try {
                 this.dateTime = format.parse((String) json.get("dateTime"));
             } catch (ParseException e){
@@ -128,11 +124,11 @@ public class Event implements Serializable {
         return month.substring(0, 3) + " " + day;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -184,6 +180,10 @@ public class Event implements Serializable {
 
         }
         return url;
+    }
+
+    @Override public int compareTo(Event event) {
+        return getDateTime().compareTo(event.getDateTime());
     }
 
 }
