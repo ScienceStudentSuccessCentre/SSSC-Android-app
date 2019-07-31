@@ -11,8 +11,7 @@
 
         <item android:id="@+id/notification"
             android:title=""
-            android:icon="@drawable/ic_notifications_none_white_24dp"
-            android:iconTint="@android:color/white"
+            android:icon="@drawable/ic_notifications_active_black_24dp"
             app:showAsAction="always"/>
 
         <item android:id="@+id/share"

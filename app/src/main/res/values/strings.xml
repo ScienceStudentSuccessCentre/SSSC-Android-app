@@ -34,5 +34,6 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_event_alert">EventAlert</string>
 
 </resources>

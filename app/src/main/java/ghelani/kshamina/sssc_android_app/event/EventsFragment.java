@@ -1,16 +1,13 @@
 package ghelani.kshamina.sssc_android_app.event;
 
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -26,13 +23,17 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
-import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.SettingsActivity;
 
 public class EventsFragment extends Fragment {
     private TextView result;
@@ -42,6 +43,10 @@ public class EventsFragment extends Fragment {
     private RecyclerView recyclerView;
     private EventsAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+
+    private Event test;
+
+    SharedPreferences preferences;
 
     final String url = "http://sssc-carleton-app-server.herokuapp.com/events";
 
@@ -56,7 +61,28 @@ public class EventsFragment extends Fragment {
     };
 
     public EventsFragment() {
+        URL url = null;
+        try {
+            url = new URL("www.google.ca");
+        } catch (MalformedURLException e) {
+
+        }
+
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.HOUR_OF_DAY, 1);
+        calendar.add(Calendar.MINUTE, 1);
+
+        date = calendar.getTime();
+
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        String formattedDate=dateFormat. format(date);
+
+
         // Required empty public constructor
+        test = new Event("test", "Test Event", url,
+                "describe", date, formattedDate, "here", null, "wow");
     }
 
 
@@ -64,8 +90,9 @@ public class EventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-//        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_events, container, false);
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         recyclerView = view.findViewById(R.id.eventsList);
         recyclerView.setHasFixedSize(true);
@@ -89,7 +116,7 @@ public class EventsFragment extends Fragment {
             @Override
             public void run() {
                 eventList.clear();
-
+                eventList.add(test);
                 RequestQueue ExampleRequestQueue = Volley.newRequestQueue(getContext());
                 StringRequest ExampleStringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                     @Override
@@ -136,6 +163,7 @@ public class EventsFragment extends Fragment {
         Fragment eventSingle = new EventSingleFragment();
         eventSingle.setArguments(bundle);
         AppCompatActivity activity = (AppCompatActivity) view.getContext();
+        activity.invalidateOptionsMenu();
         activity.getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_container, eventSingle).addToBackStack(null).commit();
     }

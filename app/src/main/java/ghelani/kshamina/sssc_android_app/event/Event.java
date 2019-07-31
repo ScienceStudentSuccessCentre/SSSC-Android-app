@@ -22,6 +22,7 @@ public class Event implements Serializable, Comparable<Event>{
     private String location;
     private URL imageURL;
     private String actionUrl;
+    private boolean notify;
 
     public Event(String id, String name, URL url, String description, Date dateTime, String rawTime, String location, URL imageURL, String actionUrl) {
         this.id = id;
@@ -124,6 +125,15 @@ public class Event implements Serializable, Comparable<Event>{
         return month.substring(0, 3) + " " + day;
     }
 
+    public long getNotificationTime() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(this.dateTime);
+
+        // subtract an hour for notification time
+        cal.add(Calendar.HOUR, -1);
+        return cal.getTimeInMillis();
+    }
+
     public String getId() {
         return id;
     }
@@ -166,6 +176,14 @@ public class Event implements Serializable, Comparable<Event>{
 
     public String getActionUrl() {
         return actionUrl;
+    }
+
+    public boolean isNotify() {
+        return notify;
+    }
+
+    public void setNotify(boolean notify) {
+        this.notify = notify;
     }
 
     public void setActionUrl(String actionUrl) {

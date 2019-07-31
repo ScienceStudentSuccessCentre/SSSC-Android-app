@@ -1,19 +1,21 @@
 package ghelani.kshamina.sssc_android_app.event;
 
-import android.app.NotificationManager;
+import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.ShareCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,14 +25,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static android.app.Notification.VISIBILITY_PRIVATE;
 
 public class EventSingleFragment extends Fragment {
     private Event event;
-    private NotificationCompat.Builder builder;
+    private boolean eventNotification;
+    SharedPreferences preferences;
 
     public EventSingleFragment() {
         // Required empty public constructor
@@ -48,6 +50,11 @@ public class EventSingleFragment extends Fragment {
         actionBar.setDisplayShowHomeEnabled(true);
 
         event = (Event) getArguments().getSerializable("event");
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        eventNotification = preferences.getBoolean(event.getId(), false);
+        setupNotification(getNotification());
+
         TextView title = view.findViewById(R.id.eventTitle);
         title.setText(event.getName());
 
@@ -61,42 +68,106 @@ public class EventSingleFragment extends Fragment {
         TextView location = view.findViewById(R.id.location);
         location.setText(event.getLocation());
 
-        builder = new NotificationCompat.Builder(getContext())
-                .setSmallIcon(R.drawable.ic_notifications)
-                .setContentTitle("wowo")
-                .setContentText("cool");
-
         return view;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.setGroupVisible(R.id.event_single_menu, true);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem notification = menu.findItem(R.id.notification);
+
+        if(eventNotification) {
+            notification.setIcon(R.drawable.ic_notifications_active_black_24dp);
+        }
+        else {
+            notification.setIcon(R.drawable.ic_notifications_none_white_24dp);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        switch(item.getItemId()) {
+            case R.id.share :
+                ShareCompat.IntentBuilder.from(getActivity())
+                        .setType("text/plain")
+                        .setChooserTitle("Share event link!")
+                        .setText(event.getUrl().toString())
+                        .startChooser();
+                break;
 
-        if (id == R.id.share) {
-            ShareCompat.IntentBuilder.from(getActivity())
-                    .setType("text/plain")
-                    .setChooserTitle("Share event link!")
-                    .setText(event.getUrl().toString())
-                    .startChooser();
-        }
-        else if (id == R.id.actionURL) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse(event.getActionUrl()));
-            startActivity(browserIntent);
-        }
-        else if (id == R.id.notification) {
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
+            case R.id.actionURL:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(event.getActionUrl()));
+                startActivity(browserIntent);
+                break;
 
-            // notificationId is a unique int for each notification that you must define
-            notificationManager.notify(001, builder.build());
+            case R.id.notification:
+                toggleNotificationValue();
+                setupNotification(getNotification());
+                break;
+
+            default:
+                return false;
+
         }
         return super.onOptionsItemSelected(item);
+
+    }
+
+    public void setupNotification(Notification notification) {
+        Intent notificationIntent = new Intent(getActivity(), EventAlert.class);
+        notificationIntent.putExtra("notification", notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 34232, notificationIntent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+        if(eventNotification) {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, event.getNotificationTime(), pendingIntent);
+
+//          Uncomment to send alert right away
+//            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 3000, pendingIntent);
+        }
+        else {
+            alarmManager.cancel(pendingIntent);
+        }
+    }
+
+    private void toggleNotificationValue() {
+        if (this.eventNotification) {
+            SharedPreferences.Editor editor = this.preferences.edit();
+            editor.putBoolean(event.getId(), false); // value to store
+            editor.commit();
+            this.eventNotification = false;
+
+        } else {
+            SharedPreferences.Editor editor = this.preferences.edit();
+            editor.putBoolean(event.getId(), true); // value to store
+            editor.commit();
+            this.eventNotification = true;
+
+            Toast toast = Toast.makeText(getContext(),"You'll be sent a notification an hour before this event starts", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
+        getActivity().invalidateOptionsMenu();
+    }
+
+    private Notification getNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), "channel_id")
+                .setSmallIcon(R.drawable.ic_sssc)
+                .setContentTitle(event.getName())
+                .setContentText(event.getName())
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setWhen(event.getNotificationTime())
+                .setShowWhen(true)
+                .setVisibility(VISIBILITY_PRIVATE);
+        return builder.build();
     }
 
 }
