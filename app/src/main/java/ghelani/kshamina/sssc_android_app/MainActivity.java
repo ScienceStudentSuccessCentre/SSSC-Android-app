@@ -1,7 +1,5 @@
 package ghelani.kshamina.sssc_android_app;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -11,11 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 
 import com.facebook.stetho.Stetho;
 
 import ghelani.kshamina.sssc_android_app.event.EventsFragment;
+import ghelani.kshamina.sssc_android_app.grades.GradesFragment;
 
 public class MainActivity extends AppCompatActivity {
     final Fragment fragment1 = new EventsFragment();
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.setLabelVisibilityMode(1);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         fm.beginTransaction().add(R.id.main_container, fragment3, "3").hide(fragment3).commit();

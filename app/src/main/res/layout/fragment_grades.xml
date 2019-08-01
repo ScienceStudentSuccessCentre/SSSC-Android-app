@@ -4,32 +4,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ghelani.kshamina.sssc_android_app.GradesFragment">
+    tools:context="ghelani.kshamina.sssc_android_app.grades.GradesFragment">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal">
 
-        <TextView
-            android:id="@+id/count_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:textSize="80sp"
-            app:layout_constraintEnd_toEndOf="parent"
+        <ImageView
+            android:id="@+id/coming_soon_logo"
+            android:layout_width="130dp"
+            android:layout_height="196dp"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_sssc"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="32dp"/>
+            app:layout_constraintVertical_bias="0.127" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="189dp"
+            android:layout_height="88dp"
+            android:layout_marginStart="108dp"
+            android:layout_marginTop="180dp"
+            android:gravity="center"
+            android:text="Grades calculator coming soon!"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="22sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/coming_soon_logo" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="241dp"
+            android:layout_height="103dp"
+            android:layout_marginStart="84dp"
+            android:layout_marginTop="108dp"
+            android:text="We are currently working on developing the grade calculator. For now, you can use the excel sheet located on our website."
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView" />
 
         <Button
-            android:id="@+id/count_btn"
-            android:layout_marginBottom="32dp"
+            android:id="@+id/excel_grade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Increase Count"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="144dp"
+            android:text="Excel Grade Calculator"
+            android:textColor="@android:color/holo_red_dark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView2" />
 
     </android.support.constraint.ConstraintLayout>
 
