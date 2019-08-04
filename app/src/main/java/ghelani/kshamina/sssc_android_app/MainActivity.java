@@ -79,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
                     fm.beginTransaction().hide(active).show(fragment2).commit();
                     active = fragment2;
                     getSupportActionBar().show();
-                    toolbar.setTitle("Terms");
+//                    toolbar.setTitle("Terms");
+                    toolbar.setTitle("Grades Calculator");
                     return true;
 
                 case R.id.navigation_notifications:

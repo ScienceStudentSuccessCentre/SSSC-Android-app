@@ -31,11 +31,9 @@ public class GradesFragment extends Fragment {
         view.findViewById(R.id.excel_grade).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                String url = "https://sssc.carleton.ca/sites/default/files/content-files/SSSC%20Grade%20and%20Mark%20Calculator%20Updated%20%28%2Bfinal%20exam%20grade%20calculator%29%20Updated%20Dec%202018_0.xlsx";
-                String url2 = "https://sssc.carleton.ca/resources/succeeding#grades";
-
+                String url = "https://sssc.carleton.ca/resources/succeeding#grades";
                 Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url2));
+                i.setData(Uri.parse(url));
                 startActivity(i);
             }
         });

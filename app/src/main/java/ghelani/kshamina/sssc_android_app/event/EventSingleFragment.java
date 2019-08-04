@@ -1,9 +1,11 @@
 package ghelani.kshamina.sssc_android_app.event;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -17,6 +19,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -154,9 +157,9 @@ public class EventSingleFragment extends Fragment {
             editor.commit();
             this.eventNotification = true;
 
-            Toast toast = Toast.makeText(getContext(),"You'll be sent a notification an hour before this event starts", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
+            new AlertDialog.Builder(getContext())
+                    .setMessage("You'll be sent a notification an hour before this event starts.")
+                    .show();
         }
         getActivity().invalidateOptionsMenu();
     }

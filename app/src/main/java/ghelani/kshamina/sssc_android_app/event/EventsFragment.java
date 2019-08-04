@@ -167,19 +167,5 @@ public class EventsFragment extends Fragment {
                 .replace(R.id.main_container, eventSingle).addToBackStack(null).commit();
     }
 
-    public EventSingleFragment openEventSingleFragment(String id) {
-        Event event = null;
-        for(int i = 0; i < eventList.size(); i++) {
-            Event e = eventList.get(i);
-            if(e.getId().equals(id)) event = eventList.get(i);
-        }
-
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("event", event);
-        EventSingleFragment eventSingle = new EventSingleFragment();
-        eventSingle.setArguments(bundle);
-        return eventSingle;
-    }
-
 }
 
