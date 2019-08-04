@@ -76,13 +76,13 @@ public class EventsFragment extends Fragment {
 
         date = calendar.getTime();
 
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
         String formattedDate=dateFormat. format(date);
 
 
         // Required empty public constructor
         test = new Event("test", "Test Event", url,
-                "describe", date, formattedDate, "here", null, "wow");
+                "describe", date, formattedDate, "SSSC (3431 Herzberg)", null, "wow");
     }
 
 
@@ -157,7 +157,6 @@ public class EventsFragment extends Fragment {
     }
 
     private void openEventSingle(Event event, View view) {
-        Toast.makeText(getContext(), "You Clicked: " + event.getName(), Toast.LENGTH_SHORT).show();
         Bundle bundle = new Bundle();
         bundle.putSerializable("event", event);
         Fragment eventSingle = new EventSingleFragment();
@@ -168,11 +167,19 @@ public class EventsFragment extends Fragment {
                 .replace(R.id.main_container, eventSingle).addToBackStack(null).commit();
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.event_menu, menu);
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
+    public EventSingleFragment openEventSingleFragment(String id) {
+        Event event = null;
+        for(int i = 0; i < eventList.size(); i++) {
+            Event e = eventList.get(i);
+            if(e.getId().equals(id)) event = eventList.get(i);
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("event", event);
+        EventSingleFragment eventSingle = new EventSingleFragment();
+        eventSingle.setArguments(bundle);
+        return eventSingle;
+    }
 
 }
 

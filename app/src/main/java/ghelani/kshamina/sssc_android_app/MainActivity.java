@@ -9,16 +9,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebView;
 
 import com.facebook.stetho.Stetho;
 
+import ghelani.kshamina.sssc_android_app.event.Event;
+import ghelani.kshamina.sssc_android_app.event.EventSingleFragment;
 import ghelani.kshamina.sssc_android_app.event.EventsFragment;
 import ghelani.kshamina.sssc_android_app.grades.GradesFragment;
 
 public class MainActivity extends AppCompatActivity {
-    final Fragment fragment1 = new EventsFragment();
+    final EventsFragment fragment1 = new EventsFragment();
     final Fragment fragment2 = new GradesFragment();
     final Fragment fragment3 = new ResourcesFragment();
     final FragmentManager fm = getSupportFragmentManager();
@@ -44,6 +45,16 @@ public class MainActivity extends AppCompatActivity {
         fm.beginTransaction().add(R.id.main_container, fragment2, "2").hide(fragment2).commit();
         fm.beginTransaction().add(R.id.main_container,fragment1, "1").commit();
 
+        // If coming from notification click
+        Event event = (Event) getIntent().getSerializableExtra("event");
+        if(event != null) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("event", event);
+            EventSingleFragment eventSingle = new EventSingleFragment();
+            eventSingle.setArguments(bundle);
+            fm.beginTransaction().replace(R.id.main_container, eventSingle).addToBackStack(null).commit();
+
+        }
     }
 
 
@@ -96,12 +107,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
         return true;
-    }
-
-    public void showOverflowMenu(boolean showMenu){
-        if(menu == null)
-            return;
-        menu.setGroupVisible(R.id.event_single_menu, showMenu);
     }
 
     @Override

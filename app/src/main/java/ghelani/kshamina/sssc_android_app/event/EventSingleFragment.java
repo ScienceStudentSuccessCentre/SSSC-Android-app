@@ -6,12 +6,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -25,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 
 import static android.app.Notification.VISIBILITY_PRIVATE;
@@ -128,10 +131,10 @@ public class EventSingleFragment extends Fragment {
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
         if(eventNotification) {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, event.getNotificationTime(), pendingIntent);
+//            alarmManager.set(AlarmManager.RTC_WAKEUP, event.getNotificationTime(), pendingIntent);
 
 //          Uncomment to send alert right away
-//            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 3000, pendingIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 3000, pendingIntent);
         }
         else {
             alarmManager.cancel(pendingIntent);
@@ -159,14 +162,26 @@ public class EventSingleFragment extends Fragment {
     }
 
     private Notification getNotification() {
+        String title = event.getName();
+        String description = "Today at " + event.getRawTime() + ", " + event.getLocation();
+
+        Intent resultIntent = new Intent(getContext(), MainActivity.class);
+        resultIntent.putExtra("event", event);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
+        stackBuilder.addNextIntentWithParentStack(resultIntent);
+        PendingIntent resultPendingIntent =
+        stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), "channel_id")
-                .setSmallIcon(R.drawable.ic_sssc)
-                .setContentTitle(event.getName())
-                .setContentText(event.getName())
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setWhen(event.getNotificationTime())
-                .setShowWhen(true)
-                .setVisibility(VISIBILITY_PRIVATE);
+            .setSmallIcon(R.drawable.ic_sssc)
+            .setColor(Color.RED)
+            .setContentTitle(title)
+            .setContentText(description)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setWhen(event.getNotificationTime())
+            .setShowWhen(true)
+            .setVisibility(VISIBILITY_PRIVATE)
+            .setContentIntent(resultPendingIntent);
         return builder.build();
     }
 
