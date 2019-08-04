@@ -5,10 +5,10 @@ import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -19,16 +19,18 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
@@ -37,6 +39,7 @@ import static android.app.Notification.VISIBILITY_PRIVATE;
 
 public class EventSingleFragment extends Fragment {
     private Event event;
+    private ImageView imageView;
     private boolean eventNotification;
     SharedPreferences preferences;
 
@@ -66,6 +69,9 @@ public class EventSingleFragment extends Fragment {
 
         TextView description = view.findViewById(R.id.eventDescription);
         description.setText(Html.fromHtml(event.getDescription()));
+
+        imageView = view.findViewById(R.id.eventImage);
+        if(event.getImageURL() != null) this.loadEventImage();
 
         TextView rawTime = view.findViewById(R.id.rawTime);
         String time = event.getDateDisplayStringSingle() + "\n" + event.getRawTime();
@@ -186,6 +192,26 @@ public class EventSingleFragment extends Fragment {
             .setVisibility(VISIBILITY_PRIVATE)
             .setContentIntent(resultPendingIntent);
         return builder.build();
+    }
+
+    public void loadEventImage() {
+        //start a background thread for networking
+        new Thread(new Runnable() {
+            public void run(){
+                try {
+                    //download the drawable
+                    final Drawable drawable = Drawable.createFromStream((InputStream) new URL(event.getImageURL()).getContent(), "src");
+                    //edit the view in the UI thread
+                    imageView.post(new Runnable() {
+                        public void run() {
+                            imageView.setImageDrawable(drawable);
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
 }

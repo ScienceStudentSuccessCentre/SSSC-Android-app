@@ -82,7 +82,8 @@ public class EventsFragment extends Fragment {
 
         // Required empty public constructor
         test = new Event("test", "Test Event", url,
-                "describe", date, formattedDate, "SSSC (3431 Herzberg)", null, "wow");
+                "describe", date, formattedDate, "SSSC (3431 Herzberg)",
+                "https://sssc.carleton.ca/sites/default/files/inline-images/AG8Q9617_0.jpg", "wow");
     }
 
 

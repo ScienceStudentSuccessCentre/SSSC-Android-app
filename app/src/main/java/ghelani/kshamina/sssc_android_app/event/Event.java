@@ -20,10 +20,10 @@ public class Event implements Serializable, Comparable<Event>{
     private Date dateTime;
     private String rawTime;
     private String location;
-    private URL imageURL;
+    private String imageURL;
     private String actionUrl;
 
-    public Event(String id, String name, URL url, String description, Date dateTime, String rawTime, String location, URL imageURL, String actionUrl) {
+    public Event(String id, String name, URL url, String description, Date dateTime, String rawTime, String location, String imageURL, String actionUrl) {
         this.id = id;
         this.name = name;
         this.url = url;
@@ -39,11 +39,9 @@ public class Event implements Serializable, Comparable<Event>{
         try {
             this.id = (String) json.get("id");
             this.name = (String) json.get("name");
-
             if(json.has("url")) this.url = stringToURL((String) json.get("url"));
-            if(json.has("imageURL")) this.imageURL = stringToURL((String) json.get("imageURL"));
+            if(json.has("imageURL")) this.imageURL = (String) json.get("imageURL");
             if(json.has("actionUrl")) this.actionUrl = (String) json.get("actionUrl");
-
             this.description = (String) json.get("description");
 
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000Z'");
@@ -165,11 +163,11 @@ public class Event implements Serializable, Comparable<Event>{
         this.location = location;
     }
 
-    public URL getImageURL() {
+    public String getImageURL() {
         return imageURL;
     }
 
-    public void setImageURL(URL imageURL) {
+    public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
     }
 
