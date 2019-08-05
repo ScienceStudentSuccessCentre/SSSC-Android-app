@@ -3,10 +3,10 @@
 
     <item android:drawable="@android:color/white" />
 
-    <item>
-        <bitmap android:src="@drawable/ic_splash_screen"
+    <item
+        android:scaleType = "fitXY">
+        <bitmap android:src="@drawable/splash_screen_imageweb"
             android:gravity="center" />
-
     </item>
 
 </layer-list>

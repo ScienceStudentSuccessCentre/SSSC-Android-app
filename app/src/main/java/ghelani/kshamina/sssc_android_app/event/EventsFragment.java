@@ -61,29 +61,7 @@ public class EventsFragment extends Fragment {
     };
 
     public EventsFragment() {
-        URL url = null;
-        try {
-            url = new URL("www.google.ca");
-        } catch (MalformedURLException e) {
-
-        }
-
-        Date date = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.HOUR_OF_DAY, 1);
-        calendar.add(Calendar.MINUTE, 1);
-
-        date = calendar.getTime();
-
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        String formattedDate=dateFormat. format(date);
-
-
-        // Required empty public constructor
-        test = new Event("test", "Test Event", url,
-                "describe", date, formattedDate, "SSSC (3431 Herzberg)",
-                "https://sssc.carleton.ca/sites/default/files/inline-images/AG8Q9617_0.jpg", "wow");
+//        testEvent();
     }
 
 
@@ -117,7 +95,7 @@ public class EventsFragment extends Fragment {
             @Override
             public void run() {
                 eventList.clear();
-                eventList.add(test);
+//                eventList.add(test);
                 RequestQueue ExampleRequestQueue = Volley.newRequestQueue(getContext());
                 StringRequest ExampleStringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                     @Override
@@ -166,6 +144,32 @@ public class EventsFragment extends Fragment {
         activity.invalidateOptionsMenu();
         activity.getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_container, eventSingle).addToBackStack(null).commit();
+    }
+
+    private void testEvent() {
+        URL url = null;
+        try {
+            url = new URL("www.google.ca");
+        } catch (MalformedURLException e) {
+
+        }
+
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.HOUR_OF_DAY, 1);
+        calendar.add(Calendar.MINUTE, 1);
+
+        date = calendar.getTime();
+
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        String formattedDate=dateFormat. format(date);
+
+
+        // Required empty public constructor
+        test = new Event("test", "Test Event", url,
+                "describe", date, formattedDate, "SSSC (3431 Herzberg)",
+                "https://sssc.carleton.ca/sites/default/files/inline-images/AG8Q9617_0.jpg", "wow");
     }
 
 }
