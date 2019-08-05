@@ -2,11 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/settings"
-        app:showAsAction="never"/>
+    <group
+        android:id="@+id/event_single_menu">
+        <item android:id="@+id/actionURL"
+            android:title=""
+            android:icon="@drawable/ic_link_white_24dp"
+            app:showAsAction="always"/>
 
+        <item android:id="@+id/notification"
+            android:title=""
+            android:icon="@drawable/ic_notifications_active_black_24dp"
+            app:showAsAction="always"/>
+
+        <item android:id="@+id/share"
+            android:title=""
+            android:icon="@drawable/ic_share_white_24dp"
+            app:showAsAction="always"/>
+    </group>
 
 </menu>
