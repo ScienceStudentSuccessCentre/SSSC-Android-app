@@ -51,22 +51,25 @@
 
         <TextView
             android:id="@+id/rawTime"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@color/red"
             android:gravity="center"
             android:textColor="@android:color/white"
             android:textSize="17sp"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:layout_weight="0.3"/>
 
         <TextView
             android:id="@+id/location"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_alignTop="@+id/footer"
             android:background="@color/lightGrey"
-            android:textSize="17sp"
             android:gravity="center"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:textSize="17sp"
+            android:layout_weight="0.7"/>
 
     </LinearLayout>
 
