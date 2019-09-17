@@ -44,7 +44,7 @@ public class Event implements Serializable, Comparable<Event>{
             if(json.has("actionUrl")) this.actionUrl = (String) json.get("actionUrl");
             this.description = (String) json.get("description");
 
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000Z'");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000Z'", Locale.CANADA);
             try {
                 this.dateTime = format.parse((String) json.get("dateTime"));
             } catch (ParseException e){
@@ -99,10 +99,9 @@ public class Event implements Serializable, Comparable<Event>{
     }
 
     public String getDateDisplayString() {
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(Locale.CANADA);
         cal.setTime(this.dateTime);
-
-        String month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+        String month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA);
         String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
 
         if(day.length() == 1) day = "0" + day;
@@ -111,10 +110,10 @@ public class Event implements Serializable, Comparable<Event>{
     }
 
     public String getDateDisplayStringSingle() {
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(Locale.CANADA);
         cal.setTime(this.dateTime);
 
-        String month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+        String month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA);
         String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
 
         if(day.length() == 1) day = "0" + day;
@@ -123,7 +122,7 @@ public class Event implements Serializable, Comparable<Event>{
     }
 
     public long getNotificationTime() {
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(Locale.CANADA);
         cal.setTime(this.dateTime);
 
         // subtract an hour for notification time
