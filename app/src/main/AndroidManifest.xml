@@ -26,9 +26,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
         </activity>
-        <activity
-            android:name=".SettingsActivity"
-            android:label="Settings" />
 
         <receiver android:name=".event.EventAlert">
             <intent-filter>

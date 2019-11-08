@@ -16,6 +16,11 @@
         android:icon="@drawable/ic_description_black_24dp"
         android:title="@string/title_resources" />
 
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="@string/title_settings" />
+
     <!-- Settings only needed for Grades portion, uncomment later -->
     <!--<item-->
         <!--android:id="@+id/navigation_settings"-->

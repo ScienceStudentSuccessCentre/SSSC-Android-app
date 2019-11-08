@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     final EventsFragment fragment1 = new EventsFragment();
     final Fragment fragment2 = new GradesFragment();
     final Fragment fragment3 = new ResourcesFragment();
+    final Fragment fragment4 = new SettingsFragment();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment active = fragment1;
     Toolbar toolbar;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         navigation.setLabelVisibilityMode(1);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        fm.beginTransaction().add(R.id.main_container, fragment4, "4").hide(fragment4).commit();
         fm.beginTransaction().add(R.id.main_container, fragment3, "3").hide(fragment3).commit();
         fm.beginTransaction().add(R.id.main_container, fragment2, "2").hide(fragment2).commit();
         fm.beginTransaction().add(R.id.main_container,fragment1, "1").commit();
@@ -86,6 +88,12 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_notifications:
                     fm.beginTransaction().hide(active).show(fragment3).commit();
                     active = fragment3;
+                    getSupportActionBar().hide();
+                    return true;
+
+                case R.id.navigation_settings:
+                    fm.beginTransaction().hide(active).show(fragment4).commit();
+                    active = fragment4;
                     getSupportActionBar().hide();
                     return true;
             }
