@@ -13,7 +13,7 @@ import ghelani.kshamina.sssc_android_app.entity.Term;
 import ghelani.kshamina.sssc_android_app.entity.Weight;
 
 @Database(version = 1, entities = { Term.class, Course.class, Assignment.class, Weight.class })
-public abstract class AppDatabase extends RoomDatabase {
+public abstract class GradesDatabase extends RoomDatabase {
     abstract public TermDAO getTermDao();
     abstract public CourseDAO getCourseDao();
     abstract public AssignmentDAO getAssignmentDao();
