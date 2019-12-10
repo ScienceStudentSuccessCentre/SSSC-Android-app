@@ -10,8 +10,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import ghelani.kshamina.sssc_android_app.R;
-
 /**
  * A simple {@link Fragment} subclass.
  */

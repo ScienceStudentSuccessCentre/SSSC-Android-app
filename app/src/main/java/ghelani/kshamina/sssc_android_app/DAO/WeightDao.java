@@ -6,25 +6,27 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.util.List;
+
 import ghelani.kshamina.sssc_android_app.entity.Weight;
 
 @Dao
-public interface WeightDAO {
+public interface WeightDao {
     @Insert
-    public void insertWeight(Weight weight);
+    void insertWeight(Weight weight);
 
     @Update
-    public void updateWeight(Weight weight);
+    void updateWeight(Weight weight);
 
     @Delete
-    public void deleteWeight(Weight weight);
+    void deleteWeight(Weight weight);
 
     @Query("SELECT * FROM weight")
-    public Weight[] getAllWeights();
+    List<Weight> getAllWeights();
 
     @Query("SELECT * From weight WHERE weight_id = :id")
-    public Weight[] getWeightsByID(String id);
+    List<Weight> getWeightsByID(String id);
 
     @Query("SELECT * FROM weight WHERE weight_course_id = :courseId")
-    public Weight[] getWeightsByCourseId(String courseId);
+    List<Weight> getWeightsByCourseId(String courseId);
 }

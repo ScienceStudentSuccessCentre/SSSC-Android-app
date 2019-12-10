@@ -6,16 +6,18 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
+import java.util.List;
+
 import ghelani.kshamina.sssc_android_app.entity.Term;
 
 @Dao
-public interface TermDAO {
+public interface TermDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public void insertTerm(Term term);
+    void insertTerm(Term term);
 
     @Delete
-    public void deleteTerm(Term term);
+    void deleteTerm(Term term);
 
     @Query("SELECT * FROM term")
-    public Term[] getAllTerms();
+    List<Term> getAllTerms();
 }

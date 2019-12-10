@@ -6,25 +6,27 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.util.List;
+
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
 
 @Dao
-public interface AssignmentDAO {
+public interface AssignmentDao {
     @Insert
-    public void insertAssignment(Assignment assignment);
+    void insertAssignment(Assignment assignment);
 
     @Update
-    public void updateAssignment(Assignment assignment);
+    void updateAssignment(Assignment assignment);
 
     @Delete
-    public void deleteAssignment(Assignment assignment);
+    void deleteAssignment(Assignment assignment);
 
     @Query("SELECT * FROM assignment")
-    public Assignment[] getAllAssignments();
+    List<Assignment> getAllAssignments();
 
     @Query("SELECT * From assignment WHERE assignment_id = :id")
-    public Assignment[] getAssignmentsByID(String id);
+    List<Assignment> getAssignmentsByID(String id);
 
-    @Query("SELECT * FROM assignment WHERE asssignment_course_id = :courseId")
-    public Assignment[] getAssignmentsByCourseId(String courseId);
+    @Query("SELECT * FROM assignment WHERE assignment_course_id = :courseId")
+    List<Assignment> getAssignmentsByCourseId(String courseId);
 }

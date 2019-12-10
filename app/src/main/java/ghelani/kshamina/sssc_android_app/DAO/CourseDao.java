@@ -6,25 +6,27 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.util.List;
+
 import ghelani.kshamina.sssc_android_app.entity.Course;
 
 @Dao
-public interface CourseDAO {
+public interface CourseDao {
     @Insert
-    public void insertCourse(Course course);
+    void insertCourse(Course course);
 
     @Update
-    public void updateCourse(Course course);
+    void updateCourse(Course course);
 
     @Delete
-    public void deleteCourse(Course course);
+    void deleteCourse(Course course);
 
     @Query("SELECT * FROM course")
-    public Course[] getAllCourses();
+    List<Course> getAllCourses();
 
     @Query("SELECT * From course WHERE course_id = :id")
-    public Course[] getCoursesByID(String id);
+    List<Course> getCoursesByID(String id);
 
     @Query("SELECT * FROM course WHERE course_term_id = :courseTermId")
-    public Course[] getCoursesByTermId(String courseTermId);
+    List<Course> getCoursesByTermId(String courseTermId);
 }
