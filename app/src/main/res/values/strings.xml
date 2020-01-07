@@ -9,8 +9,17 @@
     <string name="calculator_tab">Calculator</string>
 
     <string name="planner_tab">Planner</string>
-    <string name="current_cgpa">Current CGPA</string>
+    <string name="planner_message">If you want to achieve a certain overall CGPA, use the section below to determine what CGPA you should aim for the current term.</string>
     <string name="current_cgpa_placeholder">8.9</string>
+    <string name="current_cgpa">Current CGPA</string>
+    <string name="credits_complete_placeholder">5.0</string>
+    <string name="credits_complete">Credits Complete</string>
+    <string name="desired_cgpa">Desired CGPA</string>
+    <string name="desired_cgpa_placeholder">10.0</string>
+    <string name="credits_progress">Credits in Progress</string>
+    <string name="credits_progress_placeholders">2.5</string>
+    <string name="calculated_CGPA">Calculated CGPA</string>
+    <string name="calculated_CGPA_placeholder">Enter Info Above</string>
 
     <string name="settings_cgpa_label">CGPA CALCULATOR</string>
     <string name="settings_in_progress_course">Include In-Progress Courses</string>

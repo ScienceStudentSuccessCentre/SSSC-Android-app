@@ -10,12 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import java.util.Locale;
 
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.grades.Grading;
 
 public class PlannerFragment extends Fragment {
     private EditText currentCGPAText;
+    private EditText creditsCompleteText;
+    private EditText desiredCGPAText;
+    private EditText creditsInProgressText;
+    private TextView calculatedCGPAText;
 
     private TextWatcher overallTextWatcher = new TextWatcher() {
         @Override
@@ -23,9 +30,25 @@ public class PlannerFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            double currentCGPA = Double.parseDouble(currentCGPAText.getText().toString());
-            System.out.println(currentCGPA);
-            Grading.calculateRequiredCGPA(currentCGPA, 1, 1, 1);
+            String currentCGPATest = currentCGPAText.getText().toString();
+            String creditsCompleteTest = creditsCompleteText.getText().toString();
+            String desiredCGPATest = desiredCGPAText.getText().toString();
+            String creditsInProgressTest = creditsInProgressText.getText().toString();
+
+            if ( (currentCGPATest.length() > 0) && (creditsCompleteTest.length() > 0) &&
+                    (desiredCGPATest.length() > 0) && (creditsInProgressTest.length() > 0) ) {
+                double currentCGPA = Double.parseDouble(currentCGPATest);
+                double creditsComplete = Double.parseDouble(creditsCompleteTest);
+                double desiredCGPA = Double.parseDouble(desiredCGPATest);
+                double creditsInProgress = Double.parseDouble(creditsInProgressTest);
+
+                System.out.println(currentCGPA);
+                double result = Grading.calculateRequiredCGPA(currentCGPA, creditsComplete, desiredCGPA, creditsInProgress);
+                System.out.println("This is the required CGPA" + result);
+                calculatedCGPAText.setText(String.format(Locale.CANADA, "%.1f", result));
+            } else {
+                calculatedCGPAText.setText("");
+            }
         }
 
         @Override
@@ -39,6 +62,18 @@ public class PlannerFragment extends Fragment {
 
         currentCGPAText = plannerView.findViewById(R.id.currentCGPA);
         currentCGPAText.addTextChangedListener(overallTextWatcher);
+
+        creditsCompleteText = plannerView.findViewById(R.id.creditsComplete);
+        creditsCompleteText.addTextChangedListener(overallTextWatcher);
+
+        desiredCGPAText = plannerView.findViewById(R.id.desiredCGPA);
+        desiredCGPAText.addTextChangedListener(overallTextWatcher);
+
+        creditsInProgressText = plannerView.findViewById(R.id.creditsProgress);
+        creditsInProgressText.addTextChangedListener(overallTextWatcher);
+
+        calculatedCGPAText = plannerView.findViewById(R.id.calculatedCGPA);
+
 
         return plannerView;
     }
