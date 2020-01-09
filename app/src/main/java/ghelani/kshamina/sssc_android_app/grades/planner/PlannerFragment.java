@@ -18,13 +18,21 @@ import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.grades.Grading;
 
 public class PlannerFragment extends Fragment {
+    // Variables for the term CGPA part
     private EditText currentCGPAText;
     private EditText creditsCompleteText;
     private EditText desiredCGPAText;
     private EditText creditsInProgressText;
     private TextView calculatedCGPAText;
 
-    private TextWatcher overallTextWatcher = new TextWatcher() {
+    // Variables for the Overall CGPA part
+    private EditText overallCurrentCGPAText;
+    private EditText overallCreditsCompleteText;
+    private EditText overallPredictedCGPAText;
+    private EditText overallCreditsProgressText;
+    private TextView overallCGPAText;
+
+    private TextWatcher termTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
@@ -42,12 +50,37 @@ public class PlannerFragment extends Fragment {
                 double desiredCGPA = Double.parseDouble(desiredCGPATest);
                 double creditsInProgress = Double.parseDouble(creditsInProgressTest);
 
-                System.out.println(currentCGPA);
                 double result = Grading.calculateRequiredCGPA(currentCGPA, creditsComplete, desiredCGPA, creditsInProgress);
-                System.out.println("This is the required CGPA" + result);
                 calculatedCGPAText.setText(String.format(Locale.CANADA, "%.1f", result));
             } else {
                 calculatedCGPAText.setText("");
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {}
+    };
+
+    private TextWatcher overallTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            String currentCGPATest = overallCurrentCGPAText.getText().toString();
+            String creditsCompleteTest = overallCreditsCompleteText.getText().toString();
+            String predictedCGPATest = overallPredictedCGPAText.getText().toString();
+            String creditsInProgressTest = overallCreditsProgressText.getText().toString();
+
+            if ( (currentCGPATest.length() > 0) && (creditsCompleteTest.length() > 0) &&
+                    (predictedCGPATest.length() > 0) && (creditsInProgressTest.length() > 0) ) {
+                double currentCGPA = Double.parseDouble(currentCGPATest);
+                double creditsComplete = Double.parseDouble(creditsCompleteTest);
+                double predicteddCGPA = Double.parseDouble(predictedCGPATest);
+                double creditsInProgress = Double.parseDouble(creditsInProgressTest);
+
+                double result = Grading.calculatePredictedCGPA(currentCGPA, creditsComplete, predicteddCGPA, creditsInProgress);
+                overallCGPAText.setText(String.format(Locale.CANADA, "%.1f", result));
             }
         }
 
@@ -61,18 +94,33 @@ public class PlannerFragment extends Fragment {
         ViewGroup plannerView = (ViewGroup) inflater.inflate(R.layout.fragment_planner, container, false);
 
         currentCGPAText = plannerView.findViewById(R.id.currentCGPA);
-        currentCGPAText.addTextChangedListener(overallTextWatcher);
+        currentCGPAText.addTextChangedListener(termTextWatcher);
 
         creditsCompleteText = plannerView.findViewById(R.id.creditsComplete);
-        creditsCompleteText.addTextChangedListener(overallTextWatcher);
+        creditsCompleteText.addTextChangedListener(termTextWatcher);
 
         desiredCGPAText = plannerView.findViewById(R.id.desiredCGPA);
-        desiredCGPAText.addTextChangedListener(overallTextWatcher);
+        desiredCGPAText.addTextChangedListener(termTextWatcher);
 
         creditsInProgressText = plannerView.findViewById(R.id.creditsProgress);
-        creditsInProgressText.addTextChangedListener(overallTextWatcher);
+        creditsInProgressText.addTextChangedListener(termTextWatcher);
 
         calculatedCGPAText = plannerView.findViewById(R.id.calculatedCGPA);
+
+
+        overallCurrentCGPAText = plannerView.findViewById(R.id.overallCurrentCGPA);
+        overallCurrentCGPAText.addTextChangedListener(overallTextWatcher);
+
+        overallCreditsCompleteText = plannerView.findViewById(R.id.overallCreditsComplete);
+        overallCreditsCompleteText.addTextChangedListener(overallTextWatcher);
+
+        overallPredictedCGPAText = plannerView.findViewById(R.id.overallPredictedCGPA);
+        overallPredictedCGPAText.addTextChangedListener(overallTextWatcher);
+
+        overallCreditsProgressText = plannerView.findViewById(R.id.overallCreditsProgress);
+        overallCreditsProgressText.addTextChangedListener(overallTextWatcher);
+
+        overallCGPAText = plannerView.findViewById(R.id.overallCGPA);
 
 
         return plannerView;
