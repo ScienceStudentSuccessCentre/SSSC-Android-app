@@ -76,10 +76,10 @@ public class PlannerFragment extends Fragment {
                     (predictedCGPATest.length() > 0) && (creditsInProgressTest.length() > 0) ) {
                 double currentCGPA = Double.parseDouble(currentCGPATest);
                 double creditsComplete = Double.parseDouble(creditsCompleteTest);
-                double predicteddCGPA = Double.parseDouble(predictedCGPATest);
+                double predictedCGPA = Double.parseDouble(predictedCGPATest);
                 double creditsInProgress = Double.parseDouble(creditsInProgressTest);
 
-                double result = Grading.calculatePredictedCGPA(currentCGPA, creditsComplete, predicteddCGPA, creditsInProgress);
+                double result = Grading.calculatePredictedCGPA(currentCGPA, creditsComplete, predictedCGPA, creditsInProgress);
                 overallCGPAText.setText(String.format(Locale.CANADA, "%.1f", result));
             }
         }
