@@ -20,10 +20,10 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="88dp"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/footer">
+        android:layout_height="75dp"
+        android:layout_alignParentBottom="true">
 
         <TextView
             android:id="@+id/calculatorCalculatedOverallCGPA"
@@ -40,11 +40,11 @@
             android:id="@+id/calculatorCalculatedMajorCGPA"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="0.5"
             android:background="@color/lightGrey"
             android:gravity="center"
             android:textColor="@android:color/black"
-            android:textSize="17sp"
-            android:layout_weight="0.5"/>
+            android:textSize="17sp" />
 
     </LinearLayout>
 
