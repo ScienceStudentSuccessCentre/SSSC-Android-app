@@ -1,17 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView3"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/gradesCalculatorFrame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity = "center"
-        android:text="@string/calculator_tab"
-        tools:layout_editor_absoluteX="202dp"
-        tools:layout_editor_absoluteY="298dp" />
-</android.support.constraint.ConstraintLayout>
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/coursesList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/footer">
+
+        <TextView
+            android:id="@+id/calculatorCalculatedOverallCGPA"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@color/red"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="@android:color/white"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/calculatorCalculatedMajorCGPA"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/lightGrey"
+            android:gravity="center"
+            android:textColor="@android:color/black"
+            android:textSize="17sp"
+            android:layout_weight="0.5"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
