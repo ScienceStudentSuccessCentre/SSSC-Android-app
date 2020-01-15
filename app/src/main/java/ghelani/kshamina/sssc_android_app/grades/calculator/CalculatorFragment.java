@@ -16,9 +16,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.entity.Course;
+import ghelani.kshamina.sssc_android_app.grades.Grading;
 
 public class CalculatorFragment extends Fragment {
 
@@ -54,17 +58,22 @@ public class CalculatorFragment extends Fragment {
         calculatedOverallCGPA = calculatorView.findViewById(R.id.calculatorCalculatedOverallCGPA);
         calculatedMajorCGPA = calculatorView.findViewById(R.id.calculatorCalculatedMajorCGPA);
 
-        calculatedOverallCGPA.setText("123123123");  // TODO display actual CGPAs
-        calculatedMajorCGPA.setText("123123123");
+        Thread thread = getCourseData();
 
-        getCourseData();
+        try {
+            thread.start();
+            thread.join();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        updateCGPAs();
 
         return calculatorView;
-
     }
 
-    private void getCourseData() {
-        new Thread(new Runnable() {
+    private Thread getCourseData() {
+         return new Thread(new Runnable() {
             @Override
             public void run() {
                 courseList.clear();
@@ -77,6 +86,15 @@ public class CalculatorFragment extends Fragment {
                         "A+",
                         "F20"
                 ));
+
+                courseList.add(new Course(
+                        "Operating Systems",
+                        "COMP 3000",
+                        0.5,
+                        false,
+                        "A",
+                        "F20"
+                ));
                 // TODO Access the DB
 
                 getActivity().runOnUiThread(new Runnable() {
@@ -86,7 +104,20 @@ public class CalculatorFragment extends Fragment {
                     }
                 });
             }
-        }).start();
+        });
+    }
+
+    private void updateCGPAs() {
+        double overallCGPA = Grading.calculateOverallCGPA(courseList);
+        calculatedOverallCGPA.setText(String.format(Locale.CANADA, "Overall CGPA: %.1f", overallCGPA));
+
+        List<Course> majorCourses = new ArrayList<>();
+        for (Course course : courseList) {
+            if (course.courseIsMajorCourse) majorCourses.add(course);
+        }
+
+        double overallMajorCGPA = Grading.calculateOverallCGPA(majorCourses);
+        calculatedMajorCGPA.setText(String.format(Locale.CANADA, "Major CGPA: %.1f", overallMajorCGPA));
     }
 
 }
