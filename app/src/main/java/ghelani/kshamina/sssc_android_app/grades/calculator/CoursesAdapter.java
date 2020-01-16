@@ -47,15 +47,12 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHo
         holder.letterGrade.setText(course.courseFinalGrade == null ? "N/A" : course.courseFinalGrade);
 
         // Retrieve term from database
-        Thread getTermThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                TermDao termDao = GradesDatabase.getInstance(activityContext).getTermDao();
-                Term courseTerm = termDao.getTermById(course.courseTermId);
+        Thread getTermThread = new Thread(() -> {
+            TermDao termDao = GradesDatabase.getInstance(activityContext).getTermDao();
+            Term courseTerm = termDao.getTermById(course.courseTermId);
 
-                holder.courseRowCode.setText(String.format(Locale.CANADA, "%s %s",
-                        courseTerm.asShortString(), course.courseCode));
-            }
+            holder.courseRowCode.setText(String.format(Locale.CANADA, "%s %s",
+                    courseTerm.asShortString(), course.courseCode));
         });
         getTermThread.start();
         try {

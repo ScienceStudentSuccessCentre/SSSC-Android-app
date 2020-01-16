@@ -16,6 +16,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import ghelani.kshamina.sssc_android_app.DAO.CourseDao;
 import ghelani.kshamina.sssc_android_app.DAO.TermDao;
@@ -38,14 +39,11 @@ public class CalculatorFragment extends Fragment {
 
     SharedPreferences preferences;  // TODO Show/hide in-progress courses
 
-    private View.OnClickListener onItemClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
-            int position = viewHolder.getAdapterPosition();
-            Course course = courseList.get(position);
-            openCourseSingle(course, view);
-        }
+    private View.OnClickListener onItemClickListener = view -> {
+        RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+        int position = viewHolder.getAdapterPosition();
+        Course course = courseList.get(position);
+        openCourseSingle(course, view);
     };
 
     @Nullable
@@ -89,81 +87,74 @@ public class CalculatorFragment extends Fragment {
      *     and updates the RecyclerView.
      */
     private Thread getCourseData() {
-         return new Thread(new Runnable() {
-            @Override
-            public void run() {
-                courseList.clear();
+         return new Thread(() -> {
+             courseList.clear();
 
-                Term dummyTerm1 = new Term(Term.Season.WINTER, "2019");  // To satisfy foreign key constraint
-                Term dummyTerm2 = new Term(Term.Season.FALL, "2020");
-                Course dummyCourse1 = new Course(
-                        "Introduction to Computer Science I",
-                        "COMP 1405",
-                        0.5,
-                        true,
-                        "A",
-                        dummyTerm1.termId
-                );
-                Course dummyCourse2 = new Course(
-                        "Introduction to Computer Science II",
-                        "COMP 1406",
-                        0.5,
-                        true,
-                        "A+",
-                        dummyTerm1.termId
-                );
-                Course dummyCourse3 = new Course(
-                        "Introduction to Logic",
-                        "PHIL 2001",
-                        0.5,
-                        false,
-                        null,
-                        dummyTerm2.termId
-                );
-                Course dummyCourse4 = new Course(
-                        "Introduction to Organizational Behaviour",
-                        "BUSI 2121",
-                        0.5,
-                        false,
-                        "D-",
-                        dummyTerm2.termId
-                );
+             Term dummyTerm1 = new Term(Term.Season.WINTER, "2019");  // To satisfy foreign key constraint
+             Term dummyTerm2 = new Term(Term.Season.FALL, "2020");
+             Course dummyCourse1 = new Course(
+                     "Introduction to Computer Science I",
+                     "COMP 1405",
+                     0.5,
+                     true,
+                     "A",
+                     dummyTerm1.termId
+             );
+             Course dummyCourse2 = new Course(
+                     "Introduction to Computer Science II",
+                     "COMP 1406",
+                     0.5,
+                     true,
+                     "A+",
+                     dummyTerm1.termId
+             );
+             Course dummyCourse3 = new Course(
+                     "Introduction to Logic",
+                     "PHIL 2001",
+                     0.5,
+                     false,
+                     null,
+                     dummyTerm2.termId
+             );
+             Course dummyCourse4 = new Course(
+                     "Introduction to Organizational Behaviour",
+                     "BUSI 2121",
+                     0.5,
+                     false,
+                     "D-",
+                     dummyTerm2.termId
+             );
 
-                GradesDatabase db = GradesDatabase.getInstance(getActivity());
-                GradesDatabase.emptyDatabase();  // TODO remove this when dummy data is removed
-                TermDao termDao = db.getTermDao();
-                CourseDao courseDao = db.getCourseDao();
+             GradesDatabase db = GradesDatabase.getInstance(getActivity());
+             GradesDatabase.emptyDatabase();  // TODO remove this when dummy data is removed
+             TermDao termDao = db.getTermDao();
+             CourseDao courseDao = db.getCourseDao();
 
-                termDao.insertTerm(dummyTerm1);
-                termDao.insertTerm(dummyTerm2);
-                courseDao.insertCourse(dummyCourse1);
-                courseDao.insertCourse(dummyCourse2);
-                courseDao.insertCourse(dummyCourse3);
-                courseDao.insertCourse(dummyCourse4);
+             termDao.insertTerm(dummyTerm1);
+             termDao.insertTerm(dummyTerm2);
+             courseDao.insertCourse(dummyCourse1);
+             courseDao.insertCourse(dummyCourse2);
+             courseDao.insertCourse(dummyCourse3);
+             courseDao.insertCourse(dummyCourse4);
 
-                courseList.addAll(courseDao.getAllCourses());
+             courseList.addAll(courseDao.getAllCourses());
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-            }
-        });
+             getActivity().runOnUiThread(adapter::notifyDataSetChanged);
+         });
     }
 
     private void updateCGPAs() {
         double overallCGPA = Grading.calculateOverallCGPA(courseList);
-        calculatedOverallCGPA.setText(String.format(Locale.CANADA, "Overall CGPA: %.1f", overallCGPA));
+        calculatedOverallCGPA.setText(overallCGPA == -1 ?
+                "Overall CGPA: N/A" : String.format(Locale.CANADA, "Overall CGPA: %.1f", overallCGPA));
 
-        List<Course> majorCourses = new ArrayList<>();
-        for (Course course : courseList) {
-            if (course.courseIsMajorCourse) majorCourses.add(course);
-        }
+        List<Course> majorCourses = courseList.stream()
+                .filter(course -> course.courseIsMajorCourse)
+                .collect(Collectors.toList());
 
         double overallMajorCGPA = Grading.calculateOverallCGPA(majorCourses);
-        calculatedMajorCGPA.setText(String.format(Locale.CANADA, "Major CGPA: %.1f", overallMajorCGPA));
+        calculatedMajorCGPA.setText(overallMajorCGPA == -1 ?
+                "Major CGPA: N/A" : String.format(Locale.CANADA, "Major CGPA: %.1f", overallMajorCGPA));
     }
 
     private void openCourseSingle(Course course, View view) {
