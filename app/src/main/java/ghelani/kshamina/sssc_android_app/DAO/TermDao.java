@@ -20,4 +20,7 @@ public interface TermDao {
 
     @Query("SELECT * FROM term")
     List<Term> getAllTerms();
+
+    @Query("SELECT * FROM term where term_id=:termId")
+    Term getTermById(String termId);
 }

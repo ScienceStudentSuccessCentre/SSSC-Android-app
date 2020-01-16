@@ -1,5 +1,6 @@
 package ghelani.kshamina.sssc_android_app.grades.calculator;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -12,15 +13,20 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Locale;
 
+import ghelani.kshamina.sssc_android_app.DAO.TermDao;
+import ghelani.kshamina.sssc_android_app.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.entity.Course;
+import ghelani.kshamina.sssc_android_app.entity.Term;
 
 public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHolder> {
     private List<Course> coursesList;
+    private Context activityContext;
     private View.OnClickListener onItemClickListener;
 
-    public CoursesAdapter(List<Course> courses) {
+    public CoursesAdapter(List<Course> courses, Context activityContext) {
         this.coursesList = courses;
+        this.activityContext = activityContext;
     }
 
     @Override
@@ -31,13 +37,25 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHo
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        Course course = coursesList.get(position);
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
+        final Course course = coursesList.get(position);
 
-        holder.courseRowCode.setText(String.format(Locale.CANADA, "[%s] %s",
-                course.courseTermId, course.courseCode));
+        // Fill in TextFields (leaving term as ...)
+        holder.courseRowCode.setText(String.format(Locale.CANADA, "[...] %s", course.courseCode));
         holder.courseRowName.setText(course.courseName);
         holder.letterGrade.setText(course.courseFinalGrade);
+
+        // Retrieve term from database
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TermDao termDao = GradesDatabase.getInstance(activityContext).getTermDao();
+                Term courseTerm = termDao.getTermById(course.courseTermId);
+
+                holder.courseRowCode.setText(String.format(Locale.CANADA, "%s %s",
+                        courseTerm.asShortString(), course.courseCode));
+            }
+        }).start();
     }
 
     @Override

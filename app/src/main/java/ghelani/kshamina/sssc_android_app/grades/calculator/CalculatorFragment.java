@@ -53,7 +53,7 @@ public class CalculatorFragment extends Fragment {
         recyclerView = calculatorView.findViewById(R.id.coursesList);
         recyclerView.setHasFixedSize(true);
 
-        adapter = new CoursesAdapter(courseList);
+        adapter = new CoursesAdapter(courseList, getActivity());
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -86,14 +86,15 @@ public class CalculatorFragment extends Fragment {
             public void run() {
                 courseList.clear();
 
-                Term dummyTerm = new Term("F", "19");  // To satisfy foreign key constraint
+                Term dummyTerm1 = new Term(Term.Season.WINTER, "2019");  // To satisfy foreign key constraint
+                Term dummyTerm2 = new Term(Term.Season.FALL, "2020");
                 Course dummyCourse1 = new Course(
-                        "Operating Systems",
-                        "COMP 3000",
+                        "Introduction to Computer Science II",
+                        "COMP 1406",
                         0.5,
                         true,
                         "A+",
-                        dummyTerm.termId
+                        dummyTerm1.termId
                 );
                 Course dummyCourse2 = new Course(
                         "Operating Systems",
@@ -101,16 +102,18 @@ public class CalculatorFragment extends Fragment {
                         0.5,
                         false,
                         "A",
-                        dummyTerm.termId
+                        dummyTerm2.termId
                 );
 
                 GradesDatabase db = GradesDatabase.getInstance(getActivity());
                 TermDao termDao = db.getTermDao();
                 CourseDao courseDao = db.getCourseDao();
 
-                termDao.insertTerm(dummyTerm);
+                termDao.insertTerm(dummyTerm1);
+                termDao.insertTerm(dummyTerm2);
                 courseDao.insertCourse(dummyCourse1);
                 courseDao.insertCourse(dummyCourse2);
+                System.out.println("Inserting courses");
 
                 courseList.addAll(courseDao.getAllCourses());
 
