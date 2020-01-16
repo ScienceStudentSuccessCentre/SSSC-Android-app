@@ -63,9 +63,9 @@ public class CalculatorFragment extends Fragment {
         calculatedMajorCGPA = calculatorView.findViewById(R.id.calculatorCalculatedMajorCGPA);
 
         Thread thread = getCourseData();
+        thread.start();
 
         try {
-            thread.start();
             thread.join();
         }
         catch (InterruptedException e) {
@@ -106,6 +106,7 @@ public class CalculatorFragment extends Fragment {
                 );
 
                 GradesDatabase db = GradesDatabase.getInstance(getActivity());
+                GradesDatabase.emptyDatabase();  // TODO remove this when dummy data is removed
                 TermDao termDao = db.getTermDao();
                 CourseDao courseDao = db.getCourseDao();
 
@@ -113,7 +114,6 @@ public class CalculatorFragment extends Fragment {
                 termDao.insertTerm(dummyTerm2);
                 courseDao.insertCourse(dummyCourse1);
                 courseDao.insertCourse(dummyCourse2);
-                System.out.println("Inserting courses");
 
                 courseList.addAll(courseDao.getAllCourses());
 

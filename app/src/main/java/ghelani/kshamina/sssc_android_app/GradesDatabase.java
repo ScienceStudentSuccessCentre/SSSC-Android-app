@@ -36,4 +36,9 @@ public abstract class GradesDatabase extends RoomDatabase {
 
         return database;
     }
+
+    /** ONLY USE FOR DEVELOPMENT PURPOSES */
+    public static void emptyDatabase() {
+        database.clearAllTables();
+    }
 }
