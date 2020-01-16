@@ -1,5 +1,7 @@
 package ghelani.kshamina.sssc_android_app.grades.calculator;
 
+import android.app.Activity;
+import android.arch.persistence.room.Room;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,14 +16,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
+import ghelani.kshamina.sssc_android_app.DAO.CourseDao;
+import ghelani.kshamina.sssc_android_app.DAO.TermDao;
+import ghelani.kshamina.sssc_android_app.GradesDatabase;
+import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.entity.Course;
+import ghelani.kshamina.sssc_android_app.entity.Term;
 import ghelani.kshamina.sssc_android_app.grades.Grading;
 
 public class CalculatorFragment extends Fragment {
@@ -72,30 +76,43 @@ public class CalculatorFragment extends Fragment {
         return calculatorView;
     }
 
+    /**
+     * Returns a Thread. When run, it populates courseList with the contents of the database
+     *     and updates the RecyclerView.
+     */
     private Thread getCourseData() {
          return new Thread(new Runnable() {
             @Override
             public void run() {
                 courseList.clear();
 
-                courseList.add(new Course(
+                Term dummyTerm = new Term("F", "19");  // To satisfy foreign key constraint
+                Course dummyCourse1 = new Course(
                         "Operating Systems",
                         "COMP 3000",
                         0.5,
                         true,
                         "A+",
-                        "F20"
-                ));
-
-                courseList.add(new Course(
+                        dummyTerm.termId
+                );
+                Course dummyCourse2 = new Course(
                         "Operating Systems",
                         "COMP 3000",
                         0.5,
                         false,
                         "A",
-                        "F20"
-                ));
-                // TODO Access the DB
+                        dummyTerm.termId
+                );
+
+                GradesDatabase db = GradesDatabase.getInstance(getActivity());
+                TermDao termDao = db.getTermDao();
+                CourseDao courseDao = db.getCourseDao();
+
+                termDao.insertTerm(dummyTerm);
+                courseDao.insertCourse(dummyCourse1);
+                courseDao.insertCourse(dummyCourse2);
+
+                courseList.addAll(courseDao.getAllCourses());
 
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
