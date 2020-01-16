@@ -1,7 +1,5 @@
 package ghelani.kshamina.sssc_android_app.grades.calculator;
 
-import android.app.Activity;
-import android.arch.persistence.room.Room;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -38,7 +36,17 @@ public class CalculatorFragment extends Fragment {
     private CoursesAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    SharedPreferences preferences;
+    SharedPreferences preferences;  // TODO Show/hide in-progress courses
+
+    private View.OnClickListener onItemClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+            int position = viewHolder.getAdapterPosition();
+            Course course = courseList.get(position);
+            openCourseSingle(course, view);
+        }
+    };
 
     @Nullable
     @Override
@@ -57,7 +65,7 @@ public class CalculatorFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-//        adapter.setOnItemClickListener(onItemClickListener);  TODO Add action listener
+        adapter.setOnItemClickListener(onItemClickListener);
 
         calculatedOverallCGPA = calculatorView.findViewById(R.id.calculatorCalculatedOverallCGPA);
         calculatedMajorCGPA = calculatorView.findViewById(R.id.calculatorCalculatedMajorCGPA);
@@ -89,6 +97,14 @@ public class CalculatorFragment extends Fragment {
                 Term dummyTerm1 = new Term(Term.Season.WINTER, "2019");  // To satisfy foreign key constraint
                 Term dummyTerm2 = new Term(Term.Season.FALL, "2020");
                 Course dummyCourse1 = new Course(
+                        "Introduction to Computer Science I",
+                        "COMP 1405",
+                        0.5,
+                        true,
+                        "A",
+                        dummyTerm1.termId
+                );
+                Course dummyCourse2 = new Course(
                         "Introduction to Computer Science II",
                         "COMP 1406",
                         0.5,
@@ -96,12 +112,20 @@ public class CalculatorFragment extends Fragment {
                         "A+",
                         dummyTerm1.termId
                 );
-                Course dummyCourse2 = new Course(
-                        "Operating Systems",
-                        "COMP 3000",
+                Course dummyCourse3 = new Course(
+                        "Introduction to Logic",
+                        "PHIL 2001",
                         0.5,
                         false,
-                        "A",
+                        null,
+                        dummyTerm2.termId
+                );
+                Course dummyCourse4 = new Course(
+                        "Introduction to Organizational Behaviour",
+                        "BUSI 2121",
+                        0.5,
+                        false,
+                        "D-",
                         dummyTerm2.termId
                 );
 
@@ -114,6 +138,8 @@ public class CalculatorFragment extends Fragment {
                 termDao.insertTerm(dummyTerm2);
                 courseDao.insertCourse(dummyCourse1);
                 courseDao.insertCourse(dummyCourse2);
+                courseDao.insertCourse(dummyCourse3);
+                courseDao.insertCourse(dummyCourse4);
 
                 courseList.addAll(courseDao.getAllCourses());
 
@@ -138,6 +164,10 @@ public class CalculatorFragment extends Fragment {
 
         double overallMajorCGPA = Grading.calculateOverallCGPA(majorCourses);
         calculatedMajorCGPA.setText(String.format(Locale.CANADA, "Major CGPA: %.1f", overallMajorCGPA));
+    }
+
+    private void openCourseSingle(Course course, View view) {
+        // TODO implement
     }
 
 }

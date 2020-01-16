@@ -44,7 +44,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHo
         // Fill in TextFields (leaving term as ...)
         holder.courseRowCode.setText(String.format(Locale.CANADA, "[...] %s", course.courseCode));
         holder.courseRowName.setText(course.courseName);
-        holder.letterGrade.setText(course.courseFinalGrade);
+        holder.letterGrade.setText(course.courseFinalGrade == null ? "N/A" : course.courseFinalGrade);
 
         // Retrieve term from database
         Thread getTermThread = new Thread(new Runnable() {
