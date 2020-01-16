@@ -7,7 +7,7 @@ import ghelani.kshamina.sssc_android_app.entity.Course;
 
 public class Grading {
 
-    public static HashMap<String, Integer> letterGradeToGPA = new HashMap<>();
+    public static final HashMap<String, Integer> letterGradeToGPA = new HashMap<>();
     static {
         letterGradeToGPA.put("F", 0);
         letterGradeToGPA.put("D-", 1);
@@ -36,11 +36,8 @@ public class Grading {
         double totalGradePoints = 0;
         double totalCreditsWithGrades = 0;
 
-        System.out.println("List : " + courses);
-
         for (Course course : courses) {
             Integer gpa = letterGradeToGPA.get(course.courseFinalGrade);
-            System.out.println("Grade: " + gpa);
             double gradeWeight = (gpa == null) ? -1 : gpa * course.courseCredits;
 
             if (gradeWeight >= 0) {
@@ -48,9 +45,6 @@ public class Grading {
                 totalCreditsWithGrades += course.courseCredits;
             }
         }
-
-        System.out.println("asdfa " + totalGradePoints + " : " + totalCreditsWithGrades);
-
 
         if (totalCreditsWithGrades > 0) {
             return (totalGradePoints / totalCreditsWithGrades);

@@ -23,6 +23,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHo
     private List<Course> coursesList;
     private Context activityContext;
     private View.OnClickListener onItemClickListener;
+    private static int colourIndex = 0;  // To scroll through colours
 
     public CoursesAdapter(List<Course> courses, Context activityContext) {
         this.coursesList = courses;
@@ -46,7 +47,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHo
         holder.letterGrade.setText(course.courseFinalGrade);
 
         // Retrieve term from database
-        new Thread(new Runnable() {
+        Thread getTermThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 TermDao termDao = GradesDatabase.getInstance(activityContext).getTermDao();
@@ -55,7 +56,14 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHo
                 holder.courseRowCode.setText(String.format(Locale.CANADA, "%s %s",
                         courseTerm.asShortString(), course.courseCode));
             }
-        }).start();
+        });
+        getTermThread.start();
+        try {
+            getTermThread.join();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -69,7 +77,15 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public View colouredBar;
-        private int[] colours = new int[] { Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW };
+        private int[] colours = new int[] {
+                Color.parseColor("#AB47BB"),  // Purple
+                Color.parseColor("#EF6D40"),  // Orange
+                Color.parseColor("#ED4134"),  // Red
+                Color.parseColor("#50AF50"),  // Green
+                Color.parseColor("#3096F3"),  // Light blue
+                Color.parseColor("#F8C045"),  // Yellow
+                Color.parseColor("#47A69B"),  // Turquoise
+        };
 
         public TextView courseRowCode, courseRowName, letterGrade;
 
@@ -80,8 +96,8 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHo
             courseRowName = view.findViewById(R.id.courseRowName);
             letterGrade = view.findViewById(R.id.courseRowGrade);
 
-            int randomColour = colours[(int)(colours.length * Math.random())];
-            colouredBar.setBackgroundColor(randomColour);
+            colouredBar.setBackgroundColor(colours[colourIndex]);
+            colourIndex = (colourIndex + 1) % colours.length;
 
             view.setTag(this);
             itemView.setOnClickListener(onItemClickListener);
