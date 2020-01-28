@@ -10,6 +10,9 @@ import java.util.UUID;
 
 @Entity
 public class Term {
+
+    public enum Season { SUMMER, WINTER, FALL };
+
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "term_id")
@@ -21,10 +24,17 @@ public class Term {
 
     public Term() {}
 
-    public Term(String season, String year) {
+    public Term(Season season, String year) {
         termId = UUID.randomUUID().toString();
-        this.termSeason = season;
+        this.termSeason = season.toString();
         this.termYear = year;
+    }
+
+    public String asShortString() {
+        return "[" +
+                this.termSeason.toString().charAt(0) +
+                (this.termYear.length() == 4 ? this.termYear.substring(2, 4) : this.termYear) +
+                "]";
     }
 
     @Override
@@ -37,5 +47,10 @@ public class Term {
     @Override
     public int hashCode() {
         return 31 + termId.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return this.termSeason + " " + this.termYear;
     }
 }

@@ -53,8 +53,8 @@ public class DatabaseTest {
 
     @Test
     public void createAndDeleteTerms() {
-        Term term1 = new Term("Winter", "2020");
-        Term term2 = new Term("Fall", "2020");
+        Term term1 = new Term(Term.Season.WINTER, "2020");
+        Term term2 = new Term(Term.Season.FALL, "2020");
         Course course1 = new Course("Test Course", "TEST1001", 0.5, true, "None", term1.termId);
         Course course2 = new Course("Another Test Course", "TEST4001", 0.5, false, "A-", term2.termId);
 
@@ -91,7 +91,7 @@ public class DatabaseTest {
 
     @Test
     public void createAndDeleteCourses() {
-        Term term = new Term("Winter", "2020");
+        Term term = new Term(Term.Season.WINTER, "2020");
         Course course1 = new Course("Test Course", "TEST1001", 0.5, true, "None", term.termId);
         Course course2 = new Course("Another Test Course", "TEST4001", 0.5, false, "A-", term.termId);
         Weight weight1 = new Weight("TEST1001 Work", 100, course1.courseId);
