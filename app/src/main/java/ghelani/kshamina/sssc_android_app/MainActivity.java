@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
             fm.beginTransaction().replace(R.id.main_container, eventSingle).addToBackStack(null).commit();
 
         }
+
+        // Initialize settings with its default values
+        // false means do not override user's saved settings on start, if they exist
+        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+
     }
 
 

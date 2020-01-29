@@ -2,6 +2,7 @@ package ghelani.kshamina.sssc_android_app.grades.calculator;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -20,18 +21,22 @@ import ghelani.kshamina.sssc_android_app.entity.Course;
 import ghelani.kshamina.sssc_android_app.entity.Term;
 
 public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHolder> {
-    private List<Course> coursesList;
+
+    private List<Course> courses;
     private Context activityContext;
     private View.OnClickListener onItemClickListener;
+
     private static int colourIndex = 0;  // To scroll through colours
 
     public CoursesAdapter(List<Course> courses, Context activityContext) {
-        this.coursesList = courses;
+        this.courses = courses;
         this.activityContext = activityContext;
+        this.onItemClickListener = null;
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    @NonNull
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.course_row, parent, false);
         return new MyViewHolder(itemView);
@@ -39,7 +44,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        final Course course = coursesList.get(position);
+        final Course course = courses.get(position);
 
         // Fill in TextFields (leaving term as ...)
         holder.courseRowCode.setText(String.format(Locale.CANADA, "[...] %s", course.courseCode));
@@ -65,7 +70,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return coursesList.size();
+        return courses.size();
     }
 
     public void setOnItemClickListener(View.OnClickListener itemClickListener) {
