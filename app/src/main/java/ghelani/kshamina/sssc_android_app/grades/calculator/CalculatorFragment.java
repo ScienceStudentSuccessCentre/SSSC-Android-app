@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -177,6 +178,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
 
     private void openCourseSingle(Course course, View view) {
         // TODO implement
+        Toast.makeText(getActivity(), "Opening " + course.courseCode, Toast.LENGTH_SHORT).show();
     }
 
 

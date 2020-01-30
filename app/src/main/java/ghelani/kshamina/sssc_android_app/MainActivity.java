@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         // Initialize settings with its default values
         // false means do not override user's saved settings on start, if they exist
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-
     }
 
 
