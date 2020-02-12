@@ -7,6 +7,8 @@
 
     <string name="terms_tab">Terms</string>
     <string name="calculator_tab">Calculator</string>
+    <string name="calculated_overall_cgpa">Overall CGPA: %.1d</string>
+    <string name="calculated_major_cgpa">Major CGPA: %.1d</string>
 
     <string name="planner_tab">Planner</string>
     <string name="planner_message">If you want to achieve a certain overall CGPA, use the section below to determine what CGPA you should aim for the current term.</string>
