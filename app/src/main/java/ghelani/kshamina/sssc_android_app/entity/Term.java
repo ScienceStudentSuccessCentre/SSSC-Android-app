@@ -37,6 +37,11 @@ public class Term {
                 "]";
     }
 
+    //returns the term as a full length string for the full textview (not the short red one)
+    public String asDisplayString(){
+        return this.termSeason + " "+ this.termYear;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj == null || obj.getClass() != this.getClass()) return false;

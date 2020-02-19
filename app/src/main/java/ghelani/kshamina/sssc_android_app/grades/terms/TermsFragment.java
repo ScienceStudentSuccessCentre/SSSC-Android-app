@@ -15,6 +15,11 @@ public class TermsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup termsView = (ViewGroup) inflater.inflate(R.layout.fragment_terms, container,false);
+
+
+
+
+
         return termsView;
     }
 }
