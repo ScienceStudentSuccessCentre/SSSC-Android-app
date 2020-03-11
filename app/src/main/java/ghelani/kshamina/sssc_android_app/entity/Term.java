@@ -59,9 +59,10 @@ public class Term {
         return this.termSeason + " " + this.termYear;
     }
 
-    @Override
-    public int compareTo(Term otherTerm){
-        return 1;
-    }
+    //TODO make sure it is in order either in database, or implment this so we can sort
+//    @Override
+//    public int compareTo(Term otherTerm){
+//        return 1;
+//    }
 
 }

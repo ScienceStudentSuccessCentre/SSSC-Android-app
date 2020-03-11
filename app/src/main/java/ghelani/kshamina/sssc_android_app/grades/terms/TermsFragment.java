@@ -42,8 +42,6 @@ public class TermsFragment extends Fragment {
 
     SharedPreferences preferences;
 
-    final String url = "http://sssc-carleton-app-server.herokuapp.com/terms";
-
 
     private View.OnClickListener onItemClickListener = new View.OnClickListener() {
         @Override
@@ -66,7 +64,7 @@ public class TermsFragment extends Fragment {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        recyclerView = termsView.findViewById(R.id.eventsList);
+        recyclerView = termsView.findViewById(R.id.termsList); //todo
         recyclerView.setHasFixedSize(true);
 
 //        adapter = new EventsAdapter(termList); //TODO terms adapter
@@ -95,7 +93,7 @@ public class TermsFragment extends Fragment {
     }
 
 
-
+    //TODO implement this, look at courses example instead of the event one since it is local
     private void getTermData() {
         new Thread(new Runnable() {
             @Override
