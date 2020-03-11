@@ -58,4 +58,10 @@ public class Term {
     public String toString() {
         return this.termSeason + " " + this.termYear;
     }
+
+    @Override
+    public int compareTo(Term otherTerm){
+        return 1;
+    }
+
 }
