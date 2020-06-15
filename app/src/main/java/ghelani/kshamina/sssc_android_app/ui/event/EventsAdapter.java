@@ -1,6 +1,6 @@
 package ghelani.kshamina.sssc_android_app.ui.event;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
