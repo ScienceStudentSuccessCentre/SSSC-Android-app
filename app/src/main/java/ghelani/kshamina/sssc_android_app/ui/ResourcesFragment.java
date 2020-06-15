@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app;
+package ghelani.kshamina.sssc_android_app.ui;
 
 
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import ghelani.kshamina.sssc_android_app.R;
 
 /**
  * A simple {@link Fragment} subclass.

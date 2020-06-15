@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app;
+package ghelani.kshamina.sssc_android_app.ui;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+
+import ghelani.kshamina.sssc_android_app.R;
 
 public class SettingsFragment extends Fragment {
 

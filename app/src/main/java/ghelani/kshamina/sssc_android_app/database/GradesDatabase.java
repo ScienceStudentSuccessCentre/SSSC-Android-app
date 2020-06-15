@@ -1,14 +1,10 @@
-package ghelani.kshamina.sssc_android_app;
+package ghelani.kshamina.sssc_android_app.database;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import ghelani.kshamina.sssc_android_app.DAO.AssignmentDao;
-import ghelani.kshamina.sssc_android_app.DAO.CourseDao;
-import ghelani.kshamina.sssc_android_app.DAO.TermDao;
-import ghelani.kshamina.sssc_android_app.DAO.WeightDao;
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.entity.Course;
 import ghelani.kshamina.sssc_android_app.entity.Term;

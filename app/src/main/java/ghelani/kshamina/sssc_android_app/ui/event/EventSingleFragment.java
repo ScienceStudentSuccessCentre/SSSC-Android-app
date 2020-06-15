@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.event;
+package ghelani.kshamina.sssc_android_app.ui.event;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;

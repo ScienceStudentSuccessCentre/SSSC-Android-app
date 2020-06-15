@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.grades.terms;
+package ghelani.kshamina.sssc_android_app.ui.grades.terms;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

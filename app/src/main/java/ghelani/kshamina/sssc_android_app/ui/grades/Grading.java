@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.grades;
+package ghelani.kshamina.sssc_android_app.ui.grades;
 
 import java.util.HashMap;
 import java.util.List;

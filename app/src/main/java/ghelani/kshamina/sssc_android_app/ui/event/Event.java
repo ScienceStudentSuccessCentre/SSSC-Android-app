@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.event;
+package ghelani.kshamina.sssc_android_app.ui.event;
 
 import org.json.JSONException;
 import org.json.JSONObject;

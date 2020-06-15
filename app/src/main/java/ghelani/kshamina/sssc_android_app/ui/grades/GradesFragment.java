@@ -1,8 +1,6 @@
-package ghelani.kshamina.sssc_android_app.grades;
+package ghelani.kshamina.sssc_android_app.ui.grades;
 
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,13 +11,11 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.grades.calculator.CalculatorFragment;
-import ghelani.kshamina.sssc_android_app.grades.planner.PlannerFragment;
-import ghelani.kshamina.sssc_android_app.grades.terms.TermsFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.calculator.CalculatorFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.planner.PlannerFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.TermsFragment;
 
 
 /**

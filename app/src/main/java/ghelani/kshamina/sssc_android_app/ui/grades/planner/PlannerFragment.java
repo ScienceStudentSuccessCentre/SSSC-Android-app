@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.grades.planner;
+package ghelani.kshamina.sssc_android_app.ui.grades.planner;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +15,7 @@ import android.widget.TextView;
 import java.util.Locale;
 
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.grades.Grading;
+import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
 
 public class PlannerFragment extends Fragment {
     // Variables for the term CGPA part

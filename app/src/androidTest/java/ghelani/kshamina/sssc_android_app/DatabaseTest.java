@@ -12,10 +12,11 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import ghelani.kshamina.sssc_android_app.DAO.AssignmentDao;
-import ghelani.kshamina.sssc_android_app.DAO.CourseDao;
-import ghelani.kshamina.sssc_android_app.DAO.TermDao;
-import ghelani.kshamina.sssc_android_app.DAO.WeightDao;
+import ghelani.kshamina.sssc_android_app.database.AssignmentDao;
+import ghelani.kshamina.sssc_android_app.database.CourseDao;
+import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
+import ghelani.kshamina.sssc_android_app.database.TermDao;
+import ghelani.kshamina.sssc_android_app.database.WeightDao;
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.entity.Course;
 import ghelani.kshamina.sssc_android_app.entity.Term;

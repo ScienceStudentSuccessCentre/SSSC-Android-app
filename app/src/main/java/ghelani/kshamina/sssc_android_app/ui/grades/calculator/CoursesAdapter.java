@@ -1,11 +1,9 @@
-package ghelani.kshamina.sssc_android_app.grades.calculator;
+package ghelani.kshamina.sssc_android_app.ui.grades.calculator;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +12,8 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Locale;
 
-import ghelani.kshamina.sssc_android_app.DAO.TermDao;
-import ghelani.kshamina.sssc_android_app.GradesDatabase;
+import ghelani.kshamina.sssc_android_app.database.TermDao;
+import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.entity.Course;
 import ghelani.kshamina.sssc_android_app.entity.Term;

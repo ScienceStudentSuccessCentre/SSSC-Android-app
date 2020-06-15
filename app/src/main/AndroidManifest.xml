@@ -27,7 +27,7 @@
             android:screenOrientation="portrait">
         </activity>
 
-        <receiver android:name=".event.EventAlert">
+        <receiver android:name=".ui.event.EventAlert">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.INPUT_METHOD_CHANGED" />

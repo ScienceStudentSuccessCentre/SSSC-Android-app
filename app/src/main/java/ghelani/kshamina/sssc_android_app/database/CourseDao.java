@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.DAO;
+package ghelani.kshamina.sssc_android_app.database;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;

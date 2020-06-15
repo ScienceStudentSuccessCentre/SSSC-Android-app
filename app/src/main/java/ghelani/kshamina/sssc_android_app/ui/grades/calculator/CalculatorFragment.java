@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.grades.calculator;
+package ghelani.kshamina.sssc_android_app.ui.grades.calculator;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,14 +20,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import ghelani.kshamina.sssc_android_app.DAO.CourseDao;
-import ghelani.kshamina.sssc_android_app.DAO.TermDao;
-import ghelani.kshamina.sssc_android_app.GradesDatabase;
+import ghelani.kshamina.sssc_android_app.database.CourseDao;
+import ghelani.kshamina.sssc_android_app.database.TermDao;
+import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.SettingsFragment;
+import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
 import ghelani.kshamina.sssc_android_app.entity.Course;
 import ghelani.kshamina.sssc_android_app.entity.Term;
-import ghelani.kshamina.sssc_android_app.grades.Grading;
+import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
 
 public class CalculatorFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 

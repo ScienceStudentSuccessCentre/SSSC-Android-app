@@ -14,10 +14,12 @@ import android.webkit.WebView;
 
 import com.facebook.stetho.Stetho;
 
-import ghelani.kshamina.sssc_android_app.event.Event;
-import ghelani.kshamina.sssc_android_app.event.EventSingleFragment;
-import ghelani.kshamina.sssc_android_app.event.EventsFragment;
-import ghelani.kshamina.sssc_android_app.grades.GradesFragment;
+import ghelani.kshamina.sssc_android_app.ui.ResourcesFragment;
+import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
+import ghelani.kshamina.sssc_android_app.ui.event.Event;
+import ghelani.kshamina.sssc_android_app.ui.event.EventSingleFragment;
+import ghelani.kshamina.sssc_android_app.ui.event.EventsFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.GradesFragment;
 
 public class MainActivity extends AppCompatActivity {
     final EventsFragment fragment1 = new EventsFragment();

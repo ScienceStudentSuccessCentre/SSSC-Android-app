@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.event;
+package ghelani.kshamina.sssc_android_app.ui.event;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
