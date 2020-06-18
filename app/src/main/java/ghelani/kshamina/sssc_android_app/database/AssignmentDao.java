@@ -21,12 +21,12 @@ public interface AssignmentDao {
     @Delete
     void deleteAssignment(Assignment assignment);
 
-    @Query("SELECT * FROM assignment")
+    @Query("SELECT * FROM assignments")
     List<Assignment> getAllAssignments();
 
-    @Query("SELECT * From assignment WHERE assignment_id = :id")
+    @Query("SELECT * From assignments WHERE assignment_id = :id")
     List<Assignment> getAssignmentsByID(String id);
 
-    @Query("SELECT * FROM assignment WHERE assignment_course_id = :courseId")
+    @Query("SELECT * FROM assignments WHERE assignment_course_id = :courseId")
     List<Assignment> getAssignmentsByCourseId(String courseId);
 }

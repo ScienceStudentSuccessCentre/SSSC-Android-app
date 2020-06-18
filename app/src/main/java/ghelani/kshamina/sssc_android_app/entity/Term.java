@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 import java.util.UUID;
 
-@Entity
+@Entity(tableName = "terms")
 public class Term {
 
     public enum Season { SUMMER, WINTER, FALL };
@@ -31,10 +31,9 @@ public class Term {
     }
 
     public String asShortString() {
-        return "[" +
+        return
                 this.termSeason.toString().charAt(0) +
-                (this.termYear.length() == 4 ? this.termYear.substring(2, 4) : this.termYear) +
-                "]";
+                (this.termYear.length() == 4 ? this.termYear.substring(2, 4) : this.termYear) ;
     }
 
     @Override

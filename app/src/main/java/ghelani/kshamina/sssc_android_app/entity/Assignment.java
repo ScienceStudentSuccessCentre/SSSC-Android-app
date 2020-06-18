@@ -11,7 +11,7 @@ import java.util.UUID;
 
 import static androidx.room.ForeignKey.CASCADE;
 
-@Entity(foreignKeys = @ForeignKey(
+@Entity(tableName = "assignments",foreignKeys = @ForeignKey(
         entity = Course.class,
         parentColumns = "course_id",
         childColumns = "assignment_course_id",

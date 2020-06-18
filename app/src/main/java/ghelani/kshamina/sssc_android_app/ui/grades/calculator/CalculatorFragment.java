@@ -20,21 +20,28 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import ghelani.kshamina.sssc_android_app.database.CourseDao;
-import ghelani.kshamina.sssc_android_app.database.TermDao;
-import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
+import javax.inject.Inject;
+
+import ghelani.kshamina.sssc_android_app.BaseDaggerFragment;
 import ghelani.kshamina.sssc_android_app.R;
+import ghelani.kshamina.sssc_android_app.repository.CourseRepository;
+import ghelani.kshamina.sssc_android_app.repository.TermRepository;
 import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
 import ghelani.kshamina.sssc_android_app.entity.Course;
 import ghelani.kshamina.sssc_android_app.entity.Term;
 import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
 
-public class CalculatorFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class CalculatorFragment extends BaseDaggerFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     // Data model
     private FilteredCourseList filteredCourseList;
     private List<Course> adapterList;    // Need to keep a reference to the list used by the adapter,
-                                         // and add to/remove from it as needed
+
+    @Inject
+    TermRepository termRepository;                                     // and add to/remove from it as needed
+
+    @Inject
+    CourseRepository courseRepository;
 
     // Components
     private TextView calculatedOverallCGPA;
@@ -89,7 +96,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
         loadCourseData();
 
         // Update CGPAs based on courses
-        updateCGPAs();
+       updateCGPAs();
 
         return calculatorView;
     }
@@ -97,6 +104,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
     /**
      * Populates courseList with the contents of the database and updates the RecyclerView.
      */
+
     private void loadCourseData() {
         Thread thread = new Thread(() -> {
              filteredCourseList.clear();
@@ -136,19 +144,14 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
                      dummyTerm2.termId
              );
 
-             GradesDatabase db = GradesDatabase.getInstance(getActivity());
-             GradesDatabase.emptyDatabase();  // TODO remove this when dummy data is removed
-             TermDao termDao = db.getTermDao();
-             CourseDao courseDao = db.getCourseDao();
+             termRepository.insert(dummyTerm1);
+            termRepository.insert(dummyTerm2);
+            courseRepository.insertCourse(dummyCourse1);
+            courseRepository.insertCourse(dummyCourse2);
+            courseRepository.insertCourse(dummyCourse3);
+            courseRepository.insertCourse(dummyCourse4);
 
-             termDao.insertTerm(dummyTerm1);
-             termDao.insertTerm(dummyTerm2);
-             courseDao.insertCourse(dummyCourse1);
-             courseDao.insertCourse(dummyCourse2);
-             courseDao.insertCourse(dummyCourse3);
-             courseDao.insertCourse(dummyCourse4);
-
-             filteredCourseList.addAll(courseDao.getAllCourses());
+             filteredCourseList.addAll(courseRepository.getAllCourses());
              updateAdapterList();
         });
 

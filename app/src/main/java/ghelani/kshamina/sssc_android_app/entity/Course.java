@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 import java.util.UUID;
 
-@Entity(foreignKeys = @ForeignKey(
+@Entity(tableName = "courses",foreignKeys = @ForeignKey(
         entity = Term.class,
         parentColumns = "term_id",
         childColumns = "course_term_id",

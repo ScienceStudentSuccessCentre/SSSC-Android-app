@@ -21,12 +21,12 @@ public interface WeightDao {
     @Delete
     void deleteWeight(Weight weight);
 
-    @Query("SELECT * FROM weight")
+    @Query("SELECT * FROM weights")
     List<Weight> getAllWeights();
 
-    @Query("SELECT * From weight WHERE weight_id = :id")
+    @Query("SELECT * From weights WHERE weight_id = :id")
     List<Weight> getWeightsByID(String id);
 
-    @Query("SELECT * FROM weight WHERE weight_course_id = :courseId")
+    @Query("SELECT * FROM weights WHERE weight_course_id = :courseId")
     List<Weight> getWeightsByCourseId(String courseId);
 }

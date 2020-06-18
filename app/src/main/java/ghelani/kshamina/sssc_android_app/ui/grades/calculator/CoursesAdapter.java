@@ -50,6 +50,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHo
         holder.letterGrade.setText(course.courseFinalGrade == null ? "N/A" : course.courseFinalGrade);
 
         // Retrieve term from database
+        /*
         Thread getTermThread = new Thread(() -> {
             TermDao termDao = GradesDatabase.getInstance(activityContext).getTermDao();
             Term courseTerm = termDao.getTermById(course.courseTermId);
@@ -64,6 +65,8 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHo
         catch (InterruptedException e) {
             e.printStackTrace();
         }
+        */
+
     }
 
     @Override

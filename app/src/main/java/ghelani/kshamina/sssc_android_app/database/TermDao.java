@@ -9,18 +9,19 @@ import androidx.room.Query;
 import java.util.List;
 
 import ghelani.kshamina.sssc_android_app.entity.Term;
+import io.reactivex.Single;
 
 @Dao
-public interface TermDao {
+public abstract class TermDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertTerm(Term term);
+    public abstract void insertTerm(Term term);
 
     @Delete
-    void deleteTerm(Term term);
+    public abstract void deleteTerm(Term term);
 
-    @Query("SELECT * FROM term")
-    List<Term> getAllTerms();
+    @Query("SELECT * FROM terms ORDER BY term_year DESC")
+    public abstract Single<List<Term>> getAllTerms();
 
-    @Query("SELECT * FROM term where term_id=:termId")
-    Term getTermById(String termId);
+    @Query("SELECT * FROM terms where term_id=:termId")
+    abstract Term getTermById(String termId);
 }
