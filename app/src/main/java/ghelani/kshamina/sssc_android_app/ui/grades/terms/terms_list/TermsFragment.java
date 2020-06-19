@@ -28,6 +28,7 @@ import ghelani.kshamina.sssc_android_app.BaseDaggerFragment;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
+import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermFragment;
 
 public class TermsFragment extends BaseDaggerFragment {
@@ -69,25 +70,26 @@ public class TermsFragment extends BaseDaggerFragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
 
         termsViewModel = new ViewModelProvider(this, viewModelFactory).get(TermsViewModel.class);
-        termsViewModel.termsState.observe(this, termViewState -> {
+        termsViewModel.getState().observe(this, termViewState -> {
             if (termViewState.isLoading()) {
                 System.out.println("Terms Loading");
             } else if (termViewState.isError()) {
                 System.out.println("Terms ERROR: " + termViewState.getError());
             } else if (termViewState.isSuccess()) {
 
-                recyclerView.setAdapter(new TermsListAdapter(termViewState.getTerms(), termsViewModel));
+                //recyclerView.setAdapter(new TermsListAdapter(termViewState.getItems(), termsViewModel));
+                recyclerView.setAdapter(new MainListAdapter(getActivity(), termViewState.getItems(),termsViewModel));
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
         });
 
-        termsViewModel.isDeleteMode.observe(this, isDeleteMode -> {
+        termsViewModel.getIsDeleteMode().observe(this, isDeleteMode -> {
 
-                termsViewModel.getTerms();
+                termsViewModel.fetchItems();
 
         });
 
-        termsViewModel.getTerms();
+        termsViewModel.fetchItems();
     }
 
     @Override
@@ -110,13 +112,14 @@ public class TermsFragment extends BaseDaggerFragment {
             case R.id.deleteActionItem:
                 //item.setVisible(false);
                // cancelDeleteItem.setVisible(true);
-                termsViewModel.isDeleteMode.setValue(true);
+                termsViewModel.setDeleteMode(true);
 
                 return true;
             case R.id.cancelDeleteItem:
                 //item.setVisible(false);
                // deleteItem.setVisible(true);
-                termsViewModel.isDeleteMode.setValue(false);
+                termsViewModel.setDeleteMode(false);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

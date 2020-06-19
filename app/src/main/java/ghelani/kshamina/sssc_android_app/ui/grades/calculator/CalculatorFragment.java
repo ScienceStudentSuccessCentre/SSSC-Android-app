@@ -24,11 +24,12 @@ import javax.inject.Inject;
 
 import ghelani.kshamina.sssc_android_app.BaseDaggerFragment;
 import ghelani.kshamina.sssc_android_app.R;
+import ghelani.kshamina.sssc_android_app.entity.TermEntity;
+import ghelani.kshamina.sssc_android_app.model.Term;
 import ghelani.kshamina.sssc_android_app.repository.CourseRepository;
 import ghelani.kshamina.sssc_android_app.repository.TermRepository;
 import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
 import ghelani.kshamina.sssc_android_app.entity.Course;
-import ghelani.kshamina.sssc_android_app.entity.Term;
 import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
 
 public class CalculatorFragment extends BaseDaggerFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -93,10 +94,10 @@ public class CalculatorFragment extends BaseDaggerFragment implements SharedPref
         preferences.registerOnSharedPreferenceChangeListener(this);
 
         // Load courses from DB
-        loadCourseData();
+       // loadCourseData();
 
         // Update CGPAs based on courses
-       updateCGPAs();
+      // updateCGPAs();
 
         return calculatorView;
     }
@@ -104,13 +105,13 @@ public class CalculatorFragment extends BaseDaggerFragment implements SharedPref
     /**
      * Populates courseList with the contents of the database and updates the RecyclerView.
      */
-
+/*
     private void loadCourseData() {
         Thread thread = new Thread(() -> {
              filteredCourseList.clear();
 
-             Term dummyTerm1 = new Term(Term.Season.WINTER, "2019");  // To satisfy foreign key constraint
-             Term dummyTerm2 = new Term(Term.Season.FALL, "2020");
+             TermEntity dummyTerm1 = new TermEntity(Term.Season.WINTER, "2019");  // To satisfy foreign key constraint
+            TermEntity dummyTerm2 = new TermEntity(Term.Season.FALL, "2020");
              Course dummyCourse1 = new Course(
                      "Introduction to Computer Science I",
                      "COMP 1405",
@@ -164,7 +165,7 @@ public class CalculatorFragment extends BaseDaggerFragment implements SharedPref
             e.printStackTrace();
         }
     }
-
+*/
     private void updateCGPAs() {
         double overallCGPA = Grading.calculateOverallCGPA(filteredCourseList.getCurrentCourseList());
         calculatedOverallCGPA.setText(overallCGPA == -1 ?

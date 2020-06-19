@@ -1,13 +1,14 @@
 package ghelani.kshamina.sssc_android_app.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
-import ghelani.kshamina.sssc_android_app.entity.Term;
+import ghelani.kshamina.sssc_android_app.entity.TermEntity;
+import ghelani.kshamina.sssc_android_app.model.Term;
 import io.reactivex.Single;
-
 
 public class TermRepository {
     private  GradesDatabase database;
@@ -19,15 +20,20 @@ public class TermRepository {
     }
 
     public void insert(Term term){
-        database.getTermDao().insertTerm(term);
+        database.getTermDao().insertTerm(new TermEntity(Term.Season.valueOf(term.getSeason()), term.getYear()));
     }
 
     public void delete(Term term){
-        database.getTermDao().deleteTerm(term);
+        database.getTermDao().deleteTerm(new TermEntity(term));
     }
 
     public Single<List<Term>> getAllTerms(){
-
-        return database.getTermDao().getAllTerms();
+        return database.getTermDao().getAllTerms().flatMap(termEntities -> {
+            List<Term> termsList = new ArrayList<>();
+            for(TermEntity termEntity: termEntities) {
+                termsList.add(new Term(termEntity.getTermId(), termEntity.getTermSeason(),termEntity.getTermYear()));
+            }
+            return Single.just(termsList);
+        });
     }
 }

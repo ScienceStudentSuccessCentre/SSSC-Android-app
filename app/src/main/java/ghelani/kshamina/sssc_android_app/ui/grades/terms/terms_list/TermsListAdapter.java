@@ -8,15 +8,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import ghelani.kshamina.sssc_android_app.databinding.ItemTermBinding;
-import ghelani.kshamina.sssc_android_app.entity.Term;
+import ghelani.kshamina.sssc_android_app.model.Term;
+import ghelani.kshamina.sssc_android_app.ui.common.list.ListViewModel;
 
 public class TermsListAdapter extends RecyclerView.Adapter<TermsViewHolder> {
 
     private List<Term> termList;
-    private TermsViewModel viewModel;
+    private ListViewModel viewModel;
 
-    public TermsListAdapter(List<Term> termList, TermsViewModel viewModel) {
+    public TermsListAdapter(List<Term> termList, ListViewModel viewModel) {
         this.termList = termList;
         this.viewModel = viewModel;
     }
@@ -24,15 +24,16 @@ public class TermsListAdapter extends RecyclerView.Adapter<TermsViewHolder> {
     @NonNull
     @Override
     public TermsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemTermBinding binding = ItemTermBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        //ItemListBinding binding = ItemListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
 
-        return new TermsViewHolder(binding);
+        //return new TermsViewHolder(binding);
+        return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull TermsViewHolder holder, int position) {
         Term term = termList.get(position);
-        holder.onBind(term,viewModel);
+       //holder.onBind(term,viewModel);
     }
 
     @Override

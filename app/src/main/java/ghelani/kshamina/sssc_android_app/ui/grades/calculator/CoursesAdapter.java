@@ -16,7 +16,6 @@ import ghelani.kshamina.sssc_android_app.database.TermDao;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.entity.Course;
-import ghelani.kshamina.sssc_android_app.entity.Term;
 
 public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHolder> {
 

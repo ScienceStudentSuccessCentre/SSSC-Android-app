@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import ghelani.kshamina.sssc_android_app.entity.Term;
+import ghelani.kshamina.sssc_android_app.model.Term;
 import ghelani.kshamina.sssc_android_app.repository.TermRepository;
 import io.reactivex.Completable;
 import io.reactivex.Scheduler;
@@ -71,7 +71,7 @@ public class AddTermPresenterImpl implements AddTermContract.Presenter {
 
     @Override
     public void onCreate() {
-        Term newTerm = new Term(Term.Season.valueOf(seasons.get(seasonSelected)), years.get(yearSelected));
+        Term newTerm = new Term(seasons.get(seasonSelected), years.get(yearSelected));
         Completable.fromAction(() -> termRepository.insert(newTerm))
                 .subscribeOn(Schedulers.io())
                 .observeOn(mainScheduler)

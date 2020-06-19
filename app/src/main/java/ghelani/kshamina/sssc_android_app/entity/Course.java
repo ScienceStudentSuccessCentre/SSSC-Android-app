@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import java.util.UUID;
 
 @Entity(tableName = "courses",foreignKeys = @ForeignKey(
-        entity = Term.class,
+        entity = TermEntity.class,
         parentColumns = "term_id",
         childColumns = "course_term_id",
         onDelete = ForeignKey.CASCADE
