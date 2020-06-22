@@ -7,6 +7,9 @@ import javax.inject.Inject;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.entity.Course;
 
+/**
+ * Abstraction over accessing the Course DAO through the database directly
+ */
 public class CourseRepository {
     private GradesDatabase database;
 

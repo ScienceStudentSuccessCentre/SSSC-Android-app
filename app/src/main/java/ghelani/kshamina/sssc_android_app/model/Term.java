@@ -4,6 +4,9 @@ import androidx.annotation.Nullable;
 
 import ghelani.kshamina.sssc_android_app.ui.common.model.TermItem;
 
+/**
+ * A domain model for term classes coming from the local database
+ */
 public class Term {
     public enum Season {SUMMER, WINTER, FALL}
 

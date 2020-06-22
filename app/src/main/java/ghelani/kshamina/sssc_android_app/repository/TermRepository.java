@@ -10,6 +10,10 @@ import ghelani.kshamina.sssc_android_app.entity.TermEntity;
 import ghelani.kshamina.sssc_android_app.model.Term;
 import io.reactivex.Single;
 
+/**
+ * Abstraction over accessing the Term DAO through the database directly
+ * Convert domain models into entities
+ */
 public class TermRepository {
     private  GradesDatabase database;
 

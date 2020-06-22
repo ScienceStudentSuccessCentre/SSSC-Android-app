@@ -22,6 +22,9 @@ import ghelani.kshamina.sssc_android_app.ui.common.list.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.model.TermItem;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list.TermsViewModel;
 
+/**
+ * List adapter for the Terms list
+ */
 public class TermsAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
     private LayoutInflater inflater;
     private TermsViewModel viewModel;

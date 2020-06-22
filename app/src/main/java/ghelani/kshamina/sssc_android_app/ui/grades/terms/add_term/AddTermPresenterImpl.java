@@ -72,6 +72,8 @@ public class AddTermPresenterImpl implements AddTermContract.Presenter {
     @Override
     public void onCreate() {
         Term newTerm = new Term(seasons.get(seasonSelected), years.get(yearSelected));
+
+        // Run insrt command on background thread called Scheduler.io and observe result on mainthread
         Completable.fromAction(() -> termRepository.insert(newTerm))
                 .subscribeOn(Schedulers.io())
                 .observeOn(mainScheduler)
