@@ -2,6 +2,8 @@ package ghelani.kshamina.sssc_android_app.model;
 
 import androidx.annotation.Nullable;
 
+import ghelani.kshamina.sssc_android_app.ui.common.model.TermItem;
+
 public class Term {
     public enum Season {SUMMER, WINTER, FALL}
 
@@ -20,7 +22,11 @@ public class Term {
         this.year = year;
     }
 
-
+    public Term(TermItem item){
+        this.id = item.getId();
+        this.season = item.getSeason();
+        this.year = item.getYear();
+    }
 
     @Override
     public boolean equals(@Nullable Object obj) {

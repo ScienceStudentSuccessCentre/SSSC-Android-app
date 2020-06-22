@@ -3,11 +3,13 @@ package ghelani.kshamina.sssc_android_app.ui.grades.calculator;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,9 @@ import ghelani.kshamina.sssc_android_app.repository.TermRepository;
 import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
 import ghelani.kshamina.sssc_android_app.entity.Course;
 import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class CalculatorFragment extends BaseDaggerFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -67,7 +72,7 @@ public class CalculatorFragment extends BaseDaggerFragment implements SharedPref
 
         setHasOptionsMenu(true);
 
-        ViewGroup calculatorView = (ViewGroup) inflater.inflate(R.layout.fragment_calculator, container,false);
+        ViewGroup calculatorView = (ViewGroup) inflater.inflate(R.layout.fragment_calculator, container, false);
 
         // Initialize data model
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -94,10 +99,10 @@ public class CalculatorFragment extends BaseDaggerFragment implements SharedPref
         preferences.registerOnSharedPreferenceChangeListener(this);
 
         // Load courses from DB
-       // loadCourseData();
+        loadCourseData();
 
         // Update CGPAs based on courses
-      // updateCGPAs();
+        updateCGPAs();
 
         return calculatorView;
     }
@@ -105,67 +110,72 @@ public class CalculatorFragment extends BaseDaggerFragment implements SharedPref
     /**
      * Populates courseList with the contents of the database and updates the RecyclerView.
      */
-/*
+
     private void loadCourseData() {
         Thread thread = new Thread(() -> {
-             filteredCourseList.clear();
+            filteredCourseList.clear();
 
-             TermEntity dummyTerm1 = new TermEntity(Term.Season.WINTER, "2019");  // To satisfy foreign key constraint
+//             TermEntity dummyTerm1 = new TermEntity(Term.Season.WINTER, "2019");  // To satisfy foreign key constraint
+//            TermEntity dummyTerm2 = new TermEntity(Term.Season.FALL, "2020");
+            TermEntity dummyTerm1 = new TermEntity(Term.Season.WINTER, "2019");  // To satisfy foreign key constraint
             TermEntity dummyTerm2 = new TermEntity(Term.Season.FALL, "2020");
-             Course dummyCourse1 = new Course(
-                     "Introduction to Computer Science I",
-                     "COMP 1405",
-                     0.5,
-                     true,
-                     "A",
-                     dummyTerm1.termId
-             );
-             Course dummyCourse2 = new Course(
-                     "Introduction to Computer Science II",
-                     "COMP 1406",
-                     0.5,
-                     true,
-                     "A+",
-                     dummyTerm1.termId
-             );
-             Course dummyCourse3 = new Course(
-                     "Introduction to Logic",
-                     "PHIL 2001",
-                     0.5,
-                     false,
-                     null,
-                     dummyTerm2.termId
-             );
-             Course dummyCourse4 = new Course(
-                     "Introduction to Organizational Behaviour",
-                     "BUSI 2121",
-                     0.5,
-                     false,
-                     "D-",
-                     dummyTerm2.termId
-             );
 
-             termRepository.insert(dummyTerm1);
-            termRepository.insert(dummyTerm2);
+            String termId1 = termRepository.insert(new Term(dummyTerm1.getTermId(), dummyTerm1.getTermSeason(), dummyTerm1.getTermYear()));
+
+            String termId2 = termRepository.insert(new Term(dummyTerm2.getTermId(), dummyTerm2.getTermSeason(), dummyTerm2.getTermYear()));
+
+            Course dummyCourse1 = new Course(
+                    "Introduction to Computer Science I",
+                    "COMP 1405",
+                    0.5,
+                    true,
+                    "A",
+                    termId1
+            );
+            Course dummyCourse2 = new Course(
+                    "Introduction to Computer Science II",
+                    "COMP 1406",
+                    0.5,
+                    true,
+                    "A+",
+                    termId1
+            );
+            Course dummyCourse3 = new Course(
+                    "Introduction to Logic",
+                    "PHIL 2001",
+                    0.5,
+                    false,
+                    null,
+                    termId2
+            );
+            Course dummyCourse4 = new Course(
+                    "Introduction to Organizational Behaviour",
+                    "BUSI 2121",
+                    0.5,
+                    false,
+                    "D-",
+                    termId2
+            );
+
+
             courseRepository.insertCourse(dummyCourse1);
             courseRepository.insertCourse(dummyCourse2);
             courseRepository.insertCourse(dummyCourse3);
             courseRepository.insertCourse(dummyCourse4);
 
-             filteredCourseList.addAll(courseRepository.getAllCourses());
-             updateAdapterList();
+            filteredCourseList.addAll(courseRepository.getAllCourses());
+            updateAdapterList();
         });
 
         thread.start();
 
         try {
             thread.join();  // Wait for it to complete
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-*/
+
     private void updateCGPAs() {
         double overallCGPA = Grading.calculateOverallCGPA(filteredCourseList.getCurrentCourseList());
         calculatedOverallCGPA.setText(overallCGPA == -1 ?
@@ -256,9 +266,9 @@ public class CalculatorFragment extends BaseDaggerFragment implements SharedPref
         public void addAll(Collection<? extends Course> courses) {
             allCourses.addAll(courses);
             filteredCourses.addAll(
-                 courses.stream()
-                    .filter(course -> course.courseFinalGrade != null && !course.courseFinalGrade.isEmpty())
-                    .collect(Collectors.toList())
+                    courses.stream()
+                            .filter(course -> course.courseFinalGrade != null && !course.courseFinalGrade.isEmpty())
+                            .collect(Collectors.toList())
             );
         }
     }

@@ -14,7 +14,7 @@
             android:title="delete"
             app:showAsAction="ifRoom"/>
         <item
-            android:visible="true"
+            android:visible="false"
             android:id="@+id/cancelDeleteItem"
             android:icon="@drawable/ic_close"
             android:title="cancel"

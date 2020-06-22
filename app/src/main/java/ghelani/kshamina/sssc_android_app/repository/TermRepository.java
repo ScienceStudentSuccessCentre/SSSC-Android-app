@@ -19,8 +19,10 @@ public class TermRepository {
 
     }
 
-    public void insert(Term term){
-        database.getTermDao().insertTerm(new TermEntity(Term.Season.valueOf(term.getSeason()), term.getYear()));
+    public String insert(Term term){
+        TermEntity termEntity = new TermEntity(Term.Season.valueOf(term.getSeason()), term.getYear());
+        database.getTermDao().insertTerm(termEntity);
+        return termEntity.getTermId();
     }
 
     public void delete(Term term){

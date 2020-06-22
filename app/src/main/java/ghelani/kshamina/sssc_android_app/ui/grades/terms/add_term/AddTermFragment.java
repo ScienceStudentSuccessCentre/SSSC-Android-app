@@ -102,7 +102,7 @@ public class AddTermFragment extends BaseDaggerFragment implements AddTermContra
     @Override
     public void onResume() {
         super.onResume();
-       // ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
     }
 
     @Override

@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import java.util.List;
+
 import ghelani.kshamina.sssc_android_app.entity.TermEntity;
 import io.reactivex.Single;
 
@@ -22,5 +23,5 @@ public abstract class TermDao {
     public abstract Single<List<TermEntity>> getAllTerms();
 
     @Query("SELECT * FROM terms where term_id=:termId")
-    abstract TermEntity getTermById(String termId);
+    public abstract TermEntity getTermById(String termId);
 }

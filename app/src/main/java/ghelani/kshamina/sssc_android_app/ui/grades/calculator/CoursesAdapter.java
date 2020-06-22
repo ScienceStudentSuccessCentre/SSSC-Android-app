@@ -12,8 +12,6 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Locale;
 
-import ghelani.kshamina.sssc_android_app.database.TermDao;
-import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.entity.Course;
 

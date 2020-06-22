@@ -1,5 +1,6 @@
 package ghelani.kshamina.sssc_android_app.ui.common.model;
 
+import ghelani.kshamina.sssc_android_app.model.Term;
 import ghelani.kshamina.sssc_android_app.ui.common.list.DiffItem;
 
 public class TermItem implements DiffItem {
@@ -12,6 +13,12 @@ public class TermItem implements DiffItem {
         this.season = season;
         this.year = year;
     }
+    public TermItem(Term term) {
+        this.id = term.getId();
+        this.season = term.getSeason();
+        this.year = term.getYear();
+    }
+
 
     public String asShortString() {
         return
