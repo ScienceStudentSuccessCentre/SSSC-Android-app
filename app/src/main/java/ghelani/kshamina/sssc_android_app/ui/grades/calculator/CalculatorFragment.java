@@ -1,5 +1,6 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.calculator;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import ghelani.kshamina.sssc_android_app.BaseDaggerFragment;
+import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.entity.TermEntity;
 import ghelani.kshamina.sssc_android_app.model.Term;
@@ -33,11 +34,8 @@ import ghelani.kshamina.sssc_android_app.repository.TermRepository;
 import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
 import ghelani.kshamina.sssc_android_app.entity.Course;
 import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
-import io.reactivex.Completable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
-public class CalculatorFragment extends BaseDaggerFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class CalculatorFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     // Data model
     private FilteredCourseList filteredCourseList;
@@ -64,6 +62,12 @@ public class CalculatorFragment extends BaseDaggerFragment implements SharedPref
         Course course = filteredCourseList.get(position);
         openCourseSingle(course, view);
     };
+
+    @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
+    }
 
     @Nullable
     @Override

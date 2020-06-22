@@ -1,5 +1,6 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,22 +15,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ghelani.kshamina.sssc_android_app.BaseDaggerFragment;
+import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.ui.grades.GradesFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list.TermsFragment;
 
-public class AddTermFragment extends BaseDaggerFragment implements AddTermContract.View {
+public class AddTermFragment extends Fragment implements AddTermContract.View {
 
     @Inject
     AddTermContract.Presenter presenter;
@@ -52,6 +49,12 @@ public class AddTermFragment extends BaseDaggerFragment implements AddTermContra
     }
 
     @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -60,6 +63,7 @@ public class AddTermFragment extends BaseDaggerFragment implements AddTermContra
         ButterKnife.bind(this, view);
         return view;
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
