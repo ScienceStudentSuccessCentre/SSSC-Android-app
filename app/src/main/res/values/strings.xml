@@ -31,7 +31,7 @@
 
     <string name="settings_cgpa_label">CGPA CALCULATOR</string>
     <string name="settings_in_progress_course">Include In-Progress Courses</string>
-    <string name="settings_in_progress_description">If toggled on, courses without a Final Grade specified will be included in your CGPA calculations on the CGPA Calculator page.</string>
+    <string name="settings_in_progress_description">If toggled on, courseEntity without a Final Grade specified will be included in your CGPA calculations on the CGPA Calculator page.</string>
     <string name="settings_backup_label">BACK UP GRADES</string>
     <string name="settings_backup_button">Back Up Grades</string>
     <string name="settings_backup_description">Open the exported attachment on your device to launch the Science Student Success Center app and restore your data.</string>

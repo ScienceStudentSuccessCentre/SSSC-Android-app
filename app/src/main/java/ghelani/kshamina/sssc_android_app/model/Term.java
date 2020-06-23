@@ -2,8 +2,6 @@ package ghelani.kshamina.sssc_android_app.model;
 
 import androidx.annotation.Nullable;
 
-import ghelani.kshamina.sssc_android_app.ui.common.model.TermItem;
-
 /**
  * A domain model for term classes coming from the local database
  */
@@ -25,12 +23,6 @@ public class Term {
         this.year = year;
     }
 
-    public Term(TermItem item){
-        this.id = item.getId();
-        this.season = item.getSeason();
-        this.year = item.getYear();
-    }
-
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj == null || obj.getClass() != this.getClass()) return false;
@@ -42,7 +34,10 @@ public class Term {
     public int hashCode() {
         return 31 + id.hashCode();
     }
-
+    @Override
+    public String toString() {
+        return this.season + " " + this.year;
+    }
 
     public String getId() {
         return id;
@@ -66,5 +61,11 @@ public class Term {
 
     public void setYear(String year) {
         this.year = year;
+    }
+
+    public String asShortString() {
+        return
+                this.season.toString().charAt(0) +
+                        (this.year.length() == 4 ? this.year.substring(2, 4) : this.year);
     }
 }

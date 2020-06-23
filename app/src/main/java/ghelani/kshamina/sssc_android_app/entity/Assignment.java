@@ -9,10 +9,8 @@ import androidx.annotation.Nullable;
 
 import java.util.UUID;
 
-import static androidx.room.ForeignKey.CASCADE;
-
 @Entity(tableName = "assignments",foreignKeys = @ForeignKey(
-        entity = Course.class,
+        entity = CourseEntity.class,
         parentColumns = "course_id",
         childColumns = "assignment_course_id",
         onDelete = ForeignKey.CASCADE
@@ -31,7 +29,7 @@ public class Assignment {
     @ColumnInfo(name = "assignment_weight_id")
     public String assignmentWeightId;    //foreign key refer to Weight:weights_id
     @ColumnInfo(name = "assignment_course_id")
-    public String assignmentCourseId;    //foreign key refer to Course:course_id
+    public String assignmentCourseId;    //foreign key refer to CourseEntity:course_id
 
     public Assignment() {}
 

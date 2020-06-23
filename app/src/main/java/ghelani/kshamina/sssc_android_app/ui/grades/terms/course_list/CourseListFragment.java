@@ -1,17 +1,33 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.R;
+import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
+import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list.TermsViewModel;
 
 public class CourseListFragment extends Fragment {
 
@@ -21,6 +37,13 @@ public class CourseListFragment extends Fragment {
     private String termID;
     private String termName;
 
+    @Inject
+    ViewModelFactory viewModelFactory;
+
+    private CoursesViewModel courseViewModel;
+
+    @BindView(R.id.coursesRecyclerView)
+    RecyclerView courseRecyclerView;
 
     public static CourseListFragment newInstance(String termID,String termName) {
         Bundle args = new Bundle();
@@ -30,6 +53,12 @@ public class CourseListFragment extends Fragment {
         CourseListFragment fragment = new CourseListFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
     }
 
     @Override
@@ -46,13 +75,43 @@ public class CourseListFragment extends Fragment {
             termName = getArguments().getString(EXTRA_TERM_NAME, "");
         }
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle(termName);
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_course_list, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_course_list, container, false);
+        ButterKnife.bind(this, view);
+
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        FloatingActionButton addCourseBtn = view.findViewById(R.id.addCourseFab);
+        addCourseBtn.setOnClickListener(v -> {
+           // openAddTermScreen();
+        });
 
+        courseRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+
+        courseViewModel = new ViewModelProvider(this, viewModelFactory).get(CoursesViewModel.class);
+        courseViewModel.state.observe(this, termViewState -> {
+            if (termViewState.isLoading()) {
+                System.out.println("Terms Loading");
+            } else if (termViewState.isError()) {
+                System.out.println("Terms ERROR: " + termViewState.getError());
+            } else if (termViewState.isSuccess()) {
+
+                courseRecyclerView.setAdapter(new MainListAdapter(getActivity(), courseViewModel.getCourseItems()));
+                courseRecyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
+
+
+        courseViewModel.isDeleteMode.observe(this, isDeleteMode -> {
+
+            courseViewModel.fetchCoursesByTermId(termID);
+
+        });
+
+        courseViewModel.fetchCoursesByTermId(termID);
     }
 }

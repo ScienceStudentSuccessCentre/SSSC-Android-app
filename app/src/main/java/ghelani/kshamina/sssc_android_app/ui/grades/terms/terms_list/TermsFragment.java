@@ -71,10 +71,12 @@ public class TermsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Terms");
+
         FloatingActionButton addTermBtn = view.findViewById(R.id.addTermFab);
         addTermBtn.setOnClickListener(v -> {
             openAddTermScreen();
         });
+
 
         recyclerView = view.findViewById(R.id.termsRecyclerView);
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
@@ -87,7 +89,7 @@ public class TermsFragment extends Fragment {
                 System.out.println("Terms ERROR: " + termViewState.getError());
             } else if (termViewState.isSuccess()) {
 
-                recyclerView.setAdapter(new MainListAdapter(getActivity(), termsViewModel.getTermItems(),termsViewModel));
+                recyclerView.setAdapter(new MainListAdapter(getActivity(), termsViewModel.getTermItems()));
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
         });

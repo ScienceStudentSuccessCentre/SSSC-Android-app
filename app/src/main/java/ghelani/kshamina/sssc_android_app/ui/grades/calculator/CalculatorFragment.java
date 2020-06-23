@@ -32,14 +32,14 @@ import ghelani.kshamina.sssc_android_app.model.Term;
 import ghelani.kshamina.sssc_android_app.repository.CourseRepository;
 import ghelani.kshamina.sssc_android_app.repository.TermRepository;
 import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
-import ghelani.kshamina.sssc_android_app.entity.Course;
+import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
 
 public class CalculatorFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     // Data model
     private FilteredCourseList filteredCourseList;
-    private List<Course> adapterList;    // Need to keep a reference to the list used by the adapter,
+    private List<CourseEntity> adapterList;    // Need to keep a reference to the list used by the adapter,
 
     @Inject
     TermRepository termRepository;                                     // and add to/remove from it as needed
@@ -55,12 +55,12 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
     private CoursesAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    // OnClick Listener for a single Course
+    // OnClick Listener for a single CourseEntity
     private View.OnClickListener onItemClickListener = view -> {
         RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
         int position = viewHolder.getAdapterPosition();
-        Course course = filteredCourseList.get(position);
-        openCourseSingle(course, view);
+        CourseEntity courseEntity = filteredCourseList.get(position);
+        openCourseSingle(courseEntity, view);
     };
 
     @Override
@@ -128,7 +128,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
 
             String termId2 = termRepository.insert(new Term(dummyTerm2.getTermId(), dummyTerm2.getTermSeason(), dummyTerm2.getTermYear()));
 
-            Course dummyCourse1 = new Course(
+            CourseEntity dummyCourseEntity1 = new CourseEntity(
                     "Introduction to Computer Science I",
                     "COMP 1405",
                     0.5,
@@ -136,7 +136,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
                     "A",
                     termId1
             );
-            Course dummyCourse2 = new Course(
+            CourseEntity dummyCourseEntity2 = new CourseEntity(
                     "Introduction to Computer Science II",
                     "COMP 1406",
                     0.5,
@@ -144,7 +144,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
                     "A+",
                     termId1
             );
-            Course dummyCourse3 = new Course(
+            CourseEntity dummyCourseEntity3 = new CourseEntity(
                     "Introduction to Logic",
                     "PHIL 2001",
                     0.5,
@@ -152,7 +152,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
                     null,
                     termId2
             );
-            Course dummyCourse4 = new Course(
+            CourseEntity dummyCourseEntity4 = new CourseEntity(
                     "Introduction to Organizational Behaviour",
                     "BUSI 2121",
                     0.5,
@@ -162,10 +162,10 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
             );
 
 
-            courseRepository.insertCourse(dummyCourse1);
-            courseRepository.insertCourse(dummyCourse2);
-            courseRepository.insertCourse(dummyCourse3);
-            courseRepository.insertCourse(dummyCourse4);
+            courseRepository.insertCourse(dummyCourseEntity1);
+            courseRepository.insertCourse(dummyCourseEntity2);
+            courseRepository.insertCourse(dummyCourseEntity3);
+            courseRepository.insertCourse(dummyCourseEntity4);
 
             filteredCourseList.addAll(courseRepository.getAllCourses());
             updateAdapterList();
@@ -185,7 +185,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
         calculatedOverallCGPA.setText(overallCGPA == -1 ?
                 "Overall CGPA: N/A" : String.format(Locale.CANADA, "Overall CGPA: %.1f", overallCGPA));
 
-        List<Course> majorCourses = filteredCourseList.getCurrentCourseList().stream()
+        List<CourseEntity> majorCourses = filteredCourseList.getCurrentCourseList().stream()
                 .filter(course -> course.courseIsMajorCourse)
                 .collect(Collectors.toList());
 
@@ -194,9 +194,9 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
                 "Major CGPA: N/A" : String.format(Locale.CANADA, "Major CGPA: %.1f", overallMajorCGPA));
     }
 
-    private void openCourseSingle(Course course, View view) {
+    private void openCourseSingle(CourseEntity courseEntity, View view) {
         // TODO implement
-        Toast.makeText(getActivity(), "Opening " + course.courseCode, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Opening " + courseEntity.courseCode, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -233,17 +233,17 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
      * A List, except it can switch between filtered and non-filtered mode
      */
     private class FilteredCourseList {
-        private List<Course> allCourses = new ArrayList<>();
-        private List<Course> filteredCourses = new ArrayList<>();
+        private List<CourseEntity> allCourses = new ArrayList<>();
+        private List<CourseEntity> filteredCourses = new ArrayList<>();
 
         private boolean isFiltered;
 
-        public FilteredCourseList(List<Course> allCourses, boolean shouldShow) {
+        public FilteredCourseList(List<CourseEntity> allCourses, boolean shouldShow) {
             this.addAll(allCourses);
             this.isFiltered = !shouldShow;
         }
 
-        public Course get(int index) {
+        public CourseEntity get(int index) {
             if (isFiltered) return filteredCourses.get(index);
             return allCourses.get(index);
         }
@@ -257,7 +257,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
             this.isFiltered = !shouldShow;
         }
 
-        public List<Course> getCurrentCourseList() {
+        public List<CourseEntity> getCurrentCourseList() {
             if (isFiltered) return this.filteredCourses;
             return this.allCourses;
         }
@@ -267,7 +267,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
             filteredCourses.clear();
         }
 
-        public void addAll(Collection<? extends Course> courses) {
+        public void addAll(Collection<? extends CourseEntity> courses) {
             allCourses.addAll(courses);
             filteredCourses.addAll(
                     courses.stream()

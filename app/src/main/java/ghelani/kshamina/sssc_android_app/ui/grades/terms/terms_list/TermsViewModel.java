@@ -1,5 +1,7 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list;
 
+import android.view.View;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -11,9 +13,10 @@ import javax.inject.Inject;
 
 import ghelani.kshamina.sssc_android_app.model.Term;
 import ghelani.kshamina.sssc_android_app.repository.TermRepository;
-import ghelani.kshamina.sssc_android_app.ui.common.list.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.common.events.ItemClickListener;
+import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
-import ghelani.kshamina.sssc_android_app.ui.common.model.TermItem;
+import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
 import io.reactivex.Completable;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -61,38 +64,53 @@ public class TermsViewModel extends ViewModel {
     public List<DiffItem> getTermItems(){
         List<DiffItem> termItems = new ArrayList<>();
         for(Term term : state.getValue().getItems()){
-            termItems.add(new TermItem(term));
+            termItems.add(new ListItem(term.getId(),term.asShortString(),"",term.toString(), View.GONE, new ItemClickListener() {
+
+                @Override
+                public void onItemClicked(String id) {
+                    termRepository.getTermById(id)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new SingleObserver<Term>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(Term term) {
+                                    termSelected.setValue(term);
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+                            });
+                }
+
+                @Override
+                public boolean onItemLongClicked(String id) {
+                    isDeleteMode.setValue(!isDeleteMode.getValue());
+                    return true;
+                }
+
+                @Override
+                public void toggleDeleteMode() {
+
+                }
+
+                @Override
+                public void deleteItem(String id) {
+                    Completable.fromAction(() -> termRepository.delete(id))
+                            .subscribeOn(Schedulers.io())
+                            .subscribe();
+                    fetchTerms();
+                }
+            }));
         }
         return termItems;
     }
-
-    public void deleteItem(Term term) {
-        Completable.fromAction(() -> termRepository.delete(term))
-                .subscribeOn(Schedulers.io())
-                .subscribe();
-        fetchTerms();
-    }
-
-    public void addItem(Term term) {
-        Completable.fromAction(() -> termRepository.insert(term))
-                .subscribeOn(Schedulers.io())
-                .subscribe();
-        fetchTerms();
-    }
-
-    public void updateItem(Term item) {
-
-    }
-
-    public void onItemClicked(Term item) {
-       termSelected.setValue(item);
-    }
-
-    public boolean onItemLongClicked(Term item) {
-        isDeleteMode.setValue(!isDeleteMode.getValue());
-        return true;
-    }
-
 }
 
 

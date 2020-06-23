@@ -15,7 +15,7 @@ import java.util.UUID;
         childColumns = "course_term_id",
         onDelete = ForeignKey.CASCADE
 ))
-public class Course {
+public class CourseEntity {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "course_id")
@@ -33,9 +33,9 @@ public class Course {
     @ColumnInfo(name = "course_term_id")
     public String courseTermId;  //foreign key refer to Term:term_id;
 
-    public Course() {}
+    public CourseEntity() {}
 
-    public Course(String name, String code, double credits, boolean isMajorCourse, String finalGrade, String termId) {
+    public CourseEntity(String name, String code, double credits, boolean isMajorCourse, String finalGrade, String termId) {
         courseId = UUID.randomUUID().toString();
         this.courseName = name;
         this.courseCode = code;
@@ -48,8 +48,8 @@ public class Course {
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        Course course = (Course) obj;
-        return courseId.equals(course.courseId);
+        CourseEntity courseEntity = (CourseEntity) obj;
+        return courseId.equals(courseEntity.courseId);
     }
 
     @Override

@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import java.util.UUID;
 
 @Entity(tableName = "weights",foreignKeys = @ForeignKey(
-        entity = Course.class,
+        entity = CourseEntity.class,
         parentColumns = "course_id",
         childColumns = "weight_course_id",
         onDelete = ForeignKey.CASCADE
@@ -25,7 +25,7 @@ public class Weight {
     @ColumnInfo(name = "weight_value")
     public double weightValue;
     @ColumnInfo(name = "weight_course_id")
-    public String weightCourseId;    //foreign key refer to Course:course_id
+    public String weightCourseId;    //foreign key refer to CourseEntity:course_id
 
     public Weight() {}
 

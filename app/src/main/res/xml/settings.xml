@@ -8,8 +8,8 @@
     <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="include_in_progress_switch"
-        android:title="Include in-progress courses"
-        android:summary="Toggle this off if you do not want to include courses which are currently in-progress."
+        android:title="Include in-progress courseEntity"
+        android:summary="Toggle this off if you do not want to include courseEntity which are currently in-progress."
     />
 
 </androidx.preference.PreferenceScreen>

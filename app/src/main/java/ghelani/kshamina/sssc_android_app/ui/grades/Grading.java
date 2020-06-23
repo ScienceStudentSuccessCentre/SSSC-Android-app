@@ -3,7 +3,7 @@ package ghelani.kshamina.sssc_android_app.ui.grades;
 import java.util.HashMap;
 import java.util.List;
 
-import ghelani.kshamina.sssc_android_app.entity.Course;
+import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 
 public class Grading {
 
@@ -32,11 +32,11 @@ public class Grading {
         return ((currentGPA * creditsComplete) + (predictedGPA * creditsInProgress)) / (creditsComplete + creditsInProgress);
     }
 
-    public static double calculateOverallCGPA(List<Course> courses) {
+    public static double calculateOverallCGPA(List<CourseEntity> courseEntity) {
         double totalGradePoints = 0;
         double totalCreditsWithGrades = 0;
 
-        for (Course course : courses) {
+        for (CourseEntity course : courseEntity) {
             Integer gpa = letterGradeToGPA.get(course.courseFinalGrade);
             double gradeWeight = (gpa == null) ? -1 : gpa * course.courseCredits;
 

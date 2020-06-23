@@ -67,12 +67,12 @@
 
             </com.google.android.material.card.MaterialCardView>
             <TextView
-                android:visibility="gone"
                 android:id="@+id/heading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:text=""
+                android:textColor="@android:color/black"
                 android:textAlignment="center"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -83,13 +83,16 @@
 
             <TextView
                 android:id="@+id/description"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:text=""
-                android:textAlignment="center"
-                android:textSize="20sp"
+                android:textAlignment="viewStart"
+                android:textSize="18sp"
                 tools:text="Description"
+                android:ellipsize="end"
+                android:singleLine="true"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/termCard"
                 app:layout_constraintTop_toBottomOf="@id/heading" />

@@ -16,12 +16,12 @@ public abstract class TermDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertTerm(TermEntity term);
 
-    @Delete
-    public abstract void deleteTerm(TermEntity term);
+    @Query ("DELETE FROM terms where term_id = :termId")
+    public abstract void deleteTerm(String termId);
 
     @Query("SELECT * FROM terms ORDER BY term_year DESC")
     public abstract Single<List<TermEntity>> getAllTerms();
 
     @Query("SELECT * FROM terms where term_id=:termId")
-    public abstract TermEntity getTermById(String termId);
+    public abstract Single<TermEntity> getTermById(String termId);
 }

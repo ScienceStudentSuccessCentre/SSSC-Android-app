@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.ui.common.list;
+package ghelani.kshamina.sssc_android_app.ui.common.list.model;
 
 /**
  * All list items will implement this class so lists can be generated

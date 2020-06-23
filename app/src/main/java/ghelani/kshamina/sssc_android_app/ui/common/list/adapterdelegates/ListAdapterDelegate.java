@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.ui.common.adapterdelegates;
+package ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -17,45 +16,42 @@ import com.hannesdorfmann.adapterdelegates4.AdapterDelegate;
 import java.util.List;
 
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.model.Term;
-import ghelani.kshamina.sssc_android_app.ui.common.list.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.model.TermItem;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list.TermsViewModel;
+import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
 
-/**
- * List adapter for the Terms list
- */
-public class TermsAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
+public class ListAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
+
     private LayoutInflater inflater;
-    private TermsViewModel viewModel;
 
-    public TermsAdapterDelegate(Activity activity, ViewModel viewModel) {
+    public ListAdapterDelegate(Activity activity) {
         inflater = activity.getLayoutInflater();
-        this.viewModel = (TermsViewModel) viewModel;
     }
 
     @Override
     protected boolean isForViewType(@NonNull List<DiffItem> items, int position) {
-        return items.get(position) instanceof TermItem;
+        return items.get(position) instanceof ListItem;
     }
 
     @NonNull
     @Override
     protected RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent) {
-        return new ListViewHolder(inflater.inflate(R.layout.list_item, parent, false));
+        return new ListAdapterDelegate.ListViewHolder(inflater.inflate(R.layout.list_item, parent, false));
     }
 
     @Override
     protected void onBindViewHolder(@NonNull List<DiffItem> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
-        TermItem term = (TermItem) items.get(position);
+        ListItem item = (ListItem) items.get(position);
         ListViewHolder listViewHolder = (ListViewHolder) holder;
-        listViewHolder.itemCard.setOnLongClickListener(v -> viewModel.onItemLongClicked(new Term(term)));
-        listViewHolder.itemCard.setOnClickListener(v -> viewModel.onItemClicked(new Term(term)));
-        listViewHolder.deleteIcon.setOnClickListener(v->viewModel.deleteItem(new Term(term)));
-        listViewHolder.deleteIcon.setVisibility(viewModel.isDeleteMode.getValue()? View.VISIBLE: View.GONE);
-        listViewHolder.shortForm.setText(term.asShortString());
-        listViewHolder.description.setText(term.toString());
-        listViewHolder.heading.setVisibility(View.GONE);
+
+        listViewHolder.itemCard.setOnLongClickListener(v -> item.getClickListener().onItemLongClicked(item.getId()));
+        listViewHolder.itemCard.setOnClickListener(v -> item.getClickListener().onItemClicked(item.getId()));
+        listViewHolder.deleteIcon.setOnClickListener(v -> item.getClickListener().deleteItem(item.getId()));
+        //listViewHolder.deleteIcon.setVisibility(viewModel.isDeleteMode.getValue()? View.VISIBLE: View.GONE);
+        listViewHolder.shortForm.setText(item.getShortFormText());
+        listViewHolder.description.setText(item.getDescriptionText());
+        listViewHolder.heading.setText(item.getHeaderText());
+        listViewHolder.heading.setVisibility(item.getHeaderText().isEmpty() ? View.GONE : View.VISIBLE);
+
     }
 
     static class ListViewHolder extends RecyclerView.ViewHolder {
