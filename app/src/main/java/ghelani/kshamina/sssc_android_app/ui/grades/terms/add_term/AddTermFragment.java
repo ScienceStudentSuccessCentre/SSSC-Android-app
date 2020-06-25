@@ -64,7 +64,6 @@ public class AddTermFragment extends Fragment implements AddTermContract.View {
         return view;
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -107,11 +106,13 @@ public class AddTermFragment extends Fragment implements AddTermContract.View {
     public void onResume() {
         super.onResume();
         ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
+        ((MainActivity) requireActivity()).getNavigatonView().setVisibility(View.GONE);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         ((AppCompatActivity) requireActivity()).getSupportActionBar().show();
+        ((MainActivity) requireActivity()).getNavigatonView().setVisibility(View.VISIBLE);
     }
 }

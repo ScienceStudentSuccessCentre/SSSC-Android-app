@@ -36,7 +36,7 @@ public class Term {
     }
     @Override
     public String toString() {
-        return this.season + " " + this.year;
+        return this.season.charAt(0)+ this.season.substring(1).toLowerCase()  + " " + this.year;
     }
 
     public String getId() {
@@ -49,6 +49,10 @@ public class Term {
 
     public String getSeason() {
         return season;
+    }
+
+    public String getDisplayableSeason() {
+        return season.charAt(0)+ this.season.substring(1).toLowerCase();
     }
 
     public void setSeason(String season) {

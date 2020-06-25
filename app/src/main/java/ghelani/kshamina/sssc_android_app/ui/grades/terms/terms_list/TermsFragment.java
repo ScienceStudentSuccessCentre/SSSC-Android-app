@@ -103,18 +103,13 @@ public class TermsFragment extends Fragment {
             fragmentTransaction.commit();
         });
 
-        termsViewModel.isDeleteMode.observe(this, isDeleteMode -> {
-
-                termsViewModel.fetchTerms();
-
-        });
 
         termsViewModel.fetchTerms();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
+        menu.clear();
         inflater.inflate(R.menu.term_list_menu, menu);
 
         deleteItem = menu.findItem(R.id.deleteActionItem);
@@ -130,13 +125,11 @@ public class TermsFragment extends Fragment {
             case R.id.deleteActionItem:
                 item.setVisible(false);
                 cancelDeleteItem.setVisible(true);
-                termsViewModel.isDeleteMode.setValue(true);
 
                 return true;
             case R.id.cancelDeleteItem:
                 item.setVisible(false);
                 deleteItem.setVisible(true);
-                termsViewModel.isDeleteMode.setValue(false);
 
                 return true;
             default:
@@ -145,12 +138,21 @@ public class TermsFragment extends Fragment {
     }
 
     private void openAddTermScreen() {
-        ((MainActivity) requireActivity()).changeFragment(new AddTermFragment());
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainer, new AddTermFragment());
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-       // ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Terms");
+       ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Terms");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

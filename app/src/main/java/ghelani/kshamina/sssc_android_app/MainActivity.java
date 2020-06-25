@@ -79,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public BottomNavigationView getNavigatonView() {
+        return navigatonView;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;

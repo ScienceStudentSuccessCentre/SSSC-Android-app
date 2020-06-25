@@ -30,8 +30,8 @@ public class CourseRepository {
         database.getCourseDao().updateCourse(courseEntity);
     }
 
-    public void deleteCourse(CourseEntity courseEntity){
-        database.getCourseDao().deleteCourse(courseEntity);
+    public void deleteCourse(String courseId){
+        database.getCourseDao().deleteCourse(courseId);
     }
 
     public  List<CourseEntity> getAllCourses(){

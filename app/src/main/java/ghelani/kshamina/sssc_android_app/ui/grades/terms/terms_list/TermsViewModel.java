@@ -1,7 +1,5 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list;
 
-import android.view.View;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -18,6 +16,7 @@ import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
 import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -27,9 +26,9 @@ import io.reactivex.schedulers.Schedulers;
 public class TermsViewModel extends ViewModel {
 
     private TermRepository termRepository;
-    public MutableLiveData<ViewState<Term>> state = new MutableLiveData<>();
-    public MutableLiveData<Boolean> isDeleteMode = new MutableLiveData<>(false);
+    public MutableLiveData<ViewState<ListItem>> state = new MutableLiveData<>();
     public MutableLiveData<Term> termSelected = new MutableLiveData<>();
+    private List<ListItem> termsList = new ArrayList<>();
 
     @Inject
     public TermsViewModel(TermRepository termRepository) {
@@ -38,34 +37,112 @@ public class TermsViewModel extends ViewModel {
     }
 
     public void fetchTerms() {
+        termsList.clear();
         termRepository.getAllTerms()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<List<Term>>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
-                        state.setValue(new ViewState<Term>(true, false, false, "", Collections.emptyList()));
+                        state.setValue(new ViewState<>(true, false, false, "", Collections.emptyList()));
                     }
 
                     @Override
                     public void onSuccess(@NonNull List<Term> terms) {
                         for(Term term : terms){
-                            System.out.println(term.getId() + ", " + term.getSeason() +" " + term.getYear());
+                           // System.out.println(term.getId() + ", " + term.getSeason() +" " + term.getYear());
+                            termsList.add(createListItem(term));
                         }
-                        state.setValue(new ViewState<Term>(false, false, true, "", terms));
+                        state.setValue(new ViewState<>(false, false, true, "", termsList));
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        state.setValue(new ViewState<Term>(false, true, true, e.getMessage(), Collections.emptyList()));
+                        state.setValue(new ViewState<>(false, true, true, e.getMessage(), Collections.emptyList()));
                     }
                 });
     }
+
+    private ListItem createListItem(Term term){
+        return new ListItem(term.getId(),term.asShortString(),"",term.toString(), false, new ItemClickListener() {
+            @Override
+            public void onItemClicked(String id) {
+                termRepository.getTermById(id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new SingleObserver<Term>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onSuccess(Term term) {
+                                termSelected.setValue(term);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+                        });
+            }
+
+            @Override
+            public boolean onItemLongClicked(String id) {
+                //isDeleteMode.setValue(!isDeleteMode.getValue());
+                for(ListItem term: termsList){
+                    if(term.getId().equals(id)){
+                        term.setDeleteIconVisible(!term.isDeleteIconVisible());
+                    }
+                }
+                state.setValue(new ViewState<>(false, false, true, "", termsList));
+                return true;
+            }
+
+            @Override
+            public void toggleDeleteMode() {
+
+            }
+
+            @Override
+            public void deleteItem(String id) {
+                Completable.fromAction(() -> termRepository.delete(id))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new CompletableObserver() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                fetchTerms();
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+                        });
+
+            }
+        });
+    }
+
+    public List<DiffItem> getTermItems(){
+        List<DiffItem> termItems = new ArrayList<>();
+        for(ListItem listItem : termsList){
+            termItems.add(listItem);
+        }
+        return termItems;
+    }
+    /*
     public List<DiffItem> getTermItems(){
         List<DiffItem> termItems = new ArrayList<>();
         for(Term term : state.getValue().getItems()){
-            termItems.add(new ListItem(term.getId(),term.asShortString(),"",term.toString(), View.GONE, new ItemClickListener() {
-
+            DiffItem item = new ListItem(term.getId(),term.asShortString(),"",term.toString(), false, new ItemClickListener() {
                 @Override
                 public void onItemClicked(String id) {
                     termRepository.getTermById(id)
@@ -91,7 +168,13 @@ public class TermsViewModel extends ViewModel {
 
                 @Override
                 public boolean onItemLongClicked(String id) {
-                    isDeleteMode.setValue(!isDeleteMode.getValue());
+                    //isDeleteMode.setValue(!isDeleteMode.getValue());
+                    for(ListItem term: termsList){
+                        if(term.getId().equals(id)){
+                            term.setDeleteIconVisible(!term.isDeleteIconVisible());
+                        }
+                    }
+
                     return true;
                 }
 
@@ -107,10 +190,14 @@ public class TermsViewModel extends ViewModel {
                             .subscribe();
                     fetchTerms();
                 }
-            }));
+            });
+            termItems.add(item);
+            termsList.add((ListItem) item);
         }
         return termItems;
     }
+    */
+
 }
 
 

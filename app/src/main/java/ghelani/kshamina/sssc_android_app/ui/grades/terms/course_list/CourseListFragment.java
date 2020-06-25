@@ -19,6 +19,9 @@ import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -27,6 +30,10 @@ import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
+import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list.TermsViewModel;
 
 public class CourseListFragment extends Fragment {
@@ -85,9 +92,10 @@ public class CourseListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         FloatingActionButton addCourseBtn = view.findViewById(R.id.addCourseFab);
         addCourseBtn.setOnClickListener(v -> {
-           // openAddTermScreen();
+            openAddCourseScreen();
         });
 
         courseRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
@@ -95,16 +103,15 @@ public class CourseListFragment extends Fragment {
         courseViewModel = new ViewModelProvider(this, viewModelFactory).get(CoursesViewModel.class);
         courseViewModel.state.observe(this, termViewState -> {
             if (termViewState.isLoading()) {
-                System.out.println("Terms Loading");
+                System.out.println("Courses Loading");
             } else if (termViewState.isError()) {
-                System.out.println("Terms ERROR: " + termViewState.getError());
+                System.out.println("Course load ERROR: " + termViewState.getError());
             } else if (termViewState.isSuccess()) {
 
                 courseRecyclerView.setAdapter(new MainListAdapter(getActivity(), courseViewModel.getCourseItems()));
                 courseRecyclerView.getAdapter().notifyDataSetChanged();
             }
         });
-
 
         courseViewModel.isDeleteMode.observe(this, isDeleteMode -> {
 
@@ -114,4 +121,15 @@ public class CourseListFragment extends Fragment {
 
         courseViewModel.fetchCoursesByTermId(termID);
     }
+
+    private void openAddCourseScreen() {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainer, AddCourseFragment.newInstance(termID));
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+
+
 }

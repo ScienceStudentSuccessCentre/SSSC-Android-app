@@ -12,11 +12,10 @@
             android:id="@+id/deleteActionItem"
             android:icon="@drawable/ic_delete"
             android:title="delete"
-            app:showAsAction="ifRoom"/>
+            app:showAsAction="always"/>
         <item
-            android:visible="false"
             android:id="@+id/cancelDeleteItem"
             android:icon="@drawable/ic_close"
             android:title="cancel"
-            app:showAsAction="ifRoom"/>
+            app:showAsAction="always"/>
 </menu>

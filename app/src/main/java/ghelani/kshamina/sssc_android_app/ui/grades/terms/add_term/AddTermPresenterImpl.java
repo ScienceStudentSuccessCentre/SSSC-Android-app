@@ -11,7 +11,6 @@ import ghelani.kshamina.sssc_android_app.model.Term;
 import ghelani.kshamina.sssc_android_app.repository.TermRepository;
 import io.reactivex.Completable;
 import io.reactivex.Scheduler;
-import io.reactivex.schedulers.Schedulers;
 
 public class AddTermPresenterImpl implements AddTermContract.Presenter {
 
@@ -37,7 +36,7 @@ public class AddTermPresenterImpl implements AddTermContract.Presenter {
         this.termRepository = termRepository;
 
         years = generateYearList();
-        seasons = new ArrayList<>(Arrays.asList("FALL", "SUMMER", "WINTER"));
+        seasons = new ArrayList<>(Arrays.asList("Fall", "Summer", "Winter"));
         yearSelected = -1;
         seasonSelected = -1;
     }
@@ -71,11 +70,11 @@ public class AddTermPresenterImpl implements AddTermContract.Presenter {
 
     @Override
     public void onCreate() {
-        Term newTerm = new Term(seasons.get(seasonSelected), years.get(yearSelected));
+        Term newTerm = new Term(seasons.get(seasonSelected).toUpperCase(), years.get(yearSelected));
 
         // Run insrt command on background thread called Scheduler.io and observe result on mainthread
         Completable.fromAction(() -> termRepository.insert(newTerm))
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribe();
         view.navigateToTermsPage();

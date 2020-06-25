@@ -1,7 +1,5 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list;
 
-import android.view.View;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -17,6 +15,8 @@ import ghelani.kshamina.sssc_android_app.ui.common.events.ItemClickListener;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -25,9 +25,12 @@ import io.reactivex.schedulers.Schedulers;
 public class CoursesViewModel extends ViewModel {
 
     private CourseRepository courseRepository;
-    public MutableLiveData<ViewState<Course>> state = new MutableLiveData<>();
+    public MutableLiveData<ViewState<ListItem>> state = new MutableLiveData<>();
     public MutableLiveData<Boolean> isDeleteMode = new MutableLiveData<>(false);
-    public MutableLiveData<Course> courseSelected = new MutableLiveData<>();
+    private List<ListItem> courseItemList = new ArrayList<>();
+    public MutableLiveData<String> courseSelected = new MutableLiveData<>();
+    public MutableLiveData<Double> credits = new MutableLiveData<>();
+    public MutableLiveData<Double> termGPA = new MutableLiveData<>();
 
     @Inject
     public CoursesViewModel(CourseRepository courseRepository) {
@@ -36,6 +39,7 @@ public class CoursesViewModel extends ViewModel {
     }
 
     public void fetchCoursesByTermId(String termId) {
+        courseItemList.clear();
         courseRepository.getCoursesByTermId(termId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -47,7 +51,11 @@ public class CoursesViewModel extends ViewModel {
 
                     @Override
                     public void onSuccess(List<Course> courses) {
-                        state.setValue(new ViewState<Course>(false, false, true, "", courses));
+
+                        for (Course course : courses) {
+                            courseItemList.add(createListItem(course));
+                        }
+                        state.setValue(new ViewState<>(false, false, true, "", courseItemList));
                     }
 
                     @Override
@@ -57,33 +65,59 @@ public class CoursesViewModel extends ViewModel {
                 });
     }
 
-    public List<DiffItem> getCourseItems() {
-        List<DiffItem> listItems = new ArrayList<>();
-        for (Course course : state.getValue().getItems()) {
-            listItems.add(new ListItem(course.getCourseId(), course.getCourseFinalGrade(), course.getCourseCode(), course.getCourseName(), View.GONE, new ItemClickListener() {
-                @Override
-                public void onItemClicked(String id) {
+    private ListItem createListItem(Course course) {
+        return new ListItem(course.getCourseId(), course.getCourseFinalGrade(), course.getCourseCode(), course.getCourseName(), false, new ItemClickListener() {
+            @Override
+            public void onItemClicked(String id) {
+                courseSelected.setValue(id);
+            }
 
+            @Override
+            public boolean onItemLongClicked(String id) {
+                for(ListItem term: courseItemList){
+                    if(term.getId().equals(id)){
+                        term.setDeleteIconVisible(!term.isDeleteIconVisible());
+                    }
                 }
+                state.setValue(new ViewState<>(false, false, true, "", courseItemList));
+                return true;
+            }
 
-                @Override
-                public boolean onItemLongClicked(String id) {
+            @Override
+            public void toggleDeleteMode() {
 
-                    return false;
-                }
+            }
 
-                @Override
-                public void toggleDeleteMode() {
+            @Override
+            public void deleteItem(String courseId) {
+                Completable.fromAction(() -> courseRepository.deleteCourse(courseId))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new CompletableObserver() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
 
-                }
+                            }
 
-                @Override
-                public void deleteItem(String id) {
+                            @Override
+                            public void onComplete() {
 
-                }
-            }));
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+                        });
+            }
+        });
+    }
+    public List<DiffItem> getCourseItems(){
+        List<DiffItem> courseItems = new ArrayList<>();
+        for(ListItem listItem : courseItemList){
+            courseItems.add(listItem);
         }
-        return listItems;
+        return courseItems;
     }
 }
 

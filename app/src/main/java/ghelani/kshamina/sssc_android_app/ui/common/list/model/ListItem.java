@@ -10,15 +10,15 @@ public class ListItem implements DiffItem {
     private String shortFormText;
     private String headerText;
     private String descriptionText;
-    private int deleteIconVisibilty;
+    private boolean deleteIconVisible;
     private ItemClickListener clickListener;
 
-    public ListItem(String id, String shortFormText, String headerText, String descriptionText, int deleteIconVisibilty, ItemClickListener clickListener) {
+    public ListItem(String id, String shortFormText, String headerText, String descriptionText, boolean deleteIconVisible, ItemClickListener clickListener) {
         this.id = id;
         this.shortFormText = shortFormText;
         this.headerText = headerText;
         this.descriptionText = descriptionText;
-        this.deleteIconVisibilty = deleteIconVisibilty;
+        this.deleteIconVisible = deleteIconVisible;
         this.clickListener = clickListener;
     }
 
@@ -54,12 +54,12 @@ public class ListItem implements DiffItem {
         this.descriptionText = descriptionText;
     }
 
-    public int getDeleteIconVisibilty() {
-        return deleteIconVisibilty;
+    public boolean isDeleteIconVisible() {
+        return deleteIconVisible;
     }
 
-    public void setDeleteIconVisibilty(int deleteIconVisibilty) {
-        this.deleteIconVisibilty = deleteIconVisibilty;
+    public void setDeleteIconVisible(boolean deleteIconVisible) {
+        this.deleteIconVisible = deleteIconVisible;
     }
 
     public ItemClickListener getClickListener() {
