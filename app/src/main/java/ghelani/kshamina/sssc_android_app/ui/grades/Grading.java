@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
+import ghelani.kshamina.sssc_android_app.model.Course;
 
 public class Grading {
 
@@ -43,6 +44,25 @@ public class Grading {
             if (gradeWeight >= 0) {
                 totalGradePoints += gradeWeight;
                 totalCreditsWithGrades += course.courseCredits;
+            }
+        }
+
+        if (totalCreditsWithGrades > 0) {
+            return (totalGradePoints / totalCreditsWithGrades);
+        }
+        return -1;
+    }
+    public static double calculateTermGPA(List<Course> courses) {
+        double totalGradePoints = 0;
+        double totalCreditsWithGrades = 0;
+
+        for (Course course : courses) {
+            Integer gpa = letterGradeToGPA.get(course.getCourseFinalGrade());
+            double gradeWeight = (gpa == null) ? -1 : gpa * course.getCourseCredits();
+
+            if (gradeWeight >= 0) {
+                totalGradePoints += gradeWeight;
+                totalCreditsWithGrades += course.getCourseCredits();
             }
         }
 

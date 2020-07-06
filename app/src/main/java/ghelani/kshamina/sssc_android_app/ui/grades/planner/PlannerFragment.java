@@ -3,6 +3,8 @@ package ghelani.kshamina.sssc_android_app.ui.grades.planner;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -93,6 +95,9 @@ public class PlannerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup plannerView = (ViewGroup) inflater.inflate(R.layout.fragment_planner, container, false);
 
+//        Toolbar toolbar = getParentFragment().getView().findViewById(R.id.gradesToolbar);
+//        toolbar.setTitle("Planner");
+
         currentCGPAText = plannerView.findViewById(R.id.currentCGPA);
         currentCGPAText.addTextChangedListener(termTextWatcher);
 
@@ -124,5 +129,11 @@ public class PlannerFragment extends Fragment {
 
 
         return plannerView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Planner");
     }
 }

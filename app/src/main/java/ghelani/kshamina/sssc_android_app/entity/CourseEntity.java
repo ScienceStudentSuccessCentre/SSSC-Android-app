@@ -9,6 +9,8 @@ import androidx.annotation.Nullable;
 
 import java.util.UUID;
 
+import ghelani.kshamina.sssc_android_app.model.Course;
+
 @Entity(tableName = "courses",foreignKeys = @ForeignKey(
         entity = TermEntity.class,
         parentColumns = "term_id",
@@ -43,6 +45,16 @@ public class CourseEntity {
         this.courseIsMajorCourse = isMajorCourse;
         this.courseFinalGrade = finalGrade;
         this.courseTermId = termId;
+    }
+
+    public CourseEntity(Course course) {
+        courseId = UUID.randomUUID().toString();
+        this.courseName = course.getCourseName();
+        this.courseCode = course.getCourseCode();
+        this.courseCredits = course.getCourseCredits();
+        this.courseIsMajorCourse = course.isCourseIsMajorCourse();
+        this.courseFinalGrade = course.getCourseFinalGrade();
+        this.courseTermId = course.getCourseTermId();
     }
 
     @Override

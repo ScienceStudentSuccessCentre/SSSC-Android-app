@@ -5,5 +5,5 @@ public interface ItemClickListener {
     void onItemClicked(String id);
     boolean onItemLongClicked(String id);
     void toggleDeleteMode();
-    void deleteItem(String id);
+    void deleteItem(String courseId);
 }

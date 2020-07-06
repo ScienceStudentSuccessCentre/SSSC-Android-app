@@ -4,8 +4,10 @@ package ghelani.kshamina.sssc_android_app.dagger;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import ghelani.kshamina.sssc_android_app.ui.grades.calculator.CalculatorFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CourseListFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.dagger.CoursePresenterModule;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.dagger.CourseViewModelModule;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.dagger.TermsPresenterModule;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list.TermsFragment;
@@ -22,6 +24,9 @@ abstract class FragmentBuilderModule {
 
     @ContributesAndroidInjector(modules = {CourseViewModelModule.class})
     abstract CourseListFragment injectCourseListFragment();
+
+    @ContributesAndroidInjector(modules = {CoursePresenterModule.class})
+    abstract AddCourseFragment injectAddCourseFragment();
 
     @ContributesAndroidInjector()
     abstract CalculatorFragment injectCalculatorFragment();

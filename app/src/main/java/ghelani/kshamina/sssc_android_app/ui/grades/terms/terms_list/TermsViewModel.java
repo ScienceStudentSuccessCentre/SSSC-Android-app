@@ -29,11 +29,13 @@ public class TermsViewModel extends ViewModel {
     public MutableLiveData<ViewState<ListItem>> state = new MutableLiveData<>();
     public MutableLiveData<Term> termSelected = new MutableLiveData<>();
     private List<ListItem> termsList = new ArrayList<>();
+    private boolean isDeleteMode;
 
     @Inject
     public TermsViewModel(TermRepository termRepository) {
         super();
         this.termRepository = termRepository;
+        isDeleteMode = false;
     }
 
     public void fetchTerms() {
@@ -49,8 +51,9 @@ public class TermsViewModel extends ViewModel {
 
                     @Override
                     public void onSuccess(@NonNull List<Term> terms) {
+                        Collections.sort(terms);
+                        Collections.reverse(terms);
                         for(Term term : terms){
-                           // System.out.println(term.getId() + ", " + term.getSeason() +" " + term.getYear());
                             termsList.add(createListItem(term));
                         }
                         state.setValue(new ViewState<>(false, false, true, "", termsList));
@@ -64,7 +67,7 @@ public class TermsViewModel extends ViewModel {
     }
 
     private ListItem createListItem(Term term){
-        return new ListItem(term.getId(),term.asShortString(),"",term.toString(), false, new ItemClickListener() {
+        return new ListItem(term.getId(),term.asShortString(),"",term.toString(), isDeleteMode, new ItemClickListener() {
             @Override
             public void onItemClicked(String id) {
                 termRepository.getTermById(id)
@@ -90,7 +93,6 @@ public class TermsViewModel extends ViewModel {
 
             @Override
             public boolean onItemLongClicked(String id) {
-                //isDeleteMode.setValue(!isDeleteMode.getValue());
                 for(ListItem term: termsList){
                     if(term.getId().equals(id)){
                         term.setDeleteIconVisible(!term.isDeleteIconVisible());
@@ -138,66 +140,14 @@ public class TermsViewModel extends ViewModel {
         }
         return termItems;
     }
-    /*
-    public List<DiffItem> getTermItems(){
-        List<DiffItem> termItems = new ArrayList<>();
-        for(Term term : state.getValue().getItems()){
-            DiffItem item = new ListItem(term.getId(),term.asShortString(),"",term.toString(), false, new ItemClickListener() {
-                @Override
-                public void onItemClicked(String id) {
-                    termRepository.getTermById(id)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new SingleObserver<Term>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
 
-                                }
-
-                                @Override
-                                public void onSuccess(Term term) {
-                                    termSelected.setValue(term);
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-
-                                }
-                            });
-                }
-
-                @Override
-                public boolean onItemLongClicked(String id) {
-                    //isDeleteMode.setValue(!isDeleteMode.getValue());
-                    for(ListItem term: termsList){
-                        if(term.getId().equals(id)){
-                            term.setDeleteIconVisible(!term.isDeleteIconVisible());
-                        }
-                    }
-
-                    return true;
-                }
-
-                @Override
-                public void toggleDeleteMode() {
-
-                }
-
-                @Override
-                public void deleteItem(String id) {
-                    Completable.fromAction(() -> termRepository.delete(id))
-                            .subscribeOn(Schedulers.io())
-                            .subscribe();
-                    fetchTerms();
-                }
-            });
-            termItems.add(item);
-            termsList.add((ListItem) item);
-        }
-        return termItems;
+    public boolean isDeleteMode() {
+        return isDeleteMode;
     }
-    */
 
+    public void setDeleteMode(boolean deleteMode) {
+        isDeleteMode = deleteMode;
+    }
 }
 
 

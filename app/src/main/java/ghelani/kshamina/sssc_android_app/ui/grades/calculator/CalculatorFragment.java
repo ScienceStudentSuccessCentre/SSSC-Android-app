@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -74,7 +76,8 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        setHasOptionsMenu(true);
+//        Toolbar toolbar = getParentFragment().getView().findViewById(R.id.gradesToolbar);
+//        toolbar.setTitle("Calculator");
 
         ViewGroup calculatorView = (ViewGroup) inflater.inflate(R.layout.fragment_calculator, container, false);
 
@@ -213,6 +216,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
     public void onResume() {
         super.onResume();
         PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Calculator");
     }
 
     @Override

@@ -21,11 +21,13 @@ import ghelani.kshamina.sssc_android_app.ui.ResourcesFragment;
 import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
 import ghelani.kshamina.sssc_android_app.ui.event.EventsFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.GradesFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CourseListFragment;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigatonView;
-    Toolbar toolbar;
-    Menu menu;
+    //Toolbar toolbar;
+   // Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
         Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
 
-        toolbar = findViewById(R.id.toolbar);
+        //toolbar = findViewById(R.id.toolbar);
 
-        setSupportActionBar(toolbar);
+        //setSupportActionBar(toolbar);
         navigatonView = findViewById(R.id.navigation);
         navigatonView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
         changeFragment(new EventsFragment());
@@ -56,24 +58,34 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    public void replaceFragment(Fragment newFragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainer, newFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+
+
     private void setupBottomNav() {
         navigatonView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     changeFragment(new EventsFragment());
-                    getSupportActionBar().setTitle("Events");
+                   // getSupportActionBar().setTitle("Events");
                     break;
                 case R.id.navigation_dashboard:
                     changeFragment(new GradesFragment());
-                    getSupportActionBar().setTitle("Grades Calculator");
+                   // getSupportActionBar().setTitle("Grades Calculator");
                     break;
                 case R.id.navigation_notifications:
                     changeFragment(new ResourcesFragment());
-                    getSupportActionBar().setTitle("Resources");
+                   // getSupportActionBar().setTitle("Resources");
                     break;
                 case R.id.navigation_settings:
                     changeFragment(new SettingsFragment());
-                    getSupportActionBar().setTitle("Settings");
+                   // getSupportActionBar().setTitle("Settings");
             }
             return true;
         });
@@ -82,15 +94,15 @@ public class MainActivity extends AppCompatActivity {
     public BottomNavigationView getNavigatonView() {
         return navigatonView;
     }
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.main_menu, menu);
         menu.setGroupVisible(R.id.event_single_menu, false);
         return super.onCreateOptionsMenu(menu);
-    }
-
+        }
+*/
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

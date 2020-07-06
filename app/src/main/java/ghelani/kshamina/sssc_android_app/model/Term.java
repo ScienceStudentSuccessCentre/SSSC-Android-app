@@ -5,8 +5,23 @@ import androidx.annotation.Nullable;
 /**
  * A domain model for term classes coming from the local database
  */
-public class Term {
-    public enum Season {SUMMER, WINTER, FALL}
+public class Term implements Comparable<Term> {
+
+    public enum Season {
+        WINTER(1),
+        SUMMER(2),
+        FALL(3);
+
+        private final int seasonValue;
+
+        Season(int seasonValue) {
+            this.seasonValue = seasonValue;
+        }
+
+        public int getSeasonValue() {
+            return seasonValue;
+        }
+    }
 
     private String id;
     private String season;
@@ -72,4 +87,15 @@ public class Term {
                 this.season.toString().charAt(0) +
                         (this.year.length() == 4 ? this.year.substring(2, 4) : this.year);
     }
+
+    @Override
+    public int compareTo(Term term) {
+        int result = Integer.compare(Integer.parseInt(this.getYear()), Integer.parseInt(term.year));
+        if(result != 0) {
+            return result;
+        }else{
+            return Integer.compare(Season.valueOf(this.getSeason()).getSeasonValue(), Season.valueOf(term.getSeason()).getSeasonValue());
+        }
+    }
+
 }

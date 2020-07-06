@@ -5,19 +5,31 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.grades.terms.course_list.CourseListFragment">
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.grades.terms.terms_list.TermsFragment">
+        android:orientation="vertical">
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"/>
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/courseListToolbar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#638594"
+            app:title="Courses" />
 
         <LinearLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentTop="true">
+            android:layout_height="50dp">
 
         <TextView
-            android:id="@+id/calculatorCalculatedOverallCGPA"
+            android:id="@+id/termGPAText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
@@ -29,7 +41,7 @@
             android:textSize="17sp" />
 
         <TextView
-            android:id="@+id/calculatorCalculatedMajorCGPA"
+            android:id="@+id/termCredits"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
@@ -44,19 +56,17 @@
             android:id="@+id/coursesRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:layout_below="@id/header"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addCourseFab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_add"
-            app:tint="@color/white"
-            app:backgroundTint="#638594"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"/>
-    </RelativeLayout>
 
+    </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addCourseFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_add"
+        app:tint="@color/white"
+        android:layout_gravity="end|bottom"
+        app:backgroundTint="#638594"/>
 </FrameLayout>

@@ -19,7 +19,7 @@ public abstract class TermDao {
     @Query ("DELETE FROM terms where term_id = :termId")
     public abstract void deleteTerm(String termId);
 
-    @Query("SELECT * FROM terms ORDER BY term_year DESC")
+    @Query("SELECT * FROM terms ORDER BY term_year, term_season DESC")
     public abstract Single<List<TermEntity>> getAllTerms();
 
     @Query("SELECT * FROM terms where term_id=:termId")

@@ -2,24 +2,24 @@ package ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -49,8 +49,6 @@ public class TermsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Terms");
-        //requireActivity().setTitle("Terms");
         setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_terms, container, false);
     }
@@ -77,7 +75,6 @@ public class TermsFragment extends Fragment {
             openAddTermScreen();
         });
 
-
         recyclerView = view.findViewById(R.id.termsRecyclerView);
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
 
@@ -88,21 +85,20 @@ public class TermsFragment extends Fragment {
             } else if (termViewState.isError()) {
                 System.out.println("Terms ERROR: " + termViewState.getError());
             } else if (termViewState.isSuccess()) {
-
                 recyclerView.setAdapter(new MainListAdapter(getActivity(), termsViewModel.getTermItems()));
-                recyclerView.getAdapter().notifyDataSetChanged();
             }
         });
 
         termsViewModel.termSelected.observe(this, term -> {
+            setHasOptionsMenu(false);
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            CourseListFragment courseListFragment = CourseListFragment.newInstance(term.getId(),term.getSeason() + " " +term.getYear());
+            CourseListFragment courseListFragment = CourseListFragment.newInstance(term.getId(),term.toString());
             fragmentTransaction.replace(R.id.fragmentContainer, courseListFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-        });
 
+        });
 
         termsViewModel.fetchTerms();
     }
@@ -110,31 +106,26 @@ public class TermsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.term_list_menu, menu);
-
-        deleteItem = menu.findItem(R.id.deleteActionItem);
-        cancelDeleteItem = menu.findItem(R.id.cancelDeleteItem);
+        inflater.inflate(R.menu.course_list_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.deleteActionItem:
-                item.setVisible(false);
-                cancelDeleteItem.setVisible(true);
+        if (item.getItemId() == R.id.deleteActionItem) {
+            if (termsViewModel.isDeleteMode()) {
+                item.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_delete));
+                termsViewModel.setDeleteMode(false);
+            } else {
+                item.setIcon(R.drawable.ic_close);
+                termsViewModel.setDeleteMode(true);
+            }
+            termsViewModel.fetchTerms();
 
-                return true;
-            case R.id.cancelDeleteItem:
-                item.setVisible(false);
-                deleteItem.setVisible(true);
-
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void openAddTermScreen() {
@@ -147,8 +138,15 @@ public class TermsFragment extends Fragment {
 
     @Override
     public void onResume() {
+        setHasOptionsMenu(true);
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Terms");
         super.onResume();
-       ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Terms");
+    }
+
+    @Override
+    public void onPause() {
+        setHasOptionsMenu(false);
+        super.onPause();
     }
 
     @Override

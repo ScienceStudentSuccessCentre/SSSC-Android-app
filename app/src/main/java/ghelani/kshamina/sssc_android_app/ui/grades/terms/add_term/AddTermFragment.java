@@ -58,7 +58,6 @@ public class AddTermFragment extends Fragment implements AddTermContract.View {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
         View view = inflater.inflate(R.layout.fragment_add_term, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -84,7 +83,8 @@ public class AddTermFragment extends Fragment implements AddTermContract.View {
 
     @Override
     public void navigateToTermsPage() {
-        ((MainActivity)requireActivity()).changeFragment(new GradesFragment());
+        //((MainActivity)requireActivity()).changeFragment(new GradesFragment());
+        getFragmentManager().popBackStackImmediate();
     }
 
     @Override
@@ -105,14 +105,14 @@ public class AddTermFragment extends Fragment implements AddTermContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        ((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
+        //((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
         ((MainActivity) requireActivity()).getNavigatonView().setVisibility(View.GONE);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        ((AppCompatActivity) requireActivity()).getSupportActionBar().show();
+      //  ((AppCompatActivity) requireActivity()).getSupportActionBar().show();
         ((MainActivity) requireActivity()).getNavigatonView().setVisibility(View.VISIBLE);
     }
 }

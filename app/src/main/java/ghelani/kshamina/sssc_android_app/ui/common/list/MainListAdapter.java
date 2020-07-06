@@ -6,7 +6,9 @@ import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter;
 
 import java.util.List;
 
+import ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates.InputFormAdapterDelegate;
 import ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates.ListAdapterDelegate;
+import ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates.TextFormAdapterDelegate;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 
 /**
@@ -19,9 +21,9 @@ public class MainListAdapter extends ListDelegationAdapter<List<DiffItem>> {
 
         // DelegatesManager is a protected Field in ListDelegationAdapter
         delegatesManager
-                .addDelegate(new ListAdapterDelegate(activity));
-                //.addDelegate(new TermsAdapterDelegate(activity));
-                //.addDelegate(new CourseAdapterDelegate(activity, viewModel));
+                .addDelegate(new ListAdapterDelegate(activity))
+                .addDelegate(new InputFormAdapterDelegate(activity))
+                .addDelegate(new TextFormAdapterDelegate(activity));
 
         // Set the items from super class.
         setItems(items);

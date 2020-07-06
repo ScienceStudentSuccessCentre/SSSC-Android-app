@@ -1,9 +1,6 @@
 package ghelani.kshamina.sssc_android_app.model;
 
 import androidx.annotation.Nullable;
-
-import java.util.UUID;
-
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 
 public class Course {
@@ -15,6 +12,15 @@ public class Course {
     private boolean courseIsMajorCourse;
     private String courseFinalGrade;
     private String courseTermId;
+
+    public Course(){
+        this.courseName = "";
+        this.courseCode = "";
+        this.courseCredits = -1;
+        this.courseIsMajorCourse = false;
+        this.courseFinalGrade = "";
+        this.courseTermId = "";
+    }
 
     public Course(String name, String code, double credits, boolean isMajorCourse, String finalGrade, String termId) {
 

@@ -15,6 +15,7 @@ import ghelani.kshamina.sssc_android_app.ui.common.events.ItemClickListener;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
+import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
@@ -26,16 +27,17 @@ public class CoursesViewModel extends ViewModel {
 
     private CourseRepository courseRepository;
     public MutableLiveData<ViewState<ListItem>> state = new MutableLiveData<>();
-    public MutableLiveData<Boolean> isDeleteMode = new MutableLiveData<>(false);
+    public boolean isDeleteMode;
     private List<ListItem> courseItemList = new ArrayList<>();
     public MutableLiveData<String> courseSelected = new MutableLiveData<>();
-    public MutableLiveData<Double> credits = new MutableLiveData<>();
+    public MutableLiveData<Double> creditsState = new MutableLiveData<>();
     public MutableLiveData<Double> termGPA = new MutableLiveData<>();
 
     @Inject
     public CoursesViewModel(CourseRepository courseRepository) {
         super();
         this.courseRepository = courseRepository;
+        isDeleteMode = false;
     }
 
     public void fetchCoursesByTermId(String termId) {
@@ -51,11 +53,15 @@ public class CoursesViewModel extends ViewModel {
 
                     @Override
                     public void onSuccess(List<Course> courses) {
-
+                        double credits = 0;
+                        double gpa = Grading.calculateTermGPA(courses);
                         for (Course course : courses) {
+                            credits += course.getCourseCredits();
                             courseItemList.add(createListItem(course));
                         }
                         state.setValue(new ViewState<>(false, false, true, "", courseItemList));
+                        creditsState.setValue(credits);
+                        termGPA.setValue(gpa);
                     }
 
                     @Override
@@ -66,7 +72,7 @@ public class CoursesViewModel extends ViewModel {
     }
 
     private ListItem createListItem(Course course) {
-        return new ListItem(course.getCourseId(), course.getCourseFinalGrade(), course.getCourseCode(), course.getCourseName(), false, new ItemClickListener() {
+        return new ListItem(course.getCourseId(), course.getCourseFinalGrade(), course.getCourseCode(), course.getCourseName(), isDeleteMode, new ItemClickListener() {
             @Override
             public void onItemClicked(String id) {
                 courseSelected.setValue(id);
@@ -101,7 +107,7 @@ public class CoursesViewModel extends ViewModel {
 
                             @Override
                             public void onComplete() {
-
+                                fetchCoursesByTermId(course.getCourseTermId());
                             }
 
                             @Override
@@ -112,12 +118,21 @@ public class CoursesViewModel extends ViewModel {
             }
         });
     }
+
     public List<DiffItem> getCourseItems(){
         List<DiffItem> courseItems = new ArrayList<>();
         for(ListItem listItem : courseItemList){
             courseItems.add(listItem);
         }
         return courseItems;
+    }
+
+    public boolean isDeleteMode() {
+        return isDeleteMode;
+    }
+
+    public void setIsDeleteMode(boolean value){
+        isDeleteMode = value;
     }
 }
 
