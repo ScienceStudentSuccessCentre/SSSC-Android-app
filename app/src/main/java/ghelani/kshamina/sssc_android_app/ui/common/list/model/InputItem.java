@@ -1,29 +1,31 @@
 package ghelani.kshamina.sssc_android_app.ui.common.list.model;
 
+import android.text.InputType;
+
 import ghelani.kshamina.sssc_android_app.ui.common.events.FormInputItemListener;
 
-public class InputItem implements DiffItem{
+public class InputItem implements DiffItem {
 
-    public enum InputType {
+    public enum InputStyle {
         BUTTON,
         TEXT,
         SWITCH,
-
     }
 
     private String value;
     private String hint;
     private String name;
     private FormInputItemListener listener;
-    private boolean switchInput;
-    private InputType type;
+    private int keyboardType;
+    private InputStyle type;
 
-    public InputItem(String value, String hint, String name, FormInputItemListener listener, InputType type) {
+    public InputItem(String value, String hint, String name, FormInputItemListener listener, InputStyle type, int keyboardType) {
         this.value = value;
         this.hint = hint;
         this.name = name;
         this.listener = listener;
         this.type = type;
+        this.keyboardType = keyboardType;
     }
 
     public String getValue() {
@@ -58,19 +60,19 @@ public class InputItem implements DiffItem{
         this.listener = listener;
     }
 
-    public boolean isSwitchInput() {
-        return switchInput;
-    }
-
-    public void setSwitchInput(boolean switchInput) {
-        this.switchInput = switchInput;
-    }
-
-    public InputType getType() {
+    public InputStyle getType() {
         return type;
     }
 
-    public void setType(InputType type) {
+    public void setType(InputStyle type) {
         this.type = type;
+    }
+
+    public int getKeyboardType() {
+        return keyboardType;
+    }
+
+    public void setKeyboardType(int keyboardType) {
+        this.keyboardType = keyboardType;
     }
 }

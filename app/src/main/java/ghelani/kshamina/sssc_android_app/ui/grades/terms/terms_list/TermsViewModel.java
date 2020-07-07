@@ -28,7 +28,6 @@ public class TermsViewModel extends ViewModel {
     private TermRepository termRepository;
     public MutableLiveData<ViewState<ListItem>> state = new MutableLiveData<>();
     public MutableLiveData<Term> termSelected = new MutableLiveData<>();
-    private List<ListItem> termsList = new ArrayList<>();
     private boolean isDeleteMode;
 
     @Inject
@@ -39,7 +38,6 @@ public class TermsViewModel extends ViewModel {
     }
 
     public void fetchTerms() {
-        termsList.clear();
         termRepository.getAllTerms()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -53,10 +51,11 @@ public class TermsViewModel extends ViewModel {
                     public void onSuccess(@NonNull List<Term> terms) {
                         Collections.sort(terms);
                         Collections.reverse(terms);
+                        List<ListItem> items = new ArrayList<>();
                         for(Term term : terms){
-                            termsList.add(createListItem(term));
+                            items.add(createListItem(term));
                         }
-                        state.setValue(new ViewState<>(false, false, true, "", termsList));
+                        state.setValue(new ViewState<>(false, false, true, "", items));
                     }
 
                     @Override
@@ -93,12 +92,12 @@ public class TermsViewModel extends ViewModel {
 
             @Override
             public boolean onItemLongClicked(String id) {
-                for(ListItem term: termsList){
+                for(ListItem term: state.getValue().getItems()){
                     if(term.getId().equals(id)){
                         term.setDeleteIconVisible(!term.isDeleteIconVisible());
                     }
                 }
-                state.setValue(new ViewState<>(false, false, true, "", termsList));
+                state.setValue(new ViewState<>(false, false, true, "", state.getValue().getItems()));
                 return true;
             }
 
@@ -128,14 +127,13 @@ public class TermsViewModel extends ViewModel {
 
                             }
                         });
-
             }
         });
     }
 
     public List<DiffItem> getTermItems(){
         List<DiffItem> termItems = new ArrayList<>();
-        for(ListItem listItem : termsList){
+        for(ListItem listItem : state.getValue().getItems()){
             termItems.add(listItem);
         }
         return termItems;

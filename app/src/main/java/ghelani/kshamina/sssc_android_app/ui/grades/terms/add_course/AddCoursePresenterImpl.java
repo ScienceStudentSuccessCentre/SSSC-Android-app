@@ -1,5 +1,7 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course;
 
+import android.text.InputType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,26 +70,26 @@ public class AddCoursePresenterImpl implements AddCourseContract.Presenter {
         items.add(new InputItem("", "Operating Systems", "Name", (item, value) -> {
             newCourse.setCourseName(value);
             isCreateAvailable();
-        }, InputItem.InputType.TEXT));
+        }, InputItem.InputStyle.TEXT, InputType.TYPE_CLASS_TEXT));
         items.add(new InputItem("", "COMP 3000", "Code", (item, value) -> {
             newCourse.setCourseCode(value);
             isCreateAvailable();
-        }, InputItem.InputType.TEXT));
+        }, InputItem.InputStyle.TEXT,InputType.TYPE_CLASS_TEXT));
         items.add(new InputItem("", "0.5", "Credits", (item, value) -> {
             newCourse.setCourseCredits(value.isEmpty() ? -1 : Double.parseDouble(value));
             isCreateAvailable();
-        }, InputItem.InputType.TEXT));
+        }, InputItem.InputStyle.TEXT,(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL)));
         items.add(new InputItem("", "Y/N", "Counts Towards Major CGPA", (item, value) -> {
             newCourse.setCourseIsMajorCourse(!newCourse.isCourseIsMajorCourse());
             isCreateAvailable();
-        }, InputItem.InputType.SWITCH));
+        }, InputItem.InputStyle.SWITCH,InputType.TYPE_CLASS_TEXT));
         items.add(new InputItem("", "", "ADD NEW WEIGHT", (item, value) -> {
             isCreateAvailable();
-        }, InputItem.InputType.BUTTON));
+        }, InputItem.InputStyle.BUTTON,InputType.TYPE_CLASS_TEXT));
         items.add(new InputItem("", "None", "Final Grade", (item, value) -> {
             newCourse.setCourseFinalGrade(value);
             isCreateAvailable();
-        }, InputItem.InputType.TEXT));
+        }, InputItem.InputStyle.TEXT,InputType.TYPE_CLASS_TEXT));
     }
 
     @Override

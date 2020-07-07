@@ -2,6 +2,7 @@ package ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates;
 
 import android.app.Activity;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,7 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
             case TEXT:
                 inputItemViewHolder.name.setText(item.getName());
                 inputItemViewHolder.textInput.setHint(item.getHint());
+                inputItemViewHolder.textInput.setInputType(item.getKeyboardType());
                 inputItemViewHolder.textInput.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
