@@ -9,12 +9,13 @@ import androidx.annotation.Nullable;
 
 import java.util.UUID;
 
-@Entity(tableName = "weights",foreignKeys = @ForeignKey(
-        entity = CourseEntity.class,
-        parentColumns = "course_id",
-        childColumns = "weight_course_id",
-        onDelete = ForeignKey.CASCADE
-))
+@Entity(tableName = "weights",
+        foreignKeys = @ForeignKey(
+                entity = CourseEntity.class,
+                parentColumns = "course_id",
+                childColumns = "weight_course_id",
+                onDelete = ForeignKey.CASCADE
+        ))
 public class Weight {
     @PrimaryKey
     @NonNull
@@ -27,7 +28,8 @@ public class Weight {
     @ColumnInfo(name = "weight_course_id")
     public String weightCourseId;    //foreign key refer to CourseEntity:course_id
 
-    public Weight() {}
+    public Weight() {
+    }
 
     public Weight(String name, double value, String courseId) {
         weightId = UUID.randomUUID().toString();

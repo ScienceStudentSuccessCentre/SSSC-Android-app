@@ -1,6 +1,6 @@
 package ghelani.kshamina.sssc_android_app.ui.common.list.model;
 
-import ghelani.kshamina.sssc_android_app.ui.common.events.InputItemListener;
+import ghelani.kshamina.sssc_android_app.ui.common.events.FormInputItemListener;
 
 public class InputItem implements DiffItem{
 
@@ -14,11 +14,11 @@ public class InputItem implements DiffItem{
     private String value;
     private String hint;
     private String name;
-    private InputItemListener listener;
+    private FormInputItemListener listener;
     private boolean switchInput;
     private InputType type;
 
-    public InputItem(String value, String hint, String name, InputItemListener listener, InputType type) {
+    public InputItem(String value, String hint, String name, FormInputItemListener listener, InputType type) {
         this.value = value;
         this.hint = hint;
         this.name = name;
@@ -50,11 +50,11 @@ public class InputItem implements DiffItem{
         this.name = name;
     }
 
-    public InputItemListener getListener() {
+    public FormInputItemListener getListener() {
         return listener;
     }
 
-    public void setListener(InputItemListener listener) {
+    public void setListener(FormInputItemListener listener) {
         this.listener = listener;
     }
 

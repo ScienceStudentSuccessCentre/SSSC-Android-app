@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 import ghelani.kshamina.sssc_android_app.model.Term;
 import ghelani.kshamina.sssc_android_app.repository.TermRepository;
-import ghelani.kshamina.sssc_android_app.ui.common.events.ItemClickListener;
+import ghelani.kshamina.sssc_android_app.ui.common.events.ListItemEventListener;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
@@ -67,7 +67,7 @@ public class TermsViewModel extends ViewModel {
     }
 
     private ListItem createListItem(Term term){
-        return new ListItem(term.getId(),term.asShortString(),"",term.toString(), isDeleteMode, new ItemClickListener() {
+        return new ListItem(term.getId(),term.asShortString(),"",term.toString(), isDeleteMode, new ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
                 termRepository.getTermById(id)

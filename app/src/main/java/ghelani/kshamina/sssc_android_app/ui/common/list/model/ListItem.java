@@ -1,6 +1,6 @@
 package ghelani.kshamina.sssc_android_app.ui.common.list.model;
 
-import ghelani.kshamina.sssc_android_app.ui.common.events.ItemClickListener;
+import ghelani.kshamina.sssc_android_app.ui.common.events.ListItemEventListener;
 
 /**
  * List view item to display Terms, Courses, and Assignments
@@ -11,9 +11,9 @@ public class ListItem implements DiffItem {
     private String headerText;
     private String descriptionText;
     private boolean deleteIconVisible;
-    private ItemClickListener clickListener;
+    private ListItemEventListener clickListener;
 
-    public ListItem(String id, String shortFormText, String headerText, String descriptionText, boolean deleteIconVisible, ItemClickListener clickListener) {
+    public ListItem(String id, String shortFormText, String headerText, String descriptionText, boolean deleteIconVisible, ListItemEventListener clickListener) {
         this.id = id;
         this.shortFormText = shortFormText;
         this.headerText = headerText;
@@ -62,11 +62,11 @@ public class ListItem implements DiffItem {
         this.deleteIconVisible = deleteIconVisible;
     }
 
-    public ItemClickListener getClickListener() {
+    public ListItemEventListener getClickListener() {
         return clickListener;
     }
 
-    public void setClickListener(ItemClickListener clickListener) {
+    public void setClickListener(ListItemEventListener clickListener) {
         this.clickListener = clickListener;
     }
 }

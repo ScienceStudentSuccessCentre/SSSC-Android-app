@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 import ghelani.kshamina.sssc_android_app.model.Course;
 import ghelani.kshamina.sssc_android_app.repository.CourseRepository;
-import ghelani.kshamina.sssc_android_app.ui.common.events.ItemClickListener;
+import ghelani.kshamina.sssc_android_app.ui.common.events.ListItemEventListener;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
@@ -72,7 +72,7 @@ public class CoursesViewModel extends ViewModel {
     }
 
     private ListItem createListItem(Course course) {
-        return new ListItem(course.getCourseId(), course.getCourseFinalGrade(), course.getCourseCode(), course.getCourseName(), isDeleteMode, new ItemClickListener() {
+        return new ListItem(course.getCourseId(), course.getCourseFinalGrade(), course.getCourseCode(), course.getCourseName(), isDeleteMode, new ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
                 courseSelected.setValue(id);

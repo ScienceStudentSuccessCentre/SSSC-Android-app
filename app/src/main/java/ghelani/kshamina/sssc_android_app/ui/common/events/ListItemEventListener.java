@@ -1,6 +1,6 @@
 package ghelani.kshamina.sssc_android_app.ui.common.events;
 
-public interface ItemClickListener {
+public interface ListItemEventListener {
 
     void onItemClicked(String id);
     boolean onItemLongClicked(String id);

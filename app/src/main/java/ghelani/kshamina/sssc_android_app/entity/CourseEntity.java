@@ -11,12 +11,13 @@ import java.util.UUID;
 
 import ghelani.kshamina.sssc_android_app.model.Course;
 
-@Entity(tableName = "courses",foreignKeys = @ForeignKey(
-        entity = TermEntity.class,
-        parentColumns = "term_id",
-        childColumns = "course_term_id",
-        onDelete = ForeignKey.CASCADE
-))
+@Entity(tableName = "courses",
+        foreignKeys = @ForeignKey(
+                entity = TermEntity.class,
+                parentColumns = "term_id",
+                childColumns = "course_term_id",
+                onDelete = ForeignKey.CASCADE
+        ))
 public class CourseEntity {
     @PrimaryKey
     @NonNull
@@ -35,7 +36,8 @@ public class CourseEntity {
     @ColumnInfo(name = "course_term_id")
     public String courseTermId;  //foreign key refer to Term:term_id;
 
-    public CourseEntity() {}
+    public CourseEntity() {
+    }
 
     public CourseEntity(String name, String code, double credits, boolean isMajorCourse, String finalGrade, String termId) {
         courseId = UUID.randomUUID().toString();

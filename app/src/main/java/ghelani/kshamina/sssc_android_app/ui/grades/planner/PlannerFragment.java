@@ -95,9 +95,6 @@ public class PlannerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup plannerView = (ViewGroup) inflater.inflate(R.layout.fragment_planner, container, false);
 
-//        Toolbar toolbar = getParentFragment().getView().findViewById(R.id.gradesToolbar);
-//        toolbar.setTitle("Planner");
-
         currentCGPAText = plannerView.findViewById(R.id.currentCGPA);
         currentCGPAText.addTextChangedListener(termTextWatcher);
 

@@ -139,6 +139,7 @@ public class TermsFragment extends Fragment {
     @Override
     public void onResume() {
         setHasOptionsMenu(true);
+        termsViewModel.fetchTerms();
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Terms");
         super.onResume();
     }
