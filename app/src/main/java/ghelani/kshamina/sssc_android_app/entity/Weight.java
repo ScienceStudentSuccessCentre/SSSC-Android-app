@@ -1,20 +1,21 @@
 package ghelani.kshamina.sssc_android_app.entity;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.PrimaryKey;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.UUID;
 
-@Entity(foreignKeys = @ForeignKey(
-        entity = Course.class,
-        parentColumns = "course_id",
-        childColumns = "weight_course_id",
-        onDelete = ForeignKey.CASCADE
-))
+@Entity(tableName = "weights",
+        foreignKeys = @ForeignKey(
+                entity = CourseEntity.class,
+                parentColumns = "course_id",
+                childColumns = "weight_course_id",
+                onDelete = ForeignKey.CASCADE
+        ))
 public class Weight {
     @PrimaryKey
     @NonNull
@@ -25,9 +26,10 @@ public class Weight {
     @ColumnInfo(name = "weight_value")
     public double weightValue;
     @ColumnInfo(name = "weight_course_id")
-    public String weightCourseId;    //foreign key refer to Course:course_id
+    public String weightCourseId;    //foreign key refer to CourseEntity:course_id
 
-    public Weight() {}
+    public Weight() {
+    }
 
     public Weight(String name, double value, String courseId) {
         weightId = UUID.randomUUID().toString();

@@ -1,35 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ghelani.kshamina.sssc_android_app.grades.GradesFragment">
+    tools:context=".ui.grades.GradesFragment">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/grades_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <android.support.design.widget.TabLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBarLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/terms_tab" />
+                android:theme="@style/AppTheme.AppBarOverlay"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/calculator_tab" />
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/gradesToolbar"
+                    style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="#638594"
+                    app:title="Terms" />
 
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/planner_tab" />
-        </android.support.design.widget.TabLayout>
-    </android.support.v4.view.ViewPager>
+            </com.google.android.material.appbar.AppBarLayout>
 
-</FrameLayout>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/gradesTabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </com.google.android.material.tabs.TabLayout>
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/grades_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

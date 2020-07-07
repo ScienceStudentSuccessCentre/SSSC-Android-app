@@ -1,33 +1,33 @@
 package ghelani.kshamina.sssc_android_app;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 
 import com.facebook.stetho.Stetho;
+import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 
-import ghelani.kshamina.sssc_android_app.event.Event;
-import ghelani.kshamina.sssc_android_app.event.EventSingleFragment;
-import ghelani.kshamina.sssc_android_app.event.EventsFragment;
-import ghelani.kshamina.sssc_android_app.grades.GradesFragment;
+import ghelani.kshamina.sssc_android_app.ui.ResourcesFragment;
+import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
+import ghelani.kshamina.sssc_android_app.ui.event.EventsFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.GradesFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CourseListFragment;
 
 public class MainActivity extends AppCompatActivity {
-    final EventsFragment fragment1 = new EventsFragment();
-    final Fragment fragment2 = new GradesFragment();
-    final Fragment fragment3 = new ResourcesFragment();
-    final Fragment fragment4 = new SettingsFragment();
-    final FragmentManager fm = getSupportFragmentManager();
-    Fragment active = fragment1;
-    Toolbar toolbar;
-    Menu menu;
+    private BottomNavigationView navigatonView;
+    //Toolbar toolbar;
+   // Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,86 +35,74 @@ public class MainActivity extends AppCompatActivity {
         Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
 
-        toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Upcoming Events");
-        setSupportActionBar(toolbar);
+        //toolbar = findViewById(R.id.toolbar);
 
-        BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setLabelVisibilityMode(1);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        fm.beginTransaction().add(R.id.main_container, fragment4, "4").hide(fragment4).commit();
-        fm.beginTransaction().add(R.id.main_container, fragment3, "3").hide(fragment3).commit();
-        fm.beginTransaction().add(R.id.main_container, fragment2, "2").hide(fragment2).commit();
-        fm.beginTransaction().add(R.id.main_container,fragment1, "1").commit();
-
-        // If coming from notification click
-        Event event = (Event) getIntent().getSerializableExtra("event");
-        if(event != null) {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("event", event);
-            EventSingleFragment eventSingle = new EventSingleFragment();
-            eventSingle.setArguments(bundle);
-            fm.beginTransaction().replace(R.id.main_container, eventSingle).addToBackStack(null).commit();
-
-        }
+        //setSupportActionBar(toolbar);
+        navigatonView = findViewById(R.id.navigation);
+        navigatonView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
+        changeFragment(new EventsFragment());
+        setupBottomNav();
 
         // Initialize settings with its default values
         // false means do not override user's saved settings on start, if they exist
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
     }
 
+    public void changeFragment(Fragment newFragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        while (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStackImmediate();
+        }
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainer, newFragment);
+        fragmentTransaction.commit();
+    }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+    public void replaceFragment(Fragment newFragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentContainer, newFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            fm.popBackStack();
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            getSupportActionBar().setDisplayShowHomeEnabled(false);
 
+
+    private void setupBottomNav() {
+        navigatonView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    fm.beginTransaction().hide(active).show(fragment1).commit();
-                    active = fragment1;
-                    getSupportActionBar().show();
-                    toolbar.setTitle("Upcoming Events");
-                    return true;
-
+                    changeFragment(new EventsFragment());
+                   // getSupportActionBar().setTitle("Events");
+                    break;
                 case R.id.navigation_dashboard:
-                    fm.beginTransaction().hide(active).show(fragment2).commit();
-                    active = fragment2;
-                    getSupportActionBar().show();
-//                    toolbar.setTitle("Terms");
-                    toolbar.setTitle("Grades Calculator");
-                    return true;
-
+                    changeFragment(new GradesFragment());
+                   // getSupportActionBar().setTitle("Grades Calculator");
+                    break;
                 case R.id.navigation_notifications:
-                    fm.beginTransaction().hide(active).show(fragment3).commit();
-                    active = fragment3;
-                    getSupportActionBar().hide();
-                    return true;
-
+                    changeFragment(new ResourcesFragment());
+                   // getSupportActionBar().setTitle("Resources");
+                    break;
                 case R.id.navigation_settings:
-                    fm.beginTransaction().hide(active).show(fragment4).commit();
-                    active = fragment4;
-                    getSupportActionBar().hide();
-                    return true;
+                    changeFragment(new SettingsFragment());
+                   // getSupportActionBar().setTitle("Settings");
             }
-            return false;
-        }
-    };
+            return true;
+        });
+    }
 
-
+    public BottomNavigationView getNavigatonView() {
+        return navigatonView;
+    }
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
         getMenuInflater().inflate(R.menu.main_menu, menu);
         menu.setGroupVisible(R.id.event_single_menu, false);
         return super.onCreateOptionsMenu(menu);
-    }
-
+        }
+*/
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -129,5 +117,7 @@ public class MainActivity extends AppCompatActivity {
         if(webView != null && webView.canGoBack()) webView.goBack();
         else super.onBackPressed();
     }
+
+
 
 }

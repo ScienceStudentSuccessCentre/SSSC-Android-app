@@ -2,14 +2,14 @@
 <!-- This file usually is supposed to represent a default layout given by Android, -->
 <!--    but since we are using our own settings layout, this page is only kept for -->
 <!--    automatic persistence of user settings.                                    -->
-<android.support.v7.preference.PreferenceScreen
+<androidx.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="include_in_progress_switch"
         android:title="Include in-progress courses"
         android:summary="Toggle this off if you do not want to include courses which are currently in-progress."
     />
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

@@ -1,7 +1,7 @@
 package ghelani.kshamina.sssc_android_app;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import static android.os.SystemClock.sleep;
@@ -16,7 +16,5 @@ public class SplashActivity extends AppCompatActivity {
         sleep(200);
         startActivity(intent);
         finish();
-
-
     }
 }
