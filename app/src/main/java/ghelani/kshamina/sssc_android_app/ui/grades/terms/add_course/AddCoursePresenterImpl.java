@@ -7,36 +7,38 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import ghelani.kshamina.sssc_android_app.database.CourseDao;
+import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
-import ghelani.kshamina.sssc_android_app.model.Course;
-import ghelani.kshamina.sssc_android_app.repository.CourseRepository;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.InputItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.TextItem;
 import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
 
 public class AddCoursePresenterImpl implements AddCourseContract.Presenter {
 
     private AddCourseContract.View view;
-    private CourseRepository courseRepository;
+    private CourseDao courseDao;
     private Scheduler backgroundScheduler;
     private Scheduler mainScheduler;
     private List<InputItem> items;
-    private Course newCourse;
+    private CourseEntity newCourse;
 
     @Inject
     public AddCoursePresenterImpl(AddCourseContract.View view,
                                   Scheduler backgroundScheduler,
                                   Scheduler mainScheduler,
-                                  CourseRepository courseRepository) {
+                                  GradesDatabase gradesDatabase) {
         this.view = view;
-        this.courseRepository = courseRepository;
+        this.courseDao = gradesDatabase.getCourseDao();
         this.backgroundScheduler = backgroundScheduler;
         this.mainScheduler = mainScheduler;
 
         createItemsList();
-        newCourse = new Course();
+        newCourse = new CourseEntity();
 
     }
 
@@ -61,54 +63,70 @@ public class AddCoursePresenterImpl implements AddCourseContract.Presenter {
 
     @Override
     public void setTermId(String termID) {
-        newCourse.setCourseTermId(termID);
+        newCourse.courseTermId = termID;
     }
 
     private void createItemsList() {
         items = new ArrayList<>();
 
-        items.add(new InputItem("", "Operating Systems", "Name", (item, value) -> {
-            newCourse.setCourseName(value);
+        items.add(new InputItem("Operating Systems", "Name", InputType.TYPE_CLASS_TEXT, (item, value) -> {
+            newCourse.courseName = value;
             isCreateAvailable();
-        }, InputItem.InputStyle.TEXT, InputType.TYPE_CLASS_TEXT));
-        items.add(new InputItem("", "COMP 3000", "Code", (item, value) -> {
-            newCourse.setCourseCode(value);
-            isCreateAvailable();
-        }, InputItem.InputStyle.TEXT,InputType.TYPE_CLASS_TEXT));
-        items.add(new InputItem("", "0.5", "Credits", (item, value) -> {
-            newCourse.setCourseCredits(value.isEmpty() ? -1 : Double.parseDouble(value));
-            isCreateAvailable();
-        }, InputItem.InputStyle.TEXT,(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL)));
-        items.add(new InputItem("", "Y/N", "Counts Towards Major CGPA", (item, value) -> {
-            newCourse.setCourseIsMajorCourse(!newCourse.isCourseIsMajorCourse());
-            isCreateAvailable();
-        }, InputItem.InputStyle.SWITCH,InputType.TYPE_CLASS_TEXT));
-        items.add(new InputItem("", "", "ADD NEW WEIGHT", (item, value) -> {
-            isCreateAvailable();
-        }, InputItem.InputStyle.BUTTON,InputType.TYPE_CLASS_TEXT));
-        items.add(new InputItem("", "None", "Final Grade", (item, value) -> {
-            newCourse.setCourseFinalGrade(value);
-            isCreateAvailable();
-        }, InputItem.InputStyle.TEXT,InputType.TYPE_CLASS_TEXT));
-    }
+        }));
 
-    @Override
-    public void onCancel() {
+        items.add(new InputItem("COMP 3000", "Code", InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS, (item, value) -> {
+            newCourse.courseCode = value;
+            isCreateAvailable();
+        }));
 
+        items.add(new InputItem("0.5", "Credits", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
+            newCourse.courseCredits = value.isEmpty() ? -1 : Double.parseDouble(value);
+            isCreateAvailable();
+        }));
+
+        items.add(new InputItem("Y/N", "Counts Towards Major CGPA", InputItem.InputStyle.SWITCH, InputType.TYPE_CLASS_TEXT, (item, value) -> {
+            newCourse.courseIsMajorCourse = !newCourse.courseIsMajorCourse;
+            isCreateAvailable();
+        }));
+
+        items.add(new InputItem("", "ADD NEW WEIGHT", InputItem.InputStyle.BUTTON, InputType.TYPE_CLASS_TEXT, (item, value) -> {
+           // newCourse.setCourseIsMajorCourse(Boolean.getBoolean(value));
+            isCreateAvailable();
+        }));
+
+        items.add(new InputItem("None", "Final Grade", InputType.TYPE_CLASS_TEXT, (item, value) -> {
+            newCourse.courseFinalGrade = value;
+            isCreateAvailable();
+        }));
     }
 
     @Override
     public void onCreate() {
-        if (!newCourse.getCourseName().isEmpty() && !newCourse.getCourseCode().isEmpty() && newCourse.getCourseCredits() != -1) {
-            Completable.fromAction(() -> courseRepository.insertCourse(new CourseEntity(newCourse)))
+        if (!newCourse.courseName.isEmpty() && !newCourse.courseCode.isEmpty() && newCourse.courseCredits != -1) {
+            Completable.fromAction(() ->  courseDao.insertCourse(newCourse))
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
-                    .subscribe();
-            view.navigateToCoursesPage();
+                    .subscribe(new CompletableObserver() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            view.navigateToCoursesPage();
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+                    });
+
         }
     }
 
     private void isCreateAvailable() {
-        view.setCreateEnabled((!newCourse.getCourseName().isEmpty() && !newCourse.getCourseCode().isEmpty() && newCourse.getCourseCredits() != -1));
+        view.setCreateEnabled((!newCourse.courseName.isEmpty() && !newCourse.courseCode.isEmpty() && newCourse.courseCredits != -1));
     }
 }

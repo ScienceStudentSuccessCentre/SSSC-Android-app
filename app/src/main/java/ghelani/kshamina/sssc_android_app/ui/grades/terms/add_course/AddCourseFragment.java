@@ -1,6 +1,9 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -53,7 +56,6 @@ public class AddCourseFragment extends Fragment implements AddCourseContract.Vie
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -78,19 +80,35 @@ public class AddCourseFragment extends Fragment implements AddCourseContract.Vie
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-/*
-        Spinner spinner = (Spinner) view.findViewById(R.id.finalGradeSpinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.grades_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-        */
+
         cancelButton.setOnClickListener(v->navigateToCoursesPage());
         createButton.setOnClickListener(v -> presenter.onCreate());
-        recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL){
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                Drawable mDivider=getContext().getDrawable(R.drawable.recyclerview_divider);
+
+                int right = parent.getWidth() - parent.getPaddingRight();
+                int left= parent.getPaddingLeft();
+                int childCount = parent.getChildCount();
+
+                for (int i = 0; i < childCount-1; i++) {
+                    //Remove line divider between assignment weight not and Override Calculated Grade heading
+                    if(i == childCount-4){
+                        continue;
+                    }
+                    View child = parent.getChildAt(i);
+                    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+
+                    int top = child.getBottom() + params.bottomMargin;
+                    int bottom = top + mDivider.getIntrinsicHeight();
+
+                    mDivider.setBounds(left, top, right, bottom);
+                    mDivider.draw(c);
+                }
+            }
+        });
+
         recyclerView.setAdapter(new MainListAdapter(getActivity(), presenter.getInputItems()));
     }
 

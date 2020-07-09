@@ -9,8 +9,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import ghelani.kshamina.sssc_android_app.model.Course;
-import ghelani.kshamina.sssc_android_app.repository.CourseRepository;
+import ghelani.kshamina.sssc_android_app.database.CourseDao;
+import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
+import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.ui.common.events.ListItemEventListener;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
@@ -25,7 +26,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CoursesViewModel extends ViewModel {
 
-    private CourseRepository courseRepository;
+    private CourseDao courseDao;
     public MutableLiveData<ViewState<ListItem>> state = new MutableLiveData<>();
     public boolean isDeleteMode;
     private List<ListItem> courseItemList = new ArrayList<>();
@@ -34,29 +35,29 @@ public class CoursesViewModel extends ViewModel {
     public MutableLiveData<Double> termGPA = new MutableLiveData<>();
 
     @Inject
-    public CoursesViewModel(CourseRepository courseRepository) {
+    public CoursesViewModel(GradesDatabase gradesDatabase) {
         super();
-        this.courseRepository = courseRepository;
+        this.courseDao = gradesDatabase.getCourseDao();
         isDeleteMode = false;
     }
 
     public void fetchCoursesByTermId(String termId) {
         courseItemList.clear();
-        courseRepository.getCoursesByTermId(termId)
+        courseDao.getCoursesByTermId(termId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<Course>>() {
+                .subscribe(new SingleObserver<List<CourseEntity>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         state.setValue(new ViewState<>(true, false, false, "", Collections.emptyList()));
                     }
 
                     @Override
-                    public void onSuccess(List<Course> courses) {
+                    public void onSuccess(List<CourseEntity> courses) {
                         double credits = 0;
                         double gpa = Grading.calculateTermGPA(courses);
-                        for (Course course : courses) {
-                            credits += course.getCourseCredits();
+                        for (CourseEntity course : courses) {
+                            credits += course.courseCredits;
                             courseItemList.add(createListItem(course));
                         }
                         state.setValue(new ViewState<>(false, false, true, "", courseItemList));
@@ -71,8 +72,8 @@ public class CoursesViewModel extends ViewModel {
                 });
     }
 
-    private ListItem createListItem(Course course) {
-        return new ListItem(course.getCourseId(), course.getCourseFinalGrade(), course.getCourseCode(), course.getCourseName(), isDeleteMode, new ListItemEventListener() {
+    private ListItem createListItem(CourseEntity course) {
+        return new ListItem(course.courseId, course.courseFinalGrade, course.courseCode, course.courseName, isDeleteMode, new ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
                 courseSelected.setValue(id);
@@ -96,7 +97,7 @@ public class CoursesViewModel extends ViewModel {
 
             @Override
             public void deleteItem(String courseId) {
-                Completable.fromAction(() -> courseRepository.deleteCourse(courseId))
+                Completable.fromAction(() -> courseDao.deleteCourse(courseId))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CompletableObserver() {
@@ -107,7 +108,7 @@ public class CoursesViewModel extends ViewModel {
 
                             @Override
                             public void onComplete() {
-                                fetchCoursesByTermId(course.getCourseTermId());
+                                fetchCoursesByTermId(course.courseTermId);
                             }
 
                             @Override

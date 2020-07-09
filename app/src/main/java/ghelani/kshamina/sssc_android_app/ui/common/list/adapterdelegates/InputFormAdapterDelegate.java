@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,7 +51,7 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
         InputItem item = (InputItem) items.get(position);
         InputItemViewHolder inputItemViewHolder = (InputItemViewHolder) holder;
 
-        switch (item.getType()){
+        switch (item.getType()) {
             case TEXT:
                 inputItemViewHolder.name.setText(item.getName());
                 inputItemViewHolder.textInput.setHint(item.getHint());
@@ -76,11 +78,13 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
                 inputItemViewHolder.inputLayout.setVisibility(View.GONE);
                 inputItemViewHolder.inputButton.setVisibility(View.VISIBLE);
                 inputItemViewHolder.inputButton.setText(item.getName());
+                inputItemViewHolder.inputButton.setOnClickListener(v -> item.getListener().onValueChanged(item, "pressed"));
                 break;
             case SWITCH:
                 inputItemViewHolder.name.setText(item.getName());
                 inputItemViewHolder.textInput.setVisibility(View.GONE);
                 inputItemViewHolder.switchInput.setVisibility(View.VISIBLE);
+                inputItemViewHolder.switchInput.setOnCheckedChangeListener((buttonView, isChecked) -> item.getListener().onValueChanged(item, String.valueOf(isChecked)));
                 break;
         }
     }

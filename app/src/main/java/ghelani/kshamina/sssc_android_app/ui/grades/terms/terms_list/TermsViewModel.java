@@ -9,8 +9,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import ghelani.kshamina.sssc_android_app.model.Term;
-import ghelani.kshamina.sssc_android_app.repository.TermRepository;
+import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
+import ghelani.kshamina.sssc_android_app.database.TermDao;
+import ghelani.kshamina.sssc_android_app.entity.TermEntity;
 import ghelani.kshamina.sssc_android_app.ui.common.events.ListItemEventListener;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
@@ -25,34 +26,52 @@ import io.reactivex.schedulers.Schedulers;
 
 public class TermsViewModel extends ViewModel {
 
-    private TermRepository termRepository;
+    private TermDao termDao;
     public MutableLiveData<ViewState<ListItem>> state = new MutableLiveData<>();
-    public MutableLiveData<Term> termSelected = new MutableLiveData<>();
+    public MutableLiveData<TermEntity> termSelected = new MutableLiveData<>();
     private boolean isDeleteMode;
 
     @Inject
-    public TermsViewModel(TermRepository termRepository) {
+    public TermsViewModel(GradesDatabase db) {
         super();
-        this.termRepository = termRepository;
+        this.termDao = db.getTermDao();
         isDeleteMode = false;
     }
 
-    public void fetchTerms() {
-        termRepository.getAllTerms()
+    public void insertTerm(TermEntity newTerm){
+        Completable.fromAction(() -> termDao.insertTerm(newTerm))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<Term>>() {
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {}
+
+                    @Override
+                    public void onComplete() {
+                        fetchTerms();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {}
+                });
+    }
+
+    public void fetchTerms() {
+        termDao.getAllTerms()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<TermEntity>>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         state.setValue(new ViewState<>(true, false, false, "", Collections.emptyList()));
                     }
 
                     @Override
-                    public void onSuccess(@NonNull List<Term> terms) {
+                    public void onSuccess(@NonNull List<TermEntity> terms) {
                         Collections.sort(terms);
                         Collections.reverse(terms);
                         List<ListItem> items = new ArrayList<>();
-                        for(Term term : terms){
+                        for(TermEntity term : terms){
                             items.add(createListItem(term));
                         }
                         state.setValue(new ViewState<>(false, false, true, "", items));
@@ -65,21 +84,21 @@ public class TermsViewModel extends ViewModel {
                 });
     }
 
-    private ListItem createListItem(Term term){
-        return new ListItem(term.getId(),term.asShortString(),"",term.toString(), isDeleteMode, new ListItemEventListener() {
+    private ListItem createListItem(TermEntity term){
+        return new ListItem(term.getTermId(),term.asShortString(),"",term.toString(), isDeleteMode, new ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
-                termRepository.getTermById(id)
+                termDao.getTermById(id)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new SingleObserver<Term>() {
+                        .subscribe(new SingleObserver<TermEntity>() {
                             @Override
                             public void onSubscribe(Disposable d) {
 
                             }
 
                             @Override
-                            public void onSuccess(Term term) {
+                            public void onSuccess(TermEntity term) {
                                 termSelected.setValue(term);
                             }
 
@@ -108,7 +127,7 @@ public class TermsViewModel extends ViewModel {
 
             @Override
             public void deleteItem(String id) {
-                Completable.fromAction(() -> termRepository.delete(id))
+                Completable.fromAction(() -> termDao.deleteTerm(id))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CompletableObserver() {
@@ -147,8 +166,4 @@ public class TermsViewModel extends ViewModel {
         isDeleteMode = deleteMode;
     }
 }
-
-
-
-
 

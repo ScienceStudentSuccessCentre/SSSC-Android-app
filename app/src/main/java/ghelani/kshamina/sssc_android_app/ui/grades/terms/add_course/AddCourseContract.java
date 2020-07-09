@@ -16,8 +16,6 @@ public interface AddCourseContract {
 
         void setTermId(String termId);
 
-        void onCancel();
-
         void onCreate();
     }
 }
