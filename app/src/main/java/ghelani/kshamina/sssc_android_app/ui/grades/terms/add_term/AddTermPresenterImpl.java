@@ -7,9 +7,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import ghelani.kshamina.sssc_android_app.model.Term;
-import ghelani.kshamina.sssc_android_app.repository.TermRepository;
-import io.reactivex.Completable;
+import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
+import ghelani.kshamina.sssc_android_app.database.TermDao;
+import ghelani.kshamina.sssc_android_app.entity.TermEntity;
 import io.reactivex.Scheduler;
 
 public class AddTermPresenterImpl implements AddTermContract.Presenter {
@@ -17,8 +17,7 @@ public class AddTermPresenterImpl implements AddTermContract.Presenter {
     private AddTermContract.View view;
     private Scheduler backgroundScheduler;
     private Scheduler mainScheduler;
-    private TermRepository termRepository;
-
+    private TermDao termDao;
 
     private int yearSelected;
     private int seasonSelected;
@@ -29,11 +28,11 @@ public class AddTermPresenterImpl implements AddTermContract.Presenter {
     public AddTermPresenterImpl(AddTermContract.View view,
                                 Scheduler backgroundScheduler,
                                 Scheduler mainScheduler,
-                                TermRepository termRepository) {
+                                GradesDatabase db) {
         this.view = view;
         this.backgroundScheduler = backgroundScheduler;
         this.mainScheduler = mainScheduler;
-        this.termRepository = termRepository;
+        termDao = db.getTermDao();
 
         years = generateYearList();
         seasons = new ArrayList<>(Arrays.asList("Fall", "Summer", "Winter"));
@@ -64,20 +63,8 @@ public class AddTermPresenterImpl implements AddTermContract.Presenter {
     }
 
     @Override
-    public void onCancel() {
-        view.navigateToTermsPage();
-    }
-
-    @Override
-    public void onCreate() {
-        Term newTerm = new Term(seasons.get(seasonSelected).toUpperCase(), years.get(yearSelected));
-
-        // Run insrt command on background thread called Scheduler.io and observe result on mainthread
-        Completable.fromAction(() -> termRepository.insert(newTerm))
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .subscribe();
-        view.navigateToTermsPage();
+    public TermEntity createTerm() {
+        return new TermEntity(TermEntity.Season.valueOf(seasons.get(seasonSelected).toUpperCase()), years.get(yearSelected));
     }
 
     private List<String> generateYearList() {

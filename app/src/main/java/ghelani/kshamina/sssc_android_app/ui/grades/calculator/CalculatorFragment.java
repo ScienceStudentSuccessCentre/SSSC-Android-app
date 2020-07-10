@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,10 +28,9 @@ import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.R;
+import ghelani.kshamina.sssc_android_app.database.CourseDao;
+import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.entity.TermEntity;
-import ghelani.kshamina.sssc_android_app.model.Term;
-import ghelani.kshamina.sssc_android_app.repository.CourseRepository;
-import ghelani.kshamina.sssc_android_app.repository.TermRepository;
 import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
@@ -44,10 +42,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
     private List<CourseEntity> adapterList;    // Need to keep a reference to the list used by the adapter,
 
     @Inject
-    TermRepository termRepository;                                     // and add to/remove from it as needed
-
-    @Inject
-    CourseRepository courseRepository;
+    GradesDatabase gradesDatabase;                                     // and add to/remove from it as needed
 
     // Components
     private TextView calculatedOverallCGPA;
@@ -75,9 +70,6 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
-//        Toolbar toolbar = getParentFragment().getView().findViewById(R.id.gradesToolbar);
-//        toolbar.setTitle("Calculator");
 
         ViewGroup calculatorView = (ViewGroup) inflater.inflate(R.layout.fragment_calculator, container, false);
 
@@ -122,14 +114,13 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
         Thread thread = new Thread(() -> {
             filteredCourseList.clear();
 
-//             TermEntity dummyTerm1 = new TermEntity(Term.Season.WINTER, "2019");  // To satisfy foreign key constraint
-//            TermEntity dummyTerm2 = new TermEntity(Term.Season.FALL, "2020");
-            TermEntity dummyTerm1 = new TermEntity(Term.Season.WINTER, "2019");  // To satisfy foreign key constraint
-            TermEntity dummyTerm2 = new TermEntity(Term.Season.FALL, "2020");
+            TermEntity dummyTerm1 = new TermEntity(TermEntity.Season.WINTER, "2019");  // To satisfy foreign key constraint
+            TermEntity dummyTerm2 = new TermEntity(TermEntity.Season.FALL, "2020");
+            gradesDatabase.getTermDao().insertTerm(dummyTerm1);
+            gradesDatabase.getTermDao().insertTerm(dummyTerm2);
+            String termId1 = dummyTerm1.getTermId();
 
-            String termId1 = termRepository.insert(new Term(dummyTerm1.getTermId(), dummyTerm1.getTermSeason(), dummyTerm1.getTermYear()));
-
-            String termId2 = termRepository.insert(new Term(dummyTerm2.getTermId(), dummyTerm2.getTermSeason(), dummyTerm2.getTermYear()));
+            String termId2 = dummyTerm2.getTermId();
 
             CourseEntity dummyCourseEntity1 = new CourseEntity(
                     "Introduction to Computer Science I",
@@ -164,13 +155,13 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
                     termId2
             );
 
+            CourseDao courseDao = gradesDatabase.getCourseDao();
+            courseDao.insertCourse(dummyCourseEntity1);
+            courseDao.insertCourse(dummyCourseEntity2);
+            courseDao.insertCourse(dummyCourseEntity3);
+            courseDao.insertCourse(dummyCourseEntity4);
 
-            courseRepository.insertCourse(dummyCourseEntity1);
-            courseRepository.insertCourse(dummyCourseEntity2);
-            courseRepository.insertCourse(dummyCourseEntity3);
-            courseRepository.insertCourse(dummyCourseEntity4);
-
-            filteredCourseList.addAll(courseRepository.getAllCourses());
+            filteredCourseList.addAll(courseDao.getAllCourses());
             updateAdapterList();
         });
 

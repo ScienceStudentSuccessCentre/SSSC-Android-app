@@ -93,7 +93,7 @@ public class TermsFragment extends Fragment {
             setHasOptionsMenu(false);
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            CourseListFragment courseListFragment = CourseListFragment.newInstance(term.getId(),term.toString());
+            CourseListFragment courseListFragment = CourseListFragment.newInstance(term.getTermId(),term.toString());
             fragmentTransaction.replace(R.id.fragmentContainer, courseListFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();

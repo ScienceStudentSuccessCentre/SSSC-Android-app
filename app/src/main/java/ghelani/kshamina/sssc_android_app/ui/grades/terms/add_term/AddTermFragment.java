@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +25,9 @@ import butterknife.ButterKnife;
 import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
+import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.ui.grades.GradesFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list.TermsViewModel;
 
 public class AddTermFragment extends Fragment implements AddTermContract.View {
 
@@ -42,6 +45,11 @@ public class AddTermFragment extends Fragment implements AddTermContract.View {
 
     @BindView(R.id.cancelButton)
     Button cancelButton;
+
+    @Inject
+    ViewModelFactory viewModelFactory;
+
+    private TermsViewModel termsViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,13 +75,14 @@ public class AddTermFragment extends Fragment implements AddTermContract.View {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        termsViewModel = new ViewModelProvider(this, viewModelFactory).get(TermsViewModel.class);
+
         createButton.setOnClickListener(v -> {
-            presenter.onCreate();
+            termsViewModel.insertTerm(presenter.createTerm());
+            navigateToTermsPage();
         });
 
-        cancelButton.setOnClickListener(v -> {
-            presenter.onCancel();
-        });
+        cancelButton.setOnClickListener(v -> navigateToTermsPage());
 
         seasonListView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         yearListView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
@@ -83,8 +92,7 @@ public class AddTermFragment extends Fragment implements AddTermContract.View {
 
     @Override
     public void navigateToTermsPage() {
-        //((MainActivity)requireActivity()).changeFragment(new GradesFragment());
-        getFragmentManager().popBackStackImmediate();
+        ((MainActivity) requireActivity()).changeFragment(new GradesFragment());
     }
 
     @Override
@@ -105,14 +113,12 @@ public class AddTermFragment extends Fragment implements AddTermContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        //((AppCompatActivity) requireActivity()).getSupportActionBar().hide();
         ((MainActivity) requireActivity()).getNavigatonView().setVisibility(View.GONE);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-      //  ((AppCompatActivity) requireActivity()).getSupportActionBar().show();
         ((MainActivity) requireActivity()).getNavigatonView().setVisibility(View.VISIBLE);
     }
 }

@@ -8,11 +8,24 @@ import androidx.annotation.Nullable;
 
 import java.util.UUID;
 
-import ghelani.kshamina.sssc_android_app.model.Term;
-import ghelani.kshamina.sssc_android_app.model.Term.Season;
-
 @Entity(tableName = "terms")
-public class TermEntity {
+public class TermEntity implements Comparable<TermEntity> {
+
+    public enum Season {
+        WINTER(1),
+        SUMMER(2),
+        FALL(3);
+
+        private final int seasonValue;
+
+        Season(int seasonValue) {
+            this.seasonValue = seasonValue;
+        }
+
+        public int getSeasonValue() {
+            return seasonValue;
+        }
+    }
 
     @PrimaryKey
     @NonNull
@@ -23,7 +36,8 @@ public class TermEntity {
     @ColumnInfo(name = "term_year")
     public String termYear;
 
-    public TermEntity(){}
+    public TermEntity() {
+    }
 
     public TermEntity(Season season, String year) {
         termId = UUID.randomUUID().toString();
@@ -31,10 +45,40 @@ public class TermEntity {
         this.termYear = year;
     }
 
-    public TermEntity(Term term){
-        this.termId = term.getId();
-        this.termSeason = term.getSeason();
-        this.termYear = term.getYear();
+    @Override
+    public int compareTo(TermEntity term) {
+
+        int result = Integer.compare(Integer.parseInt(this.getTermYear()), Integer.parseInt(term.getTermYear()));
+        if (result != 0) {
+            return result;
+        } else {
+            return Integer.compare(Season.valueOf(this.getTermSeason()).getSeasonValue(), Season.valueOf(term.getTermSeason()).getSeasonValue());
+        }
+
+    }
+
+    public String asShortString() {
+        return
+                this.termSeason.charAt(0) +
+                        (this.termYear.length() == 4 ? this.termYear.substring(2, 4) : this.termYear);
+    }
+
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        TermEntity term = (TermEntity) obj;
+        return termId.equals(term.getTermId());
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 + termId.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return this.termSeason.charAt(0) + this.termSeason.substring(1).toLowerCase() + " " + this.termYear;
     }
 
     @NonNull

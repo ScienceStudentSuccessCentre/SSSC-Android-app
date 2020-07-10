@@ -1,9 +1,9 @@
 package ghelani.kshamina.sssc_android_app.ui.common.events;
 
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.InputItem;
+import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 
 public interface FormInputItemListener {
 
-    void onValueChanged(InputItem item, String value);
+    void onValueChanged(DiffItem item, String value);
 
 }
