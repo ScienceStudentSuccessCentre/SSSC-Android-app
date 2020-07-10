@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -26,6 +28,7 @@ import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
+import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CourseListFragment;
 
 public class AddCourseFragment extends Fragment implements AddCourseContract.View {
@@ -108,8 +111,7 @@ public class AddCourseFragment extends Fragment implements AddCourseContract.Vie
                 }
             }
         });
-
-        recyclerView.setAdapter(new MainListAdapter(getActivity(), presenter.getInputItems()));
+        presenter.getInputItems();
     }
 
     @Override
@@ -121,5 +123,10 @@ public class AddCourseFragment extends Fragment implements AddCourseContract.Vie
     @Override
     public void setCreateEnabled(boolean value) {
         createButton.setEnabled(value);
+    }
+
+    @Override
+    public void displayItems(List<DiffItem> items) {
+        recyclerView.setAdapter(new MainListAdapter(getActivity(), items));
     }
 }

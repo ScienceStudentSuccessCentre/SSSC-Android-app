@@ -9,10 +9,12 @@ public interface AddCourseContract {
         void navigateToCoursesPage();
 
         void setCreateEnabled(boolean value);
+
+        void displayItems(List<DiffItem> items);
     }
 
     interface Presenter {
-        List<DiffItem> getInputItems();
+        void getInputItems();
 
         void setTermId(String termId);
 

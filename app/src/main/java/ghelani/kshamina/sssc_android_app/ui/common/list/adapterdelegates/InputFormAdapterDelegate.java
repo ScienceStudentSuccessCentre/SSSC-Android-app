@@ -2,16 +2,12 @@ package ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates;
 
 import android.app.Activity;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -58,9 +54,7 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
                 inputItemViewHolder.textInput.setInputType(item.getKeyboardType());
                 inputItemViewHolder.textInput.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                    }
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -68,9 +62,7 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
                     }
 
                     @Override
-                    public void afterTextChanged(Editable s) {
-
-                    }
+                    public void afterTextChanged(Editable s) {}
                 });
                 inputItemViewHolder.switchInput.setVisibility(View.GONE);
                 break;

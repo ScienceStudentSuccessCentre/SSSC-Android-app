@@ -10,22 +10,28 @@ public class InputItem implements DiffItem {
         SWITCH,
     }
 
+    private String value;
     private String hint;
     private String name;
     private FormInputItemListener listener;
     private int keyboardType;
     private InputStyle type;
 
-    public InputItem(String hint, String name, InputStyle type, int keyboardType, FormInputItemListener listener) {
+    public InputItem(String value,String hint, String name, InputStyle type, int keyboardType, FormInputItemListener listener) {
         this.hint = hint;
         this.name = name;
         this.listener = listener;
         this.type = type;
         this.keyboardType = keyboardType;
+        this.value = value;
     }
 
     public InputItem(String hint, String name, int keyboardType, FormInputItemListener listener) {
-        this(hint, name, InputStyle.TEXT, keyboardType, listener);
+        this("",hint, name, InputStyle.TEXT, keyboardType, listener);
+    }
+
+    public InputItem(String hint, String name, InputStyle type, int keyboardType, FormInputItemListener listener) {
+        this("",hint, name, type,keyboardType, listener);
     }
 
     public String getHint() {
@@ -66,5 +72,13 @@ public class InputItem implements DiffItem {
 
     public void setKeyboardType(int keyboardType) {
         this.keyboardType = keyboardType;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }
