@@ -82,7 +82,7 @@ public class AddCoursePresenterImpl implements AddCourseContract.Presenter {
             isCreateAvailable();
         }));
 
-        items.add(new InputItem("Y/N", "Counts Towards Major CGPA", InputItem.InputStyle.SWITCH, InputType.TYPE_CLASS_TEXT, (item, value) -> {
+        items.add(new InputItem("Y/N", "Counts Towards Major CGPA", InputItem.InputStyle.SWITCH, 1, (item, value) -> {
             newCourse.courseIsMajorCourse = !newCourse.courseIsMajorCourse;
             ((InputItem) item).setValue(value);
             isCreateAvailable();

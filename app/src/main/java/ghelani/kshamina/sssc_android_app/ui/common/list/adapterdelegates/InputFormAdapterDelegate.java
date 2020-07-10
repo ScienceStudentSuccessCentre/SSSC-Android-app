@@ -50,8 +50,10 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
         switch (item.getType()) {
             case TEXT:
                 inputItemViewHolder.name.setText(item.getName());
+                inputItemViewHolder.textInput.setText(item.getValue());
                 inputItemViewHolder.textInput.setHint(item.getHint());
                 inputItemViewHolder.textInput.setInputType(item.getKeyboardType());
+                inputItemViewHolder.switchInput.setVisibility(View.GONE);
                 inputItemViewHolder.textInput.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -64,7 +66,6 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
                     @Override
                     public void afterTextChanged(Editable s) {}
                 });
-                inputItemViewHolder.switchInput.setVisibility(View.GONE);
                 break;
             case BUTTON:
                 inputItemViewHolder.inputLayout.setVisibility(View.GONE);
@@ -76,6 +77,7 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
                 inputItemViewHolder.name.setText(item.getName());
                 inputItemViewHolder.textInput.setVisibility(View.GONE);
                 inputItemViewHolder.switchInput.setVisibility(View.VISIBLE);
+                inputItemViewHolder.switchInput.setChecked(Boolean.parseBoolean(item.getValue()));
                 inputItemViewHolder.switchInput.setOnCheckedChangeListener((buttonView, isChecked) -> item.getListener().onValueChanged(item, String.valueOf(isChecked)));
                 break;
         }

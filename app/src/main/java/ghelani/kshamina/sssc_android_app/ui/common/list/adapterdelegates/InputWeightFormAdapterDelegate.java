@@ -71,7 +71,7 @@ public class InputWeightFormAdapterDelegate extends AdapterDelegate<List<DiffIte
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                item.getNameListener().onValueChanged(item,s.toString());
+                item.getValueListener().onValueChanged(item,s.toString());
             }
             @Override
             public void afterTextChanged(Editable s) { }
