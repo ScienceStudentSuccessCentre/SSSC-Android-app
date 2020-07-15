@@ -129,4 +129,16 @@ public class AddCourseFragment extends Fragment implements AddCourseContract.Vie
     public void displayItems(List<DiffItem> items) {
         recyclerView.setAdapter(new MainListAdapter(getActivity(), items));
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) requireActivity()).getNavigatonView().setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((MainActivity) requireActivity()).getNavigatonView().setVisibility(View.VISIBLE);
+    }
 }

@@ -9,6 +9,7 @@ import androidx.room.Update;
 import java.util.List;
 
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
+import io.reactivex.Single;
 
 @Dao
 public interface AssignmentDao {
@@ -28,5 +29,5 @@ public interface AssignmentDao {
     List<Assignment> getAssignmentsByID(String id);
 
     @Query("SELECT * FROM assignments WHERE assignment_course_id = :courseId")
-    List<Assignment> getAssignmentsByCourseId(String courseId);
+    Single<List<Assignment>> getAssignmentsByCourseId(String courseId);
 }

@@ -1,5 +1,6 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list;
 
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -13,10 +14,12 @@ import ghelani.kshamina.sssc_android_app.database.CourseDao;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.ui.common.events.ListItemEventListener;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.common.events.SingleLiveEvent;
 import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
+import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
 import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments.AssignmentListFragment;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
@@ -30,9 +33,9 @@ public class CoursesViewModel extends ViewModel {
     public MutableLiveData<ViewState<ListItem>> state = new MutableLiveData<>();
     public boolean isDeleteMode;
     private List<ListItem> courseItemList = new ArrayList<>();
-    public MutableLiveData<String> courseSelected = new MutableLiveData<>();
     public MutableLiveData<Double> creditsState = new MutableLiveData<>();
     public MutableLiveData<Double> termGPA = new MutableLiveData<>();
+    public final SingleLiveEvent<Fragment> navigationEvent = new SingleLiveEvent<>();
 
     @Inject
     public CoursesViewModel(GradesDatabase gradesDatabase) {
@@ -76,7 +79,11 @@ public class CoursesViewModel extends ViewModel {
         return new ListItem(course.courseId, course.courseFinalGrade, course.courseCode, course.courseName, isDeleteMode, new ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
-                courseSelected.setValue(id);
+                for(ListItem item: courseItemList){
+                    if(item.getId().equals(id)){
+                        navigationEvent.setValue(AssignmentListFragment.newInstance(id,item.getDescriptionText(),item.getHeaderText()));
+                    }
+                }
             }
 
             @Override

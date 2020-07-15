@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -37,6 +38,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.AndroidSupportInjection;
+import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
@@ -44,6 +46,7 @@ import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments.AssignmentListFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list.TermsViewModel;
 
 public class CourseListFragment extends Fragment {
@@ -114,7 +117,7 @@ public class CourseListFragment extends Fragment {
 
         FloatingActionButton addCourseBtn = view.findViewById(R.id.addCourseFab);
         addCourseBtn.setOnClickListener(v -> {
-            openAddCourseScreen();
+            replaceFragment(AddCourseFragment.newInstance(termID));
         });
 
         courseRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
@@ -130,18 +133,16 @@ public class CourseListFragment extends Fragment {
             }
         });
 
+        courseViewModel.navigationEvent.observe(this, newFragment -> replaceFragment(newFragment));
+        // courseViewModel.courseSelected.observe(this, courseID -> replaceFragment(AssignmentListFragment.newInstance(courseID)));
         courseViewModel.creditsState.observe(this, credits -> creditsText.setText("Credits: " + credits));
         courseViewModel.termGPA.observe(this, gpa -> gpaText.setText("Term GPA: " + (gpa == -1 ? "N/A" : gpa)));
 
         courseViewModel.fetchCoursesByTermId(termID);
     }
 
-    private void openAddCourseScreen() {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = Objects.requireNonNull(fragmentManager).beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainer, AddCourseFragment.newInstance(termID));
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+    private void replaceFragment(Fragment newFragment) {
+        ((MainActivity) requireActivity()).replaceFragment(newFragment);
     }
 
 

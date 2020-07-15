@@ -1,6 +1,7 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course;
 
 import android.text.InputType;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,17 +124,6 @@ public class AddCoursePresenterImpl implements AddCourseContract.Presenter {
 
     @Override
     public void onCreate() {
-        if (!weights.isEmpty()) {
-            for (Weight weight : weights) {
-                if (!weight.weightName.isEmpty() && weight.weightValue != -1) {
-                    Completable.fromAction(() -> weightDao.insertWeight(weight))
-                            .subscribeOn(backgroundScheduler)
-                            .observeOn(mainScheduler)
-                            .subscribe();
-                }
-            }
-        }
-
         Completable.fromAction(() -> courseDao.insertCourse(newCourse))
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
@@ -144,6 +134,17 @@ public class AddCoursePresenterImpl implements AddCourseContract.Presenter {
 
                     @Override
                     public void onComplete() {
+
+                        if (!weights.isEmpty()) {
+                            for (Weight weight : weights) {
+                                if (!weight.weightName.isEmpty() && weight.weightValue != -1) {
+                                    Completable.fromAction(() -> weightDao.insertWeight(weight))
+                                            .subscribeOn(backgroundScheduler)
+                                            .observeOn(mainScheduler)
+                                            .subscribe();
+                                }
+                            }
+                        }
                         view.navigateToCoursesPage();
                     }
 
@@ -151,6 +152,9 @@ public class AddCoursePresenterImpl implements AddCourseContract.Presenter {
                     public void onError(Throwable e) {
                     }
                 });
+
+
+
 
 
     }

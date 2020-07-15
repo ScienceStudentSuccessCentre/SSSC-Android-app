@@ -96,26 +96,18 @@ public class MainActivity extends AppCompatActivity {
     }
 /*
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        menu.setGroupVisible(R.id.event_single_menu, false);
-        return super.onCreateOptionsMenu(menu);
-        }
-*/
-    @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
         return true;
     }
-
+*/
     @Override
     public void onBackPressed (){
         WebView webView = findViewById(R.id.webView);
         if(webView != null && webView.canGoBack()) webView.goBack();
-        else super.onBackPressed();
+        else getSupportFragmentManager().popBackStackImmediate();
     }
 
 
