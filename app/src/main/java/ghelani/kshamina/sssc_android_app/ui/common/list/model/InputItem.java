@@ -8,6 +8,7 @@ public class InputItem implements DiffItem {
         BUTTON,
         TEXT,
         SWITCH,
+        SELECTION_SCREEN
     }
 
     private String value;
@@ -16,6 +17,7 @@ public class InputItem implements DiffItem {
     private FormInputItemListener listener;
     private int keyboardType;
     private InputStyle type;
+    private String error;
 
     public InputItem(String value,String hint, String name, InputStyle type, int keyboardType, FormInputItemListener listener) {
         this.hint = hint;
@@ -24,6 +26,7 @@ public class InputItem implements DiffItem {
         this.type = type;
         this.keyboardType = keyboardType;
         this.value = value;
+        this.error =  "";
     }
 
     public InputItem(String hint, String name, int keyboardType, FormInputItemListener listener) {
@@ -81,4 +84,5 @@ public class InputItem implements DiffItem {
     public void setValue(String value) {
         this.value = value;
     }
+
 }

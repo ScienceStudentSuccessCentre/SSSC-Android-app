@@ -9,8 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -21,12 +19,9 @@ import android.view.ViewGroup;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.Objects;
-
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.ui.grades.calculator.CalculatorFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.planner.PlannerFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list.TermsFragment;
 
 

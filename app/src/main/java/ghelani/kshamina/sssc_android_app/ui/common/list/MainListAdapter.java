@@ -9,6 +9,7 @@ import java.util.List;
 import ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates.InputFormAdapterDelegate;
 import ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates.InputWeightFormAdapterDelegate;
 import ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates.ListAdapterDelegate;
+import ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates.SelectionInputAdapterDelegate;
 import ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates.TextFormAdapterDelegate;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 
@@ -25,7 +26,8 @@ public class MainListAdapter extends ListDelegationAdapter<List<DiffItem>> {
                 .addDelegate(new ListAdapterDelegate(activity))
                 .addDelegate(new InputFormAdapterDelegate(activity))
                 .addDelegate(new TextFormAdapterDelegate(activity))
-                .addDelegate(new InputWeightFormAdapterDelegate(activity));
+                .addDelegate(new InputWeightFormAdapterDelegate(activity))
+                .addDelegate(new SelectionInputAdapterDelegate(activity));
 
         // Set the items from super class.
         setItems(items);

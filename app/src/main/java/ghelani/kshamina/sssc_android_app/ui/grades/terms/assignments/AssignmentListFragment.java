@@ -5,14 +5,18 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -32,11 +36,9 @@ import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
-import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CoursesViewModel;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
 
 public class AssignmentListFragment extends Fragment {
 
@@ -95,9 +97,11 @@ public class AssignmentListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_assignment_list, container, false);
         ButterKnife.bind(this, view);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         return view;
     }
 
@@ -108,9 +112,7 @@ public class AssignmentListFragment extends Fragment {
         toolbar.setTitle(courseCode);
         toolbar.setSubtitle(courseName);
 
-        addAssignmentFab.setOnClickListener(v -> {
-            replaceFragment(AddAssignmentFragment.newInstance(courseId));
-        });
+        addAssignmentFab.setOnClickListener(v -> replaceFragment(InputFormFragment.newInstance(courseId, InputFormFragment.FormType.ADD_ASSIGNMENT.toString())));
 
         assignmentRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         assignmentViewModel = new ViewModelProvider(this, viewModelFactory).get(AssignmentViewModel.class);
@@ -128,9 +130,43 @@ public class AssignmentListFragment extends Fragment {
                 assignmentRecyclerView.setAdapter(new MainListAdapter(getActivity(), displayableItems));
             }
         });
+
+        assignmentViewModel.fetchCourseAssignments(courseId);
     }
 
     private void replaceFragment(Fragment newFragment) {
         ((MainActivity) requireActivity()).replaceFragment(newFragment);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.course_list_menu, menu);
+        menu.removeItem(R.id.searchAction);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == R.id.deleteActionItem) {
+            if (assignmentViewModel.isDeleteMode()) {
+                item.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_delete));
+                assignmentViewModel.setDeleteMode(false);
+            } else {
+                item.setIcon(R.drawable.ic_close);
+                assignmentViewModel.setDeleteMode(true);
+            }
+            assignmentViewModel.fetchCourseAssignments(courseId);
+
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        assignmentViewModel.fetchCourseAssignments(courseId);
     }
 }

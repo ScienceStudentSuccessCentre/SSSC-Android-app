@@ -14,8 +14,8 @@ import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.ui.common.events.ListItemEventListener;
 import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
+import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -25,6 +25,7 @@ public class AssignmentViewModel extends ViewModel {
 
     private AssignmentDao assignmentDao;
     private MutableLiveData<ViewState<ListItem>> state = new MutableLiveData<>();
+    private boolean deleteMode;
 
     @Inject
     public AssignmentViewModel(GradesDatabase gradesDatabase) {
@@ -59,9 +60,10 @@ public class AssignmentViewModel extends ViewModel {
     }
 
     private ListItem createListItem(Assignment assignment){
-        return new ListItem(assignment.assignmentId, String.valueOf(assignment.assignmentGradeEarned),
-                assignment.assignmentName, String.valueOf(assignment.assignmentGradeEarned / assignment.assignmentGradeTotal),
-                false, new ListItemEventListener() {
+        int percentage = (int)((assignment.assignmentGradeEarned / assignment.assignmentGradeTotal)*100);
+        return new ListItem(assignment.assignmentId, Grading.gradeToLetter.floorEntry(percentage).getValue(),
+                assignment.assignmentName, String.valueOf(percentage),
+                deleteMode, new ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
 
@@ -86,5 +88,13 @@ public class AssignmentViewModel extends ViewModel {
 
     public LiveData<ViewState<ListItem>> getState(){
         return state;
+    }
+
+    public boolean isDeleteMode() {
+        return deleteMode;
+    }
+
+    public void setDeleteMode(boolean deleteMode) {
+        this.deleteMode = deleteMode;
     }
 }

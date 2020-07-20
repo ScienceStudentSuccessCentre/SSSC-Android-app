@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F1F2F6"
-    tools:context=".ui.grades.terms.add_assignment.AddAssignmentFragment">
+    tools:context=".ui.grades.terms.input_form.InputFormFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
 
@@ -31,6 +31,7 @@
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="New Assignment"
@@ -54,7 +55,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/addAssignmentInputList"
+            android:id="@+id/inputRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

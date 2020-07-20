@@ -1,17 +1,15 @@
 package ghelani.kshamina.sssc_android_app;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuItem;
+
 import android.webkit.WebView;
 
 import com.facebook.stetho.Stetho;
@@ -21,8 +19,6 @@ import ghelani.kshamina.sssc_android_app.ui.ResourcesFragment;
 import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
 import ghelani.kshamina.sssc_android_app.ui.event.EventsFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.GradesFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CourseListFragment;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigatonView;
@@ -61,8 +57,9 @@ public class MainActivity extends AppCompatActivity {
     public void replaceFragment(Fragment newFragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainer, newFragment);
-        fragmentTransaction.addToBackStack(null);
+        String tag = String.valueOf(getSupportFragmentManager().getBackStackEntryCount());
+        fragmentTransaction.replace(R.id.fragmentContainer, newFragment,tag);
+        fragmentTransaction.addToBackStack(tag);
         fragmentTransaction.commit();
     }
 

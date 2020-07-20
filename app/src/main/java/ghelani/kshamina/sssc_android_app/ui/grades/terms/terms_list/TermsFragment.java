@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -30,8 +29,8 @@ import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CourseListFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
 
 public class TermsFragment extends Fragment {
 
@@ -71,9 +70,7 @@ public class TermsFragment extends Fragment {
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Terms");
 
         FloatingActionButton addTermBtn = view.findViewById(R.id.addTermFab);
-        addTermBtn.setOnClickListener(v -> {
-            openAddTermScreen();
-        });
+        addTermBtn.setOnClickListener(v -> openAddTermScreen());
 
         recyclerView = view.findViewById(R.id.termsRecyclerView);
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
@@ -91,13 +88,7 @@ public class TermsFragment extends Fragment {
 
         termsViewModel.termSelected.observe(this, term -> {
             setHasOptionsMenu(false);
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            CourseListFragment courseListFragment = CourseListFragment.newInstance(term.getTermId(),term.toString());
-            fragmentTransaction.replace(R.id.fragmentContainer, courseListFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-
+            ((MainActivity) requireActivity()).replaceFragment(CourseListFragment.newInstance(term.getTermId(), term.toString()));
         });
 
         termsViewModel.fetchTerms();
@@ -129,11 +120,7 @@ public class TermsFragment extends Fragment {
     }
 
     private void openAddTermScreen() {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentContainer, new AddTermFragment());
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        ((MainActivity) requireActivity()).replaceFragment(InputFormFragment.newInstance("", InputFormFragment.FormType.ADD_TERM.toString()));
     }
 
     @Override
