@@ -37,8 +37,10 @@ import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.common.list.model.InputItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormViewModel;
 
 public class AssignmentListFragment extends Fragment {
 
@@ -131,6 +133,8 @@ public class AssignmentListFragment extends Fragment {
             }
         });
 
+        assignmentViewModel.getNavigationEvent().observe(this, this::replaceFragment);
+
         assignmentViewModel.fetchCourseAssignments(courseId);
     }
 
@@ -141,8 +145,7 @@ public class AssignmentListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.course_list_menu, menu);
-        menu.removeItem(R.id.searchAction);
+        inflater.inflate(R.menu.assignment_list_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -160,6 +163,8 @@ public class AssignmentListFragment extends Fragment {
             assignmentViewModel.fetchCourseAssignments(courseId);
 
             return true;
+        } else if (item.getItemId() == R.id.editCourseAction) {
+            replaceFragment(InputFormFragment.newInstance(courseId, InputFormFragment.FormType.UPDATE_COURSE.toString()));
         }
         return super.onOptionsItemSelected(item);
     }

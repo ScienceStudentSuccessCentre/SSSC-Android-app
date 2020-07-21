@@ -52,8 +52,8 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
         switch (item.getType()) {
             case TEXT:
                 inputItemViewHolder.name.setText(item.getName());
-                inputItemViewHolder.textInput.setText(item.getValue());
                 inputItemViewHolder.textInput.setHint(item.getHint());
+                inputItemViewHolder.textInput.setText(item.getValue());
                 inputItemViewHolder.textInput.setInputType(item.getKeyboardType());
                 if(item.getName().equals("Code")) {
                     inputItemViewHolder.textInput.setFilters(new InputFilter[]{new InputFilter.AllCaps()});

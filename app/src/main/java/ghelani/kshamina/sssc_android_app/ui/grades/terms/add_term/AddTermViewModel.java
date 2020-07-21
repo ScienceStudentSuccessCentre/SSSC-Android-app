@@ -79,14 +79,14 @@ public class AddTermViewModel extends InputFormViewModel {
 
     private void checkCreateAvailable() {
         if (season.isEmpty() || year.isEmpty()) {
-            createEnabled.setValue(false);
+            submitEnabled.setValue(false);
         } else {
-            createEnabled.setValue(true);
+            submitEnabled.setValue(true);
         }
     }
 
     @Override
-    public void onCreate() {
+    public void onSubmit() {
         TermEntity newTerm = new TermEntity(TermEntity.Season.valueOf(season.toUpperCase()), year);
         Completable.fromAction(() -> termDao.insertTerm(newTerm))
                 .subscribeOn(Schedulers.io())

@@ -48,7 +48,7 @@ public class FinalGradeViewModel extends InputFormViewModel {
     }
 
     @Override
-    public void onCreate() {
+    public void onSubmit() {
 
     }
 

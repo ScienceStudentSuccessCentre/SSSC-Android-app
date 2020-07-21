@@ -135,7 +135,6 @@ public class CourseListFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.course_list_menu, menu);
-        menu.removeItem(R.id.searchAction);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

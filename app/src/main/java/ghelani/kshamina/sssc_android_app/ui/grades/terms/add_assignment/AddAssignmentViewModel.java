@@ -22,6 +22,7 @@ import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFra
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormViewModel;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -29,52 +30,55 @@ import io.reactivex.schedulers.Schedulers;
 public class AddAssignmentViewModel extends InputFormViewModel {
 
     private MutableLiveData<List<DiffItem>> items = new MutableLiveData<>();
-    private MutableLiveData<Boolean> createEnabled = new MutableLiveData<>(false);
     private Assignment newAssignment;
     private AssignmentDao assignmentDao;
+    private Weight weight;
+    private boolean updating;
     private WeightDao weightDao;
+
 
     @Inject
     public AddAssignmentViewModel(GradesDatabase db) {
-        items.setValue(createItemsList());
         newAssignment = new Assignment("", -1, 0, "", "");
         this.assignmentDao = db.getAssignmentDao();
         this.weightDao = db.getWeightDao();
+        updating = false;
+        createItemsList();
     }
 
-    private List<DiffItem> createItemsList() {
+    private void createItemsList() {
         List<DiffItem> displayItems = new ArrayList<>();
 
         displayItems.add(new TextItem("ASSIGNMENT INFO"));
 
-        displayItems.add(new InputItem("Assignment 1", "Name", InputType.TYPE_CLASS_TEXT, (item, value) -> {
+        displayItems.add(new InputItem(newAssignment.assignmentName, "Assignment 1", "Name", InputType.TYPE_CLASS_TEXT, (item, value) -> {
             newAssignment.assignmentName = value;
             ((InputItem) item).setValue(value);
             checkCreateAvailable();
         }));
 
-        displayItems.add(new InputItem("26", "Grade Earned", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
+        displayItems.add(new InputItem(newAssignment.assignmentGradeEarned == -1 ? "" : String.valueOf(newAssignment.assignmentGradeEarned), "26", "Grade Earned", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
             newAssignment.assignmentGradeEarned = Double.parseDouble(value);
             ((InputItem) item).setValue(value);
             checkCreateAvailable();
         }));
 
-        displayItems.add(new InputItem("30", "Maximum Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
+        displayItems.add(new InputItem(newAssignment.assignmentGradeTotal == 0 ? "" : String.valueOf(newAssignment.assignmentGradeTotal),"30", "Maximum Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
             newAssignment.assignmentGradeTotal = Double.parseDouble(value);
             ((InputItem) item).setValue(value);
             checkCreateAvailable();
         }));
 
-        displayItems.add(new InputItem("Final", "", "Weight", InputItem.InputStyle.SELECTION_SCREEN, InputType.TYPE_CLASS_TEXT, (item, value) -> {
+        displayItems.add(new InputItem(weight == null ? "" : weight.weightName, "", "Weight", InputItem.InputStyle.SELECTION_SCREEN, InputType.TYPE_CLASS_TEXT, (item, value) -> {
             navigationEvent.setValue(InputFormFragment.newInstance(newAssignment.assignmentCourseId, InputFormFragment.FormType.SELECT_WEIGHT.toString()));
             ((InputItem) item).setValue(value);
         }));
-        return displayItems;
-
+        checkCreateAvailable();
+        items.setValue(displayItems);
     }
 
     @Override
-    public void onCreate() {
+    public void onSubmit() {
         Completable.fromAction(() -> assignmentDao.insertAssignment(newAssignment))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -86,7 +90,7 @@ public class AddAssignmentViewModel extends InputFormViewModel {
 
                     @Override
                     public void onComplete() {
-                        isCreateComplete().setValue(true);
+                        submitted.setValue(true);
                     }
 
                     @Override
@@ -96,9 +100,33 @@ public class AddAssignmentViewModel extends InputFormViewModel {
                 });
     }
 
-    public void setWeight(Weight weight){
-        newAssignment.assignmentWeightId= weight.weightId;
+    public void setWeight(Weight weight) {
+        this.weight = weight;
+        newAssignment.assignmentWeightId = weight.weightId;
         checkCreateAvailable();
+    }
+
+    private void getAssignmentWeight(String weightID){
+        weightDao.getWeightByID(weightID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Weight>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Weight newWeight) {
+                        weight = newWeight;
+                        createItemsList();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
     public LiveData<List<DiffItem>> getInputItems() {
@@ -106,15 +134,12 @@ public class AddAssignmentViewModel extends InputFormViewModel {
     }
 
     private void checkCreateAvailable() {
-        if (!newAssignment.assignmentName.isEmpty() && newAssignment.assignmentGradeEarned != -1 && newAssignment.assignmentGradeTotal > 0 && !newAssignment.assignmentWeightId.isEmpty()) {
-            createEnabled.setValue(true);
+        if (!newAssignment.assignmentName.isEmpty() && newAssignment.assignmentGradeEarned != -1
+                && newAssignment.assignmentGradeTotal > 0 && !newAssignment.assignmentWeightId.isEmpty()) {
+            submitEnabled.setValue(true);
         } else {
-            createEnabled.setValue(false);
+            submitEnabled.setValue(false);
         }
-    }
-
-    public LiveData<Boolean> isCreateEnabled() {
-        return createEnabled;
     }
 
     @Override
@@ -122,4 +147,27 @@ public class AddAssignmentViewModel extends InputFormViewModel {
         newAssignment.assignmentCourseId = courseId;
     }
 
+    public void fetchAssignmentToUpdate(String id) {
+        updating = true;
+        assignmentDao.getAssignmentByID(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Assignment>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Assignment assignment) {
+                        newAssignment = assignment;
+                        getAssignmentWeight(newAssignment.assignmentWeightId);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
 }

@@ -72,7 +72,7 @@ public class WeightViewModel extends InputFormViewModel {
     }
 
     @Override
-    public void onCreate() {
+    public void onSubmit() {
 
     }
 

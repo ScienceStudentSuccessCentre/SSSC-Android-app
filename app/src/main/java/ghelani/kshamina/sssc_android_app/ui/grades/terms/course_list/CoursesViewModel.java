@@ -87,22 +87,6 @@ public class CoursesViewModel extends ViewModel {
             }
 
             @Override
-            public boolean onItemLongClicked(String id) {
-                for(ListItem term: courseItemList){
-                    if(term.getId().equals(id)){
-                        term.setDeleteIconVisible(!term.isDeleteIconVisible());
-                    }
-                }
-                state.setValue(new ViewState<>(false, false, true, "", courseItemList));
-                return true;
-            }
-
-            @Override
-            public void toggleDeleteMode() {
-
-            }
-
-            @Override
             public void deleteItem(String courseId) {
                 Completable.fromAction(() -> courseDao.deleteCourse(courseId))
                         .subscribeOn(Schedulers.io())

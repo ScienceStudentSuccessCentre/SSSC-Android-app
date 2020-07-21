@@ -39,7 +39,7 @@ import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermViewMod
 public class InputFormFragment extends Fragment {
 
     public enum FormType {
-        ADD_TERM, ADD_COURSE, ADD_ASSIGNMENT, SELECT_FINAL_GRADE, SELECT_WEIGHT
+        ADD_TERM, ADD_COURSE, ADD_ASSIGNMENT, SELECT_FINAL_GRADE, SELECT_WEIGHT, UPDATE_COURSE, UPDATE_ASSIGNMENT
     }
 
     private static final String ID = "id";
@@ -59,8 +59,8 @@ public class InputFormFragment extends Fragment {
     @BindView(R.id.inputRecyclerView)
     RecyclerView inputItemRecyclerView;
 
-    @BindView(R.id.createButton)
-    Button createButton;
+    @BindView(R.id.submitButton)
+    Button submitButton;
 
     @BindView(R.id.cancelButton)
     Button cancelButton;
@@ -125,23 +125,35 @@ public class InputFormFragment extends Fragment {
             case SELECT_FINAL_GRADE:
                 title.setText("");
                 viewModel = new ViewModelProvider(this, viewModelFactory).get(FinalGradeViewModel.class);
-                createButton.setVisibility(View.GONE);
+                submitButton.setVisibility(View.GONE);
                 break;
             case SELECT_WEIGHT:
                 title.setText("");
-                createButton.setVisibility(View.GONE);
+                submitButton.setVisibility(View.GONE);
                 viewModel = new ViewModelProvider(this, viewModelFactory).get(WeightViewModel.class);
                 viewModel.setId(id);
+                break;
+            case UPDATE_COURSE:
+                title.setText("");
+                submitButton.setText("Update");
+                viewModel = new ViewModelProvider(this, viewModelFactory).get(AddCourseViewModel.class);
+                decoration = courseListDecoration();
+                ((AddCourseViewModel) viewModel).fetchCourseToUpdate(id);
+                break;
+            case UPDATE_ASSIGNMENT:
+                title.setText("");
+                submitButton.setText("Update");
+                viewModel = new ViewModelProvider(this, viewModelFactory).get(AddAssignmentViewModel.class);
+                ((AddAssignmentViewModel) viewModel).fetchAssignmentToUpdate(id);
                 break;
         }
 
         inputItemRecyclerView.addItemDecoration(decoration);
 
-        viewModel.setId(id);
         viewModel.getInputItems().observe(this, items -> inputItemRecyclerView.setAdapter(new MainListAdapter(requireActivity(), items)));
-        viewModel.isCreateEnabled().observe(this, isEnabled -> createButton.setEnabled(isEnabled));
+        viewModel.isSubmitEnabled().observe(this, isEnabled -> submitButton.setEnabled(isEnabled));
         viewModel.getNavigationEvent().observe(this, newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
-        viewModel.isCreateComplete().observe(this, isComplete -> {
+        viewModel.isSubmitted().observe(this, isComplete -> {
             if (isComplete) {
                 returnToPreviousScreen();
             }
@@ -163,7 +175,7 @@ public class InputFormFragment extends Fragment {
             });
         }
 
-        createButton.setOnClickListener(v -> viewModel.onCreate());
+        submitButton.setOnClickListener(v -> viewModel.onSubmit());
 
         cancelButton.setOnClickListener(v -> returnToPreviousScreen());
     }

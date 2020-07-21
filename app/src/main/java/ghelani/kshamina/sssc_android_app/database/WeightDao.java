@@ -26,7 +26,7 @@ public interface WeightDao {
     List<Weight> getAllWeights();
 
     @Query("SELECT * From weights WHERE weight_id = :id")
-    List<Weight> getWeightsByID(String id);
+    Single<Weight> getWeightByID(String id);
 
     @Query("SELECT * FROM weights WHERE weight_course_id = :courseId")
     Single<List<Weight>> getWeightsByCourseId(String courseId);

@@ -1,5 +1,6 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments;
 
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -13,9 +14,13 @@ import ghelani.kshamina.sssc_android_app.database.AssignmentDao;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.ui.common.events.ListItemEventListener;
+import ghelani.kshamina.sssc_android_app.ui.common.events.SingleLiveEvent;
 import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
 import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -25,6 +30,7 @@ public class AssignmentViewModel extends ViewModel {
 
     private AssignmentDao assignmentDao;
     private MutableLiveData<ViewState<ListItem>> state = new MutableLiveData<>();
+    private SingleLiveEvent<Fragment> navigationEvent = new SingleLiveEvent<>();
     private boolean deleteMode;
 
     @Inject
@@ -66,24 +72,36 @@ public class AssignmentViewModel extends ViewModel {
                 deleteMode, new ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
-
+                navigationEvent.setValue(InputFormFragment.newInstance(id, InputFormFragment.FormType.UPDATE_ASSIGNMENT.toString()));
             }
 
             @Override
-            public boolean onItemLongClicked(String id) {
-                return false;
-            }
+            public void deleteItem(String id) {
+                Completable.fromAction(() -> assignmentDao.deleteAssignment(id))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new CompletableObserver() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
 
-            @Override
-            public void toggleDeleteMode() {
+                            }
 
-            }
+                            @Override
+                            public void onComplete() {
+                                fetchCourseAssignments(assignment.assignmentCourseId);
+                            }
 
-            @Override
-            public void deleteItem(String courseId) {
+                            @Override
+                            public void onError(Throwable e) {
 
+                            }
+                        });
             }
         });
+    }
+
+    public SingleLiveEvent<Fragment> getNavigationEvent() {
+        return navigationEvent;
     }
 
     public LiveData<ViewState<ListItem>> getState(){

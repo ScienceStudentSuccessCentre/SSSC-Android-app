@@ -110,22 +110,6 @@ public class TermsViewModel extends ViewModel {
             }
 
             @Override
-            public boolean onItemLongClicked(String id) {
-                for(ListItem term: state.getValue().getItems()){
-                    if(term.getId().equals(id)){
-                        term.setDeleteIconVisible(!term.isDeleteIconVisible());
-                    }
-                }
-                state.setValue(new ViewState<>(false, false, true, "", state.getValue().getItems()));
-                return true;
-            }
-
-            @Override
-            public void toggleDeleteMode() {
-
-            }
-
-            @Override
             public void deleteItem(String id) {
                 Completable.fromAction(() -> termDao.deleteTerm(id))
                         .subscribeOn(Schedulers.io())
