@@ -13,14 +13,14 @@ import ghelani.kshamina.sssc_android_app.ui.common.list.model.SelectionItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.TextItem;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormViewModel;
 
-public class FinalGradeViewModel extends InputFormViewModel {
+public class SelectFinalGradeViewModel extends InputFormViewModel {
 
     private SingleLiveEvent<String> selectGrade = new SingleLiveEvent<>();
     private int selectedIndex;
     private String[] letterGrades;
 
     @Inject
-    public FinalGradeViewModel(String[] letterGrades) {
+    public SelectFinalGradeViewModel(String[] letterGrades) {
         selectedIndex = -1;
         this.letterGrades = letterGrades;
     }

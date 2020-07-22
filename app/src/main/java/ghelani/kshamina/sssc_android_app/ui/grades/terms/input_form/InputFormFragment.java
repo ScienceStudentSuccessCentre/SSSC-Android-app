@@ -31,9 +31,9 @@ import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentViewModel;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.WeightViewModel;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.SelectWeightViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseViewModel;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.FinalGradeViewModel;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.SelectFinalGradeViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermViewModel;
 
 public class InputFormFragment extends Fragment {
@@ -128,15 +128,15 @@ public class InputFormFragment extends Fragment {
                 break;
             case SELECT_FINAL_GRADE:
                 title.setText("");
-                viewModel = new ViewModelProvider(this, viewModelFactory).get(FinalGradeViewModel.class);
+                viewModel = new ViewModelProvider(this, viewModelFactory).get(SelectFinalGradeViewModel.class);
                 submitButton.setVisibility(View.GONE);
                 viewModel.createItemsList();
                 break;
             case SELECT_WEIGHT:
                 title.setText("");
                 submitButton.setVisibility(View.GONE);
-                viewModel = new ViewModelProvider(this, viewModelFactory).get(WeightViewModel.class);
-                ((WeightViewModel) viewModel).setId(id);
+                viewModel = new ViewModelProvider(this, viewModelFactory).get(SelectWeightViewModel.class);
+                ((SelectWeightViewModel) viewModel).setId(id);
                 viewModel.createItemsList();
                 break;
             case UPDATE_COURSE:
@@ -165,7 +165,7 @@ public class InputFormFragment extends Fragment {
             }
         });
         if (type.equals(FormType.SELECT_FINAL_GRADE)) {
-            ((FinalGradeViewModel) viewModel).getSelectedGrade().observe(this, grade -> {
+            ((SelectFinalGradeViewModel) viewModel).getSelectedGrade().observe(this, grade -> {
                 Fragment prevFragment = getFragmentManager().findFragmentByTag(String.valueOf(getFragmentManager().getBackStackEntryCount() - 2));
                 AddCourseViewModel addCourseViewModel = new ViewModelProvider(prevFragment, viewModelFactory).get(AddCourseViewModel.class);
                 addCourseViewModel.setFinalGrade(grade);
@@ -173,7 +173,7 @@ public class InputFormFragment extends Fragment {
             });
 
         }else if(type.equals(FormType.SELECT_WEIGHT)){
-            ((WeightViewModel) viewModel).getSelectedWeight().observe(this, weight -> {
+            ((SelectWeightViewModel) viewModel).getSelectedWeight().observe(this, weight -> {
                 Fragment prevFragment = getFragmentManager().findFragmentByTag(String.valueOf(getFragmentManager().getBackStackEntryCount() - 2));
                 AddAssignmentViewModel addAssignmentViewModel = new ViewModelProvider(prevFragment, viewModelFactory).get(AddAssignmentViewModel.class);
                 addAssignmentViewModel.setWeight(weight);

@@ -19,7 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class WeightViewModel extends InputFormViewModel {
+public class SelectWeightViewModel extends InputFormViewModel {
 
     private WeightDao weightDao;
     private String courseId;
@@ -27,7 +27,7 @@ public class WeightViewModel extends InputFormViewModel {
     private SingleLiveEvent<Weight> selectedWeight = new SingleLiveEvent<>();
 
     @Inject
-    public WeightViewModel(GradesDatabase db){
+    public SelectWeightViewModel(GradesDatabase db){
         weightDao = db.getWeightDao();
         selectedIndex = -1;
     }

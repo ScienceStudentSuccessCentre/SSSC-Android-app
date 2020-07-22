@@ -4,16 +4,12 @@ import ghelani.kshamina.sssc_android_app.ui.common.events.SelectionItemEventList
 
 public class SelectionItem implements DiffItem {
 
-    public enum SelectionType{
-        SEASON, YEAR, LETTER_GRADE, WEIGHT
-    }
-
     private int index;
     private String value;
     private boolean isSelected;
     private SelectionItemEventListener clickListener;
 
-    public SelectionItem(int index,String value, boolean isSelected,SelectionItemEventListener clickListener) {
+    public SelectionItem(int index, String value, boolean isSelected, SelectionItemEventListener clickListener) {
         this.index = index;
         this.value = value;
         this.isSelected = isSelected;

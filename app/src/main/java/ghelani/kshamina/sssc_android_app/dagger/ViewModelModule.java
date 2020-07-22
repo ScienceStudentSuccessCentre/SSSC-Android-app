@@ -1,18 +1,14 @@
 package ghelani.kshamina.sssc_android_app.dagger;
 
-import android.content.Context;
-
 import androidx.lifecycle.ViewModel;
 
 import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
 import dagger.multibindings.IntoMap;
-import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentViewModel;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.WeightViewModel;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.SelectWeightViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseViewModel;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.FinalGradeViewModel;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.SelectFinalGradeViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments.AssignmentViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CoursesViewModel;
@@ -53,12 +49,12 @@ public abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(FinalGradeViewModel.class)
-    public abstract ViewModel bindFinalGradeViewModel(FinalGradeViewModel viewModel);
+    @ViewModelKey(SelectFinalGradeViewModel.class)
+    public abstract ViewModel bindFinalGradeViewModel(SelectFinalGradeViewModel viewModel);
 
     @Binds
     @IntoMap
-    @ViewModelKey(WeightViewModel.class)
-    public abstract ViewModel bindWeightViewModel(WeightViewModel viewModel);
+    @ViewModelKey(SelectWeightViewModel.class)
+    public abstract ViewModel bindWeightViewModel(SelectWeightViewModel viewModel);
 
 }
