@@ -118,6 +118,7 @@ public class InputFormFragment extends Fragment {
                 title.setText("New Course");
                 viewModel = new ViewModelProvider(this, viewModelFactory).get(AddCourseViewModel.class);
                 decoration = courseListDecoration();
+                ((AddCourseViewModel) viewModel).setTermId(id);
                 viewModel.createItemsList();
                 break;
             case ADD_TERM:

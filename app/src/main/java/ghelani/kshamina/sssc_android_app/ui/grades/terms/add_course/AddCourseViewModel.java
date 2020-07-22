@@ -252,4 +252,8 @@ public class AddCourseViewModel extends InputFormViewModel {
         }
         submitEnabled.setValue((!newCourse.courseName.isEmpty() && !newCourse.courseCode.isEmpty() && newCourse.courseCredits != -1));
     }
+
+    public void setTermId(String termID){
+        newCourse.courseTermId = termID;
+    }
 }
