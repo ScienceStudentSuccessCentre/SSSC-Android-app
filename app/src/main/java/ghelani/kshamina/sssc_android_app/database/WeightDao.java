@@ -9,6 +9,7 @@ import androidx.room.Update;
 import java.util.List;
 
 import ghelani.kshamina.sssc_android_app.entity.Weight;
+import io.reactivex.Single;
 
 @Dao
 public interface WeightDao {
@@ -25,8 +26,8 @@ public interface WeightDao {
     List<Weight> getAllWeights();
 
     @Query("SELECT * From weights WHERE weight_id = :id")
-    List<Weight> getWeightsByID(String id);
+    Single<Weight> getWeightByID(String id);
 
     @Query("SELECT * FROM weights WHERE weight_course_id = :courseId")
-    List<Weight> getWeightsByCourseId(String courseId);
+    Single<List<Weight>> getWeightsByCourseId(String courseId);
 }

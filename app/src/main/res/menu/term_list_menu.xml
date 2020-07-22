@@ -13,9 +13,4 @@
             android:icon="@drawable/ic_delete"
             android:title="delete"
             app:showAsAction="always"/>
-        <item
-            android:id="@+id/cancelDeleteItem"
-            android:icon="@drawable/ic_close"
-            android:title="cancel"
-            app:showAsAction="always"/>
 </menu>

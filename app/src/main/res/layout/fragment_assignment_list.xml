@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.grades.terms.course_list.CourseListFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.grades.terms.assignments.AssignmentListFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,54 +18,24 @@
             android:theme="@style/AppTheme.AppBarOverlay">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/courseListToolbar"
+                android:id="@+id/assignmentListToolbar"
                 style="@style/Widget.MaterialComponents.Toolbar.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="#638594"
-                app:title="Courses" />
+                app:title="COMP 3000" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <LinearLayout
-            android:id="@+id/header"
-            android:layout_width="match_parent"
-            android:layout_height="50dp">
-
-            <TextView
-                android:id="@+id/termGPAText"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:background="@color/red"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="Term GPA"
-                android:textColor="@android:color/white"
-                android:textSize="17sp" />
-
-            <TextView
-                android:id="@+id/termCredits"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:background="@color/lightGrey"
-                android:gravity="center"
-                android:text="Credits 0.5"
-                android:textColor="@android:color/black"
-                android:textSize="17sp" />
-        </LinearLayout>
-
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/coursesRecyclerView"
+            android:id="@+id/assignmentsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addCourseFab"
+        android:id="@+id/addAssignmentFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"

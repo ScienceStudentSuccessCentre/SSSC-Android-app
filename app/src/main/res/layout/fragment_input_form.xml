@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F1F2F6"
-    tools:context=".ui.grades.terms.add_course.AddCourseFragment">
+    tools:context=".ui.grades.terms.input_form.InputFormFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
 
@@ -31,9 +31,10 @@
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="New Course"
+                    android:text="New Assignment"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +42,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
-                    android:id="@+id/createButton"
+                    android:id="@+id/submitButton"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -54,12 +55,12 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/addCourseInputList"
+            android:id="@+id/inputRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</FrameLayout>
 
+</FrameLayout>

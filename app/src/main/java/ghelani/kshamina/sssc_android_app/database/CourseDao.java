@@ -26,7 +26,7 @@ public interface CourseDao {
     List<CourseEntity> getAllCourses();
 
     @Query("SELECT * From courses WHERE course_id = :id")
-    Single<List<CourseEntity>>getCoursesByID(String id);
+    Single<CourseEntity>getCourseByID(String id);
 
     @Query("SELECT * FROM courses WHERE course_term_id = :courseTermId")
     Single<List<CourseEntity>> getCoursesByTermId(String courseTermId);

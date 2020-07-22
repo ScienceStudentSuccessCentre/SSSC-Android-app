@@ -2,9 +2,27 @@ package ghelani.kshamina.sssc_android_app.ui.grades;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 public class Grading {
+
+    public static final TreeMap<Integer, String> gradeToLetter = new TreeMap<>();
+    static {
+        gradeToLetter.put(0,"F");
+        gradeToLetter.put(50,"D-");
+        gradeToLetter.put(53,"D");
+        gradeToLetter.put(57,"D+");
+        gradeToLetter.put(60,"C-");
+        gradeToLetter.put(63,"C");
+        gradeToLetter.put(67,"C+");
+        gradeToLetter.put(70,"B-");
+        gradeToLetter.put(73,"B");
+        gradeToLetter.put(77,"B+");
+        gradeToLetter.put(80,"A-");
+        gradeToLetter.put(85,"A");
+        gradeToLetter.put(90,"A+");
+    }
 
     public static final HashMap<String, Integer> letterGradeToGPA = new HashMap<>();
     static {

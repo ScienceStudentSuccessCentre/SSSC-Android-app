@@ -2,12 +2,14 @@ package ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates;
 
 import android.app.Activity;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -50,13 +52,17 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
         switch (item.getType()) {
             case TEXT:
                 inputItemViewHolder.name.setText(item.getName());
-                inputItemViewHolder.textInput.setText(item.getValue());
                 inputItemViewHolder.textInput.setHint(item.getHint());
+                inputItemViewHolder.textInput.setText(item.getValue());
                 inputItemViewHolder.textInput.setInputType(item.getKeyboardType());
+                if(item.getName().equals("Code")) {
+                    inputItemViewHolder.textInput.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+                }
                 inputItemViewHolder.switchInput.setVisibility(View.GONE);
                 inputItemViewHolder.textInput.addTextChangedListener(new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -64,7 +70,8 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
                     }
 
                     @Override
-                    public void afterTextChanged(Editable s) {}
+                    public void afterTextChanged(Editable s) {
+                    }
                 });
                 break;
             case BUTTON:
@@ -80,6 +87,16 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
                 inputItemViewHolder.switchInput.setChecked(Boolean.parseBoolean(item.getValue()));
                 inputItemViewHolder.switchInput.setOnCheckedChangeListener((buttonView, isChecked) -> item.getListener().onValueChanged(item, String.valueOf(isChecked)));
                 break;
+
+            case SELECTION_SCREEN:
+                inputItemViewHolder.name.setText(item.getName());
+                inputItemViewHolder.textInput.setHint(item.getHint());
+                inputItemViewHolder.textInput.setText(item.getValue());
+                inputItemViewHolder.textInput.setEnabled(false);
+                inputItemViewHolder.switchInput.setVisibility(View.GONE);
+                inputItemViewHolder.itemLayout.setOnClickListener(v ->
+                        item.getListener().onValueChanged(item, inputItemViewHolder.textInput.getText().toString()));
+                break;
         }
     }
 
@@ -89,11 +106,13 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
         public EditText textInput;
         public SwitchMaterial switchInput;
         public ConstraintLayout inputLayout;
+        public RelativeLayout itemLayout;
         public Button inputButton;
 
         public InputItemViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.inputPrompt);
+            itemLayout = itemView.findViewById(R.id.itemLayout);
             textInput = itemView.findViewById(R.id.userInputField);
             switchInput = itemView.findViewById(R.id.switchInput);
             inputLayout = itemView.findViewById(R.id.standardInputLayout);

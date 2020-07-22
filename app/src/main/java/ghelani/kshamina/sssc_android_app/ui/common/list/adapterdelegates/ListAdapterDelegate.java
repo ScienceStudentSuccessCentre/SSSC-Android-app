@@ -43,7 +43,6 @@ public class ListAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
         ListItem item = (ListItem) items.get(position);
         ListViewHolder listViewHolder = (ListViewHolder) holder;
 
-        listViewHolder.itemCard.setOnLongClickListener(v -> item.getClickListener().onItemLongClicked(item.getId()));
         listViewHolder.itemCard.setOnClickListener(v -> item.getClickListener().onItemClicked(item.getId()));
         listViewHolder.deleteIcon.setOnClickListener(v -> item.getClickListener().deleteItem(item.getId()));
         listViewHolder.deleteIcon.setVisibility(item.isDeleteIconVisible() ? View.VISIBLE : View.GONE);

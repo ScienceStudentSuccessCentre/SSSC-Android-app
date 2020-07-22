@@ -11,6 +11,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import ghelani.kshamina.sssc_android_app.MainApplication;
+import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 
 @Module
@@ -26,4 +27,10 @@ public abstract class AppModule {
                 .fallbackToDestructiveMigration()
                 .build();
     }
+
+    @Provides
+    @Singleton
+    public static String[] providesLetterGradeArray(Context context){
+        return context.getResources().getStringArray(R.array.grades_array);
+    };
 }
