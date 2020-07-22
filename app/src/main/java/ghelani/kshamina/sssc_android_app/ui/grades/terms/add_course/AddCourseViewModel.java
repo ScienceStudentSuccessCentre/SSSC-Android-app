@@ -46,11 +46,10 @@ public class AddCourseViewModel extends InputFormViewModel {
         weights = new ArrayList<>();
         newCourse = new CourseEntity();
         updating = false;
-
-        createItemsList();
     }
 
-    private void createItemsList() {
+    @Override
+    protected void createItemsList() {
         List<DiffItem> inputItems = new ArrayList<>();
 
         inputItems.add(new TextItem("COURSE INFO"));
@@ -67,7 +66,7 @@ public class AddCourseViewModel extends InputFormViewModel {
             isSubmitAvailable();
         }));
 
-        inputItems.add(new InputItem(String.valueOf(newCourse.courseCredits), "0.5", "Credits", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
+        inputItems.add(new InputItem(newCourse.courseCredits == -1 ? "" : String.valueOf(newCourse.courseCredits), "0.5", "Credits", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
             newCourse.courseCredits = value.isEmpty() ? -1 : Double.parseDouble(value);
             ((InputItem) item).setValue(value);
             isSubmitAvailable();
@@ -82,7 +81,7 @@ public class AddCourseViewModel extends InputFormViewModel {
         inputItems.add(new TextItem("ASSIGNMENT WEIGHTS"));
 
         inputItems.add(new InputItem("", "ADD NEW WEIGHT", InputItem.InputStyle.BUTTON, InputType.TYPE_CLASS_TEXT, (item, value) -> {
-            createWeightInput("", -1);
+            createWeightInput("", 0);
             isSubmitAvailable();
         }));
 
@@ -103,7 +102,7 @@ public class AddCourseViewModel extends InputFormViewModel {
 
     private void createWeightInput(String name, double value) {
         weights.add(new Weight(name, value, newCourse.courseId));
-        items.getValue().add(items.getValue().size() - 5, new WeightItem(weights.size() - 1, name, String.valueOf(value),
+        items.getValue().add(items.getValue().size() - 5, new WeightItem(weights.size() - 1, name, value == 0 ? "" : String.valueOf(value),
                 (item, weightName) -> {
                     weights.get(((WeightItem) item).getIndex()).weightName = weightName;
                     isSubmitAvailable();
@@ -220,7 +219,7 @@ public class AddCourseViewModel extends InputFormViewModel {
     private void addWeights() {
         if (!weights.isEmpty()) {
             for (Weight weight : weights) {
-                if (!weight.weightName.isEmpty() && weight.weightValue != -1) {
+                if (!weight.weightName.isEmpty() && weight.weightValue != 0) {
                     Completable.fromAction(() -> weightDao.insertWeight(weight))
                             .subscribeOn(backgroundScheduler)
                             .observeOn(mainScheduler)
@@ -236,18 +235,12 @@ public class AddCourseViewModel extends InputFormViewModel {
         newCourse.courseFinalGrade = (grade.equals("None") ? "N/A" : grade);
     }
 
-    @Override
-    public void setId(String termId) {
-        newCourse.courseTermId = termId;
-    }
-
-
     private void isSubmitAvailable() {
         double totalWeightPercentage = 0;
         if (!weights.isEmpty()) {
             for (Weight weight : weights) {
                 totalWeightPercentage += weight.weightValue;
-                if (weight.weightName.isEmpty() && weight.weightValue != -1 || !weight.weightName.isEmpty() && weight.weightValue == -1) {
+                if (weight.weightName.isEmpty() && weight.weightValue != 0 || !weight.weightName.isEmpty() && weight.weightValue == 0) {
                     submitEnabled.setValue(false);
                     return;
                 }

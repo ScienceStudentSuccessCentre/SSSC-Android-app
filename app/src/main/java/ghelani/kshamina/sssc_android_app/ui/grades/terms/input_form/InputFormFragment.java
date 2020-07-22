@@ -112,26 +112,31 @@ public class InputFormFragment extends Fragment {
             case ADD_ASSIGNMENT:
                 title.setText("New Assignment");
                 viewModel = new ViewModelProvider(this, viewModelFactory).get(AddAssignmentViewModel.class);
+                viewModel.createItemsList();
                 break;
             case ADD_COURSE:
                 title.setText("New Course");
                 viewModel = new ViewModelProvider(this, viewModelFactory).get(AddCourseViewModel.class);
                 decoration = courseListDecoration();
+                viewModel.createItemsList();
                 break;
             case ADD_TERM:
                 title.setText("New Term");
                 viewModel = new ViewModelProvider(this, viewModelFactory).get(AddTermViewModel.class);
+                viewModel.createItemsList();
                 break;
             case SELECT_FINAL_GRADE:
                 title.setText("");
                 viewModel = new ViewModelProvider(this, viewModelFactory).get(FinalGradeViewModel.class);
                 submitButton.setVisibility(View.GONE);
+                viewModel.createItemsList();
                 break;
             case SELECT_WEIGHT:
                 title.setText("");
                 submitButton.setVisibility(View.GONE);
                 viewModel = new ViewModelProvider(this, viewModelFactory).get(WeightViewModel.class);
-                viewModel.setId(id);
+                ((WeightViewModel) viewModel).setId(id);
+                viewModel.createItemsList();
                 break;
             case UPDATE_COURSE:
                 title.setText("");

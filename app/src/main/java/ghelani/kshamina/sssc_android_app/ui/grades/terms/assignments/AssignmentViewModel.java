@@ -65,10 +65,10 @@ public class AssignmentViewModel extends ViewModel {
                 });
     }
 
-    private ListItem createListItem(Assignment assignment){
-        int percentage = (int)((assignment.assignmentGradeEarned / assignment.assignmentGradeTotal)*100);
+    private ListItem createListItem(Assignment assignment) {
+        int percentage = (int) ((assignment.assignmentGradeEarned / assignment.assignmentGradeTotal) * 100);
         return new ListItem(assignment.assignmentId, Grading.gradeToLetter.floorEntry(percentage).getValue(),
-                assignment.assignmentName, String.valueOf(percentage),
+                assignment.assignmentName, percentage + "%",
                 deleteMode, new ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
@@ -104,7 +104,7 @@ public class AssignmentViewModel extends ViewModel {
         return navigationEvent;
     }
 
-    public LiveData<ViewState<ListItem>> getState(){
+    public LiveData<ViewState<ListItem>> getState() {
         return state;
     }
 

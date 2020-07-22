@@ -32,7 +32,8 @@ public class WeightViewModel extends InputFormViewModel {
         selectedIndex = -1;
     }
 
-    private void createItemsList() {
+    @Override
+    protected void createItemsList() {
         weightDao.getWeightsByCourseId(courseId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -76,11 +77,7 @@ public class WeightViewModel extends InputFormViewModel {
 
     }
 
-    @Override
     public void setId(String id) {
         courseId = id;
-        createItemsList();
     }
-
-
 }

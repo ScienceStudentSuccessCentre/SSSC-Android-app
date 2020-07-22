@@ -23,10 +23,10 @@ public class FinalGradeViewModel extends InputFormViewModel {
     public FinalGradeViewModel(String[] letterGrades) {
         selectedIndex = -1;
         this.letterGrades = letterGrades;
-        createOptionsList();
     }
 
-    private void createOptionsList(){
+    @Override
+    protected void createItemsList(){
         List<DiffItem> optionsList = new ArrayList<>();
 
         optionsList.add(new TextItem("SELECT A GRADE"));
@@ -49,11 +49,6 @@ public class FinalGradeViewModel extends InputFormViewModel {
 
     @Override
     public void onSubmit() {
-
-    }
-
-    @Override
-    public void setId(String id) {
 
     }
 }

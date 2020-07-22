@@ -2,6 +2,12 @@ package ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,13 +18,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -37,10 +36,8 @@ import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.InputItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormViewModel;
 
 public class AssignmentListFragment extends Fragment {
 

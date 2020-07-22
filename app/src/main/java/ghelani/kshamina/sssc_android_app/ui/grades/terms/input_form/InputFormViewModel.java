@@ -16,6 +16,7 @@ public abstract class InputFormViewModel extends ViewModel {
     protected final SingleLiveEvent<Fragment> navigationEvent = new SingleLiveEvent<>();
 
     public abstract void onSubmit();
+    protected abstract void createItemsList();
 
     public LiveData<List<DiffItem>> getInputItems(){
         return items;
@@ -32,6 +33,4 @@ public abstract class InputFormViewModel extends ViewModel {
     public SingleLiveEvent<Fragment> getNavigationEvent() {
         return navigationEvent;
     }
-
-    public abstract void setId(String id);
 }

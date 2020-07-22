@@ -90,6 +90,7 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
 
             case SELECTION_SCREEN:
                 inputItemViewHolder.name.setText(item.getName());
+                inputItemViewHolder.textInput.setHint(item.getHint());
                 inputItemViewHolder.textInput.setText(item.getValue());
                 inputItemViewHolder.textInput.setEnabled(false);
                 inputItemViewHolder.switchInput.setVisibility(View.GONE);

@@ -43,10 +43,10 @@ public class AddAssignmentViewModel extends InputFormViewModel {
         this.assignmentDao = db.getAssignmentDao();
         this.weightDao = db.getWeightDao();
         updating = false;
-        createItemsList();
     }
 
-    private void createItemsList() {
+    @Override
+    protected void createItemsList() {
         List<DiffItem> displayItems = new ArrayList<>();
 
         displayItems.add(new TextItem("ASSIGNMENT INFO"));
@@ -142,11 +142,6 @@ public class AddAssignmentViewModel extends InputFormViewModel {
         }
     }
 
-    @Override
-    public void setId(String courseId) {
-        newAssignment.assignmentCourseId = courseId;
-    }
-
     public void fetchAssignmentToUpdate(String id) {
         updating = true;
         assignmentDao.getAssignmentByID(id)
@@ -162,6 +157,7 @@ public class AddAssignmentViewModel extends InputFormViewModel {
                     public void onSuccess(Assignment assignment) {
                         newAssignment = assignment;
                         getAssignmentWeight(newAssignment.assignmentWeightId);
+
                     }
 
                     @Override

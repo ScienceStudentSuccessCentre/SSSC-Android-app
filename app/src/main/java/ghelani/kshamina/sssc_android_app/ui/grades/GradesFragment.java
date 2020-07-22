@@ -98,5 +98,4 @@ public class GradesFragment extends Fragment {
             return 3;
         }
     }
-
 }

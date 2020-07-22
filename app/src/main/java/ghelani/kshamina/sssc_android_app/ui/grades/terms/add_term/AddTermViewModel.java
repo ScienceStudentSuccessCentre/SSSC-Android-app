@@ -31,7 +31,6 @@ public class AddTermViewModel extends InputFormViewModel {
 
     @Inject
     public AddTermViewModel(GradesDatabase db) {
-        createItemsList();
         season = "";
         year = "";
         selectedSeasonIndex = -1;
@@ -39,7 +38,8 @@ public class AddTermViewModel extends InputFormViewModel {
         this.termDao = db.getTermDao();
     }
 
-    private void createItemsList() {
+    @Override
+    protected void createItemsList() {
         List<DiffItem> selectionItems = new ArrayList<>();
         selectionItems.add(new TextItem("SELECT A TERM"));
 
@@ -107,10 +107,5 @@ public class AddTermViewModel extends InputFormViewModel {
 
                     }
                 });
-    }
-
-    @Override
-    public void setId(String id) {
-
     }
 }
