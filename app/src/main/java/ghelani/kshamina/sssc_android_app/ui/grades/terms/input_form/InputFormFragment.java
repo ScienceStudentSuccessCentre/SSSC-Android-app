@@ -106,12 +106,12 @@ public class InputFormFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         DividerItemDecoration decoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
         switch (type) {
             case ADD_ASSIGNMENT:
                 title.setText("New Assignment");
                 viewModel = new ViewModelProvider(this, viewModelFactory).get(AddAssignmentViewModel.class);
+                ((AddAssignmentViewModel) viewModel).setAssignmentCourseID(id);
                 viewModel.createItemsList();
                 break;
             case ADD_COURSE:

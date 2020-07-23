@@ -1,5 +1,6 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment;
 
+import android.os.AsyncTask;
 import android.text.InputType;
 
 import androidx.lifecycle.LiveData;
@@ -64,7 +65,7 @@ public class AddAssignmentViewModel extends InputFormViewModel {
         }));
 
         displayItems.add(new InputItem(newAssignment.assignmentGradeTotal == 0 ? "" : String.valueOf(newAssignment.assignmentGradeTotal),"30", "Maximum Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
-            newAssignment.assignmentGradeTotal = Double.parseDouble(value);
+            newAssignment.assignmentGradeTotal = value.isEmpty()? 0: Double.parseDouble(value);
             ((InputItem) item).setValue(value);
             checkCreateAvailable();
         }));
@@ -107,26 +108,14 @@ public class AddAssignmentViewModel extends InputFormViewModel {
     }
 
     private void getAssignmentWeight(String weightID){
-        weightDao.getWeightByID(weightID)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Weight>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        AsyncTask.execute(()->{
+            weight =  weightDao.getWeightByID(weightID);
+            createItemsList();
+        });
+    }
 
-                    }
-
-                    @Override
-                    public void onSuccess(Weight newWeight) {
-                        weight = newWeight;
-                        createItemsList();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                });
+    public void setAssignmentCourseID(String courseID){
+        this.newAssignment.assignmentCourseId = courseID;
     }
 
     public LiveData<List<DiffItem>> getInputItems() {

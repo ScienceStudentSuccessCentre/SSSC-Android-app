@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -62,6 +63,12 @@ public class AssignmentListFragment extends Fragment {
 
     @BindView(R.id.assignmentListToolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.courseGrade)
+    TextView courseGradeText;
+
+    @BindView(R.id.calculateDesiredGrade)
+    TextView calculateDesiredGrade;
 
     public AssignmentListFragment() {
         // Required empty public constructor
@@ -129,6 +136,8 @@ public class AssignmentListFragment extends Fragment {
                 assignmentRecyclerView.setAdapter(new MainListAdapter(getActivity(), displayableItems));
             }
         });
+
+        assignmentViewModel.getCourseGrade().observe(this, grade-> courseGradeText.setText("Overall Grade: " + grade));
 
         assignmentViewModel.getNavigationEvent().observe(this, this::replaceFragment);
 
