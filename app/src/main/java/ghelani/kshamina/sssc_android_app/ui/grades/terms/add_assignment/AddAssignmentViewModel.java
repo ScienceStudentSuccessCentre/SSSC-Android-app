@@ -64,8 +64,8 @@ public class AddAssignmentViewModel extends InputFormViewModel {
             checkCreateAvailable();
         }));
 
-        displayItems.add(new InputItem(newAssignment.assignmentGradeTotal == 0 ? "" : String.valueOf(newAssignment.assignmentGradeTotal),"30", "Maximum Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
-            newAssignment.assignmentGradeTotal = value.isEmpty()? 0: Double.parseDouble(value);
+        displayItems.add(new InputItem(newAssignment.assignmentGradeTotal == 0 ? "" : String.valueOf(newAssignment.assignmentGradeTotal), "30", "Maximum Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
+            newAssignment.assignmentGradeTotal = value.isEmpty() ? 0 : Double.parseDouble(value);
             ((InputItem) item).setValue(value);
             checkCreateAvailable();
         }));
@@ -86,7 +86,6 @@ public class AddAssignmentViewModel extends InputFormViewModel {
                 .subscribe(new CompletableObserver() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
                     }
 
                     @Override
@@ -96,7 +95,6 @@ public class AddAssignmentViewModel extends InputFormViewModel {
 
                     @Override
                     public void onError(Throwable e) {
-
                     }
                 });
     }
@@ -107,14 +105,28 @@ public class AddAssignmentViewModel extends InputFormViewModel {
         checkCreateAvailable();
     }
 
-    private void getAssignmentWeight(String weightID){
-        AsyncTask.execute(()->{
-            weight =  weightDao.getWeightByID(weightID);
-            createItemsList();
-        });
+    private void getAssignmentWeight(String weightID) {
+
+        weightDao.getWeightByID(weightID).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Weight>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onSuccess(Weight newWeight) {
+                        weight = newWeight;
+                        createItemsList();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+                });
     }
 
-    public void setAssignmentCourseID(String courseID){
+    public void setAssignmentCourseID(String courseID) {
         this.newAssignment.assignmentCourseId = courseID;
     }
 
@@ -139,19 +151,16 @@ public class AddAssignmentViewModel extends InputFormViewModel {
                 .subscribe(new SingleObserver<Assignment>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
                     }
 
                     @Override
                     public void onSuccess(Assignment assignment) {
                         newAssignment = assignment;
                         getAssignmentWeight(newAssignment.assignmentWeightId);
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
                     }
                 });
     }

@@ -118,6 +118,8 @@ public class AssignmentListFragment extends Fragment {
         toolbar.setTitle(courseCode);
         toolbar.setSubtitle(courseName);
 
+        calculateDesiredGrade.setOnClickListener(v->replaceFragment(InputFormFragment.newInstance(courseId, InputFormFragment.FormType.REQUIRED_FINAL_GRADE.toString())));
+
         addAssignmentFab.setOnClickListener(v -> replaceFragment(InputFormFragment.newInstance(courseId, InputFormFragment.FormType.ADD_ASSIGNMENT.toString())));
 
         assignmentRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));

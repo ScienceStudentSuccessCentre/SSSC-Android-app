@@ -78,6 +78,18 @@ public class AddCourseViewModel extends InputFormViewModel {
             isSubmitAvailable();
         }));
 
+        for(Weight weight: weights){
+            inputItems.add(items.getValue().size() - 5, new WeightItem(weights.size() - 1, weight.weightName, weight.weightValue == 0 ? "" : String.valueOf(weight.weightValue),
+                    (item, weightName) -> {
+                        weights.get(((WeightItem) item).getIndex()).weightName = weightName;
+                        isSubmitAvailable();
+                    },
+                    (item, weightValue) -> {
+                        weights.get(((WeightItem) item).getIndex()).weightValue = weightValue.isEmpty() ? -1 : Double.parseDouble(weightValue);
+                        isSubmitAvailable();
+                    }));
+        }
+
         inputItems.add(new TextItem("ASSIGNMENT WEIGHTS"));
 
         inputItems.add(new InputItem("", "ADD NEW WEIGHT", InputItem.InputStyle.BUTTON, InputType.TYPE_CLASS_TEXT, (item, value) -> {

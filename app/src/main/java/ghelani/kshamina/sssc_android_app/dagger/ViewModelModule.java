@@ -11,6 +11,7 @@ import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseVie
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.SelectFinalGradeViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments.AssignmentViewModel;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments.RequiredFinalGradeViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CoursesViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list.TermsViewModel;
 
@@ -56,5 +57,10 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SelectWeightViewModel.class)
     public abstract ViewModel bindWeightViewModel(SelectWeightViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(RequiredFinalGradeViewModel.class)
+    public abstract ViewModel bindRequiredFinalGradeViewModel(RequiredFinalGradeViewModel viewModel);
 
 }

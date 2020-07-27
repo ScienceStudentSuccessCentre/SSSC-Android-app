@@ -35,11 +35,13 @@ import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.SelectWe
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.SelectFinalGradeViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermViewModel;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments.RequiredFinalGradeViewModel;
 
 public class InputFormFragment extends Fragment {
 
     public enum FormType {
-        ADD_TERM, ADD_COURSE, ADD_ASSIGNMENT, SELECT_FINAL_GRADE, SELECT_WEIGHT, UPDATE_COURSE, UPDATE_ASSIGNMENT
+        ADD_TERM, ADD_COURSE, ADD_ASSIGNMENT, SELECT_FINAL_GRADE,
+        SELECT_WEIGHT, UPDATE_COURSE, UPDATE_ASSIGNMENT, REQUIRED_FINAL_GRADE
     }
 
     private static final String ID = "id";
@@ -151,6 +153,13 @@ public class InputFormFragment extends Fragment {
                 submitButton.setText("Update");
                 viewModel = new ViewModelProvider(this, viewModelFactory).get(AddAssignmentViewModel.class);
                 ((AddAssignmentViewModel) viewModel).fetchAssignmentToUpdate(id);
+                break;
+
+            case REQUIRED_FINAL_GRADE:
+                title.setText("");
+                submitButton.setText("Done");
+                viewModel = new ViewModelProvider(this, viewModelFactory).get(RequiredFinalGradeViewModel.class);
+                ((RequiredFinalGradeViewModel) viewModel).getCourseAndWeights(id);
                 break;
         }
 

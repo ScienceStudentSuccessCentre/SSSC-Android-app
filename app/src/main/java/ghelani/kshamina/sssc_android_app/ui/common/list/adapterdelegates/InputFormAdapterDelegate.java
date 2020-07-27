@@ -92,6 +92,7 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
                 inputItemViewHolder.name.setText(item.getName());
                 inputItemViewHolder.textInput.setHint(item.getHint());
                 inputItemViewHolder.textInput.setText(item.getValue());
+                inputItemViewHolder.textInput.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_right_24,0);
                 inputItemViewHolder.textInput.setEnabled(false);
                 inputItemViewHolder.switchInput.setVisibility(View.GONE);
                 inputItemViewHolder.itemLayout.setOnClickListener(v ->

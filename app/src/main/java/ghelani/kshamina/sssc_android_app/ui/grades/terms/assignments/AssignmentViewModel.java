@@ -13,10 +13,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import ghelani.kshamina.sssc_android_app.database.AssignmentDao;
+import ghelani.kshamina.sssc_android_app.database.CourseDao;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.database.WeightDao;
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.entity.AssignmentWithWeight;
+import ghelani.kshamina.sssc_android_app.entity.CourseWithAssignmentsAndWeights;
 import ghelani.kshamina.sssc_android_app.entity.Weight;
 import ghelani.kshamina.sssc_android_app.ui.common.events.ListItemEventListener;
 import ghelani.kshamina.sssc_android_app.ui.common.events.SingleLiveEvent;
@@ -37,20 +39,47 @@ import io.reactivex.schedulers.Schedulers;
 public class AssignmentViewModel extends ViewModel {
 
     private AssignmentDao assignmentDao;
-    private WeightDao weightDao;
+    private CourseDao courseDao;
     private MutableLiveData<ViewState<ListItem>> state = new MutableLiveData<>();
     private MutableLiveData<String> courseGradeText = new MutableLiveData<>();
     private SingleLiveEvent<Fragment> navigationEvent = new SingleLiveEvent<>();
+    private CourseWithAssignmentsAndWeights course;
     private boolean deleteMode;
 
     @Inject
     public AssignmentViewModel(GradesDatabase gradesDatabase) {
         super();
         this.assignmentDao = gradesDatabase.getAssignmentDao();
-        this.weightDao = gradesDatabase.getWeightDao();
+        this.courseDao = gradesDatabase.getCourseDao();
     }
 
     public void fetchCourseAssignments(String courseID) {
+        courseDao.getCourseWithWeightsByID(courseID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<CourseWithAssignmentsAndWeights>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(CourseWithAssignmentsAndWeights courseData) {
+                        course = courseData;
+                        List<ListItem> assignmentItems = new ArrayList<>();
+                        for (AssignmentWithWeight assignment : courseData.assignments) {
+                            assignmentItems.add(createListItem(assignment.getAssignment()));
+                        }
+                        calculateCourseGrade();
+                        state.setValue(new ViewState<>(false, false, true, "", assignmentItems));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+        /*
         assignmentDao.getAssignmentsByCourseId(courseID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -75,9 +104,18 @@ public class AssignmentViewModel extends ViewModel {
 
                     }
                 });
+
+         */
     }
 
-    private void calculateCourseGrade(List<AssignmentWithWeight> assignments) {
+    private void calculateCourseGrade() {
+        double percentage = course.calculateGradePercentage();
+        if(percentage == -1){
+            courseGradeText.setValue("N/A");
+            return;
+        }
+        courseGradeText.setValue(percentage + "%");
+        /*
         if (assignments.isEmpty()) {
             courseGradeText.setValue("N/A");
             return;
@@ -96,8 +134,10 @@ public class AssignmentViewModel extends ViewModel {
         }
 
         double percentage = totalEarned / totalWeight * 100;
+        percentage = Math.round(percentage * 10) / 10.0;
         courseGradeText.setValue(percentage + "%");
 
+         */
     }
 
     private ListItem createListItem(Assignment assignment) {
