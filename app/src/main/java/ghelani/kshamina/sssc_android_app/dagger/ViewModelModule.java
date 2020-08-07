@@ -14,6 +14,7 @@ import ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments.AssignmentV
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments.RequiredFinalGradeViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CoursesViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list.TermsViewModel;
+import ghelani.kshamina.sssc_android_app.ui.mentoring.MentorListViewModel;
 
 @Module
 public abstract class ViewModelModule {
@@ -62,5 +63,11 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(RequiredFinalGradeViewModel.class)
     public abstract ViewModel bindRequiredFinalGradeViewModel(RequiredFinalGradeViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MentorListViewModel.class)
+    public abstract ViewModel bindMentorListViewModel(MentorListViewModel viewModel);
+
 
 }

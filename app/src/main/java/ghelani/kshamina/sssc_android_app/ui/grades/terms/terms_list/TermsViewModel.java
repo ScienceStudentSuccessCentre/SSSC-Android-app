@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.database.TermDao;
 import ghelani.kshamina.sssc_android_app.entity.TermEntity;
-import ghelani.kshamina.sssc_android_app.ui.common.events.ListItemEventListener;
+import ghelani.kshamina.sssc_android_app.ui.common.events.EventListener;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
@@ -85,7 +85,7 @@ public class TermsViewModel extends ViewModel {
     }
 
     private ListItem createListItem(TermEntity term){
-        return new ListItem(term.getTermId(),term.asShortString(),"",term.toString(), isDeleteMode, new ListItemEventListener() {
+        return new ListItem(term.getTermId(),term.asShortString(),"",term.toString(), isDeleteMode, new EventListener.ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
                 termDao.getTermById(id)

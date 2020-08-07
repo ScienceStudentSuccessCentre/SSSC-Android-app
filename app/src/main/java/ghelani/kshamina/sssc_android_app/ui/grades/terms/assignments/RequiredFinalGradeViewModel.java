@@ -16,14 +16,15 @@ import ghelani.kshamina.sssc_android_app.entity.Weight;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.InputItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.TextItem;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormViewModel;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.SelectItemViewModel;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
 import io.reactivex.Scheduler;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class RequiredFinalGradeViewModel extends InputFormViewModel {
+public class RequiredFinalGradeViewModel extends SelectItemViewModel<Weight> {
 
     private CourseDao courseDao;
     private WeightDao weightDao;
@@ -32,8 +33,8 @@ public class RequiredFinalGradeViewModel extends InputFormViewModel {
     private CourseEntity course;
     private double currentCourseGrade;
     private double desiredFinalGrade;
-    private List<Weight> weightOptions;
     private Weight finalExamWeight;
+    private double requiredExamGrade;
 
     @Inject
     public RequiredFinalGradeViewModel(GradesDatabase gradesDatabase) {
@@ -41,21 +42,23 @@ public class RequiredFinalGradeViewModel extends InputFormViewModel {
         this.weightDao = gradesDatabase.getWeightDao();
         this.backgroundScheduler = Schedulers.io();
         this.mainScheduler = AndroidSchedulers.mainThread();
+        desiredFinalGrade = -1;
     }
 
     public void getCourseAndWeights(String courseID) {
         courseDao.getCourseWithWeightsByID(courseID)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
                 .subscribe(new SingleObserver<CourseWithAssignmentsAndWeights>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                     }
 
                     @Override
-                    public void onSuccess(CourseWithAssignmentsAndWeights courseWithWeights) {
-                        course = courseWithWeights.course;
-                        weightOptions = courseWithWeights.weight;
+                    public void onSuccess(CourseWithAssignmentsAndWeights courseWithAssignmentsAndWeights) {
+                        course = courseWithAssignmentsAndWeights.course;
+                        currentCourseGrade = courseWithAssignmentsAndWeights.calculateGradePercentage();
+                        // weightOptions = courseWithAssignmentsAndWeights.weight;
                         createItemsList();
                     }
 
@@ -64,7 +67,6 @@ public class RequiredFinalGradeViewModel extends InputFormViewModel {
                     }
                 });
     }
-
 
     @Override
     public void onSubmit() {
@@ -84,21 +86,43 @@ public class RequiredFinalGradeViewModel extends InputFormViewModel {
 
         }));
 
-        inputItems.add(new InputItem("", "90%", "Desired Final Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
-
+        inputItems.add(new InputItem(String.valueOf(desiredFinalGrade == -1 ? "" : desiredFinalGrade), "90%", "Desired Final Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
+            desiredFinalGrade = value.isEmpty() ? -1 : Double.parseDouble(value);
+            ((InputItem) item).setValue(value);
+            calculateRequiredExamGrade();
         }));
 
-        inputItems.add(new InputItem("", "", "Final Exam Weight", InputItem.InputStyle.SELECTION_SCREEN, InputType.TYPE_CLASS_TEXT, (item, value) -> {
+        inputItems.add(new InputItem(finalExamWeight != null ? finalExamWeight.weightName : "", "", "Final Exam Weight", InputItem.InputStyle.SELECTION_SCREEN, InputType.TYPE_CLASS_TEXT, (item, value) -> {
+            navigationEvent.setValue(InputFormFragment.newInstance(course.courseId, InputFormFragment.FormType.SELECT_WEIGHT.toString()));
 
         }));
 
         inputItems.add(new TextItem("MINIMUM FINAL GRADE REQUIRED"));
 
-        inputItems.add(new InputItem("","Enter Info Above", "Grade",InputType.TYPE_CLASS_TEXT, (item, value) -> {
+        inputItems.add(new InputItem(isFormFilled()? String.valueOf(requiredExamGrade) : "", "Enter Info Above", "Grade", InputType.TYPE_CLASS_TEXT, (item, value) -> {
 
         }));
 
-
         items.setValue(inputItems);
+    }
+
+    private boolean isFormFilled(){
+        return desiredFinalGrade != -1 && finalExamWeight != null;
+    }
+
+    private void calculateRequiredExamGrade() {
+        requiredExamGrade = 0;
+        if (isFormFilled()) {
+            requiredExamGrade = ((desiredFinalGrade - currentCourseGrade) / finalExamWeight.weightValue * 100) + currentCourseGrade;
+            requiredExamGrade = requiredExamGrade < 0 ? 0 : requiredExamGrade;
+            requiredExamGrade = Math.round(requiredExamGrade * 10) / 10.0;
+            createItemsList();
+        }
+    }
+
+    @Override
+    public void setSelectedItem(Weight item) {
+        this.finalExamWeight = item;
+        calculateRequiredExamGrade();
     }
 }

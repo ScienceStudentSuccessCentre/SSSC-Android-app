@@ -93,7 +93,7 @@ public class AddCourseViewModel extends InputFormViewModel {
         inputItems.add(new TextItem("ASSIGNMENT WEIGHTS"));
 
         inputItems.add(new InputItem("", "ADD NEW WEIGHT", InputItem.InputStyle.BUTTON, InputType.TYPE_CLASS_TEXT, (item, value) -> {
-            createWeightInput("", 0);
+            createWeightInput(new Weight("", 0, newCourse.courseId));
             isSubmitAvailable();
         }));
 
@@ -112,9 +112,9 @@ public class AddCourseViewModel extends InputFormViewModel {
         items.setValue(inputItems);
     }
 
-    private void createWeightInput(String name, double value) {
-        weights.add(new Weight(name, value, newCourse.courseId));
-        items.getValue().add(items.getValue().size() - 5, new WeightItem(weights.size() - 1, name, value == 0 ? "" : String.valueOf(value),
+    private void createWeightInput(Weight weight) {
+        weights.add(weight);
+        items.getValue().add(items.getValue().size() - 5, new WeightItem(weights.size() - 1, weight.weightName, weight.weightValue == 0 ? "" : String.valueOf(weight.weightValue),
                 (item, weightName) -> {
                     weights.get(((WeightItem) item).getIndex()).weightName = weightName;
                     isSubmitAvailable();
@@ -168,6 +168,7 @@ public class AddCourseViewModel extends InputFormViewModel {
 
                     @Override
                     public void onComplete() {
+                        addWeights();
                         submitted.setValue(true);
                     }
 
@@ -217,7 +218,7 @@ public class AddCourseViewModel extends InputFormViewModel {
                     @Override
                     public void onSuccess(List<Weight> weightList) {
                         for (Weight weight : weightList) {
-                            createWeightInput(weight.weightName, weight.weightValue);
+                            createWeightInput(weight);
                         }
                     }
 

@@ -14,16 +14,21 @@ import android.webkit.WebView;
 
 import com.facebook.stetho.Stetho;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
+import com.squareup.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
+
+import java.util.Collections;
 
 import ghelani.kshamina.sssc_android_app.ui.ResourcesFragment;
 import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
 import ghelani.kshamina.sssc_android_app.ui.event.EventsFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.GradesFragment;
+import ghelani.kshamina.sssc_android_app.ui.mentoring.MentorListFragment;
+import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView navigatonView;
-    //Toolbar toolbar;
-   // Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +36,6 @@ public class MainActivity extends AppCompatActivity {
         Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
 
-        //toolbar = findViewById(R.id.toolbar);
-
-        //setSupportActionBar(toolbar);
         navigatonView = findViewById(R.id.navigation);
         navigatonView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
         changeFragment(new EventsFragment());
@@ -63,26 +65,23 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-
-
     private void setupBottomNav() {
         navigatonView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     changeFragment(new EventsFragment());
-                   // getSupportActionBar().setTitle("Events");
                     break;
                 case R.id.navigation_dashboard:
                     changeFragment(new GradesFragment());
-                   // getSupportActionBar().setTitle("Grades Calculator");
+                    break;
+                case R.id.navigation_mentors:
+                    changeFragment(new MentorListFragment());
                     break;
                 case R.id.navigation_notifications:
                     changeFragment(new ResourcesFragment());
-                   // getSupportActionBar().setTitle("Resources");
                     break;
                 case R.id.navigation_settings:
                     changeFragment(new SettingsFragment());
-                   // getSupportActionBar().setTitle("Settings");
             }
             return true;
         });

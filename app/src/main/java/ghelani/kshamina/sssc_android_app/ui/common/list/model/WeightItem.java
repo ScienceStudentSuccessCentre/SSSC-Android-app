@@ -1,15 +1,15 @@
 package ghelani.kshamina.sssc_android_app.ui.common.list.model;
 
-import ghelani.kshamina.sssc_android_app.ui.common.events.FormInputItemListener;
+import ghelani.kshamina.sssc_android_app.ui.common.events.EventListener;
 
 public class WeightItem implements DiffItem {
     private int index;
     private String name;
     private String value;
-    private FormInputItemListener nameListener;
-    private FormInputItemListener valueListener;
+    private EventListener.FormInputItemListener nameListener;
+    private EventListener.FormInputItemListener valueListener;
 
-    public WeightItem(int index, String name, String value, FormInputItemListener nameListener, FormInputItemListener valueListener) {
+    public WeightItem(int index, String name, String value, EventListener.FormInputItemListener nameListener, EventListener.FormInputItemListener valueListener) {
         this.index = index;
         this.name = name;
         this.value = value;
@@ -33,19 +33,19 @@ public class WeightItem implements DiffItem {
         this.value = value;
     }
 
-    public FormInputItemListener getNameListener() {
+    public EventListener.FormInputItemListener getNameListener() {
         return nameListener;
     }
 
-    public void setNameListener(FormInputItemListener nameListener) {
+    public void setNameListener(EventListener.FormInputItemListener nameListener) {
         this.nameListener = nameListener;
     }
 
-    public FormInputItemListener getValueListener() {
+    public EventListener.FormInputItemListener getValueListener() {
         return valueListener;
     }
 
-    public void setValueListener(FormInputItemListener valueListener) {
+    public void setValueListener(EventListener.FormInputItemListener valueListener) {
         this.valueListener = valueListener;
     }
 

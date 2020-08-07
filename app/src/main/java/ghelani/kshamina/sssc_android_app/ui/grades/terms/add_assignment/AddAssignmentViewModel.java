@@ -1,6 +1,5 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment;
 
-import android.os.AsyncTask;
 import android.text.InputType;
 
 import androidx.lifecycle.LiveData;
@@ -19,8 +18,8 @@ import ghelani.kshamina.sssc_android_app.entity.Weight;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.InputItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.TextItem;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.SelectItemViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormViewModel;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
@@ -28,7 +27,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class AddAssignmentViewModel extends InputFormViewModel {
+public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
 
     private MutableLiveData<List<DiffItem>> items = new MutableLiveData<>();
     private Assignment newAssignment;
@@ -36,7 +35,6 @@ public class AddAssignmentViewModel extends InputFormViewModel {
     private Weight weight;
     private boolean updating;
     private WeightDao weightDao;
-
 
     @Inject
     public AddAssignmentViewModel(GradesDatabase db) {
@@ -80,23 +78,43 @@ public class AddAssignmentViewModel extends InputFormViewModel {
 
     @Override
     public void onSubmit() {
-        Completable.fromAction(() -> assignmentDao.insertAssignment(newAssignment))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
+        if(updating){
+            Completable.fromAction(() -> assignmentDao.updateAssignment(newAssignment))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new CompletableObserver() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                        }
 
-                    @Override
-                    public void onComplete() {
-                        submitted.setValue(true);
-                    }
+                        @Override
+                        public void onComplete() {
+                            submitted.setValue(true);
+                        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-                });
+                        @Override
+                        public void onError(Throwable e) {
+                        }
+                    });
+        }else {
+            Completable.fromAction(() -> assignmentDao.insertAssignment(newAssignment))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new CompletableObserver() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            submitted.setValue(true);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                        }
+                    });
+        }
     }
 
     public void setWeight(Weight weight) {
@@ -163,5 +181,16 @@ public class AddAssignmentViewModel extends InputFormViewModel {
                     public void onError(Throwable e) {
                     }
                 });
+    }
+
+    @Override
+    public void setSelectedItem(Weight item) {
+        this.weight = item;
+        newAssignment.assignmentWeightId = item.weightId;
+        checkCreateAvailable();
+    }
+
+    public Assignment getNewAssignment() {
+        return newAssignment;
     }
 }

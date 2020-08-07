@@ -38,6 +38,13 @@ public class Weight {
         this.weightCourseId = courseId;
     }
 
+    public Weight(String weightId, String name, double value, String courseId) {
+        this.weightId = weightId;
+        this.weightName = name;
+        this.weightValue = value;
+        this.weightCourseId = courseId;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj == null || obj.getClass() != this.getClass()) return false;

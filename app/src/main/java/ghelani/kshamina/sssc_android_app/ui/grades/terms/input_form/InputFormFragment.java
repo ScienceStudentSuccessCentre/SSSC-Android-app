@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,7 +30,9 @@ import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
+import ghelani.kshamina.sssc_android_app.entity.Weight;
 import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.SelectItemViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.SelectWeightViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseViewModel;
@@ -112,8 +115,9 @@ public class InputFormFragment extends Fragment {
         switch (type) {
             case ADD_ASSIGNMENT:
                 title.setText("New Assignment");
-                viewModel = new ViewModelProvider(this, viewModelFactory).get(AddAssignmentViewModel.class);
-                ((AddAssignmentViewModel) viewModel).setAssignmentCourseID(id);
+                AddAssignmentViewModel addAssignmentViewModel = new ViewModelProvider(this, viewModelFactory).get(AddAssignmentViewModel.class);
+                addAssignmentViewModel.setAssignmentCourseID(id);
+                viewModel = addAssignmentViewModel;
                 viewModel.createItemsList();
                 break;
             case ADD_COURSE:
@@ -151,8 +155,15 @@ public class InputFormFragment extends Fragment {
             case UPDATE_ASSIGNMENT:
                 title.setText("");
                 submitButton.setText("Update");
-                viewModel = new ViewModelProvider(this, viewModelFactory).get(AddAssignmentViewModel.class);
-                ((AddAssignmentViewModel) viewModel).fetchAssignmentToUpdate(id);
+                AddAssignmentViewModel updateAssignmentViewModel = new ViewModelProvider(this, viewModelFactory).get(AddAssignmentViewModel.class);
+                if (updateAssignmentViewModel.getNewAssignment().assignmentName.isEmpty()) {
+                    updateAssignmentViewModel.fetchAssignmentToUpdate(id);
+                    viewModel = updateAssignmentViewModel;
+                }else{
+                    viewModel = updateAssignmentViewModel;
+                    viewModel.createItemsList();
+                }
+
                 break;
 
             case REQUIRED_FINAL_GRADE:
@@ -181,11 +192,11 @@ public class InputFormFragment extends Fragment {
                 returnToPreviousScreen();
             });
 
-        }else if(type.equals(FormType.SELECT_WEIGHT)){
+        } else if (type.equals(FormType.SELECT_WEIGHT)) {
             ((SelectWeightViewModel) viewModel).getSelectedWeight().observe(this, weight -> {
-                Fragment prevFragment = getFragmentManager().findFragmentByTag(String.valueOf(getFragmentManager().getBackStackEntryCount() - 2));
-                AddAssignmentViewModel addAssignmentViewModel = new ViewModelProvider(prevFragment, viewModelFactory).get(AddAssignmentViewModel.class);
-                addAssignmentViewModel.setWeight(weight);
+                InputFormFragment prevFragment = (InputFormFragment) getFragmentManager().findFragmentByTag(String.valueOf(getFragmentManager().getBackStackEntryCount() - 2));
+                SelectItemViewModel itemViewModel = (SelectItemViewModel) prevFragment.viewModel;
+                itemViewModel.setSelectedItem(weight);
                 returnToPreviousScreen();
             });
         }
@@ -195,7 +206,7 @@ public class InputFormFragment extends Fragment {
         cancelButton.setOnClickListener(v -> returnToPreviousScreen());
     }
 
-    private void returnToPreviousScreen(){
+    private void returnToPreviousScreen() {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.popBackStackImmediate();
     }

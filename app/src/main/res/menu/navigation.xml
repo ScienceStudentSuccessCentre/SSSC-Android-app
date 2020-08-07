@@ -12,6 +12,12 @@
         android:title="@string/title_grades" />
 
     <item
+        android:id="@+id/navigation_mentors"
+        android:icon="@drawable/ic_person_24"
+        android:title="Mentoring" />
+
+
+    <item
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/ic_description_black_24dp"
         android:title="@string/title_resources" />

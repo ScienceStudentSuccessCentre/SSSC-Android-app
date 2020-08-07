@@ -1,6 +1,6 @@
 package ghelani.kshamina.sssc_android_app.ui.common.list.model;
 
-import ghelani.kshamina.sssc_android_app.ui.common.events.FormInputItemListener;
+import ghelani.kshamina.sssc_android_app.ui.common.events.EventListener;
 
 public class InputItem implements DiffItem {
 
@@ -14,11 +14,11 @@ public class InputItem implements DiffItem {
     private String value;
     private String hint;
     private String name;
-    private FormInputItemListener listener;
+    private EventListener.FormInputItemListener listener;
     private int keyboardType;
     private InputStyle type;
 
-    public InputItem(String value, String hint, String name, InputStyle type, int keyboardType, FormInputItemListener listener) {
+    public InputItem(String value, String hint, String name, InputStyle type, int keyboardType, EventListener.FormInputItemListener listener) {
         this.hint = hint;
         this.name = name;
         this.listener = listener;
@@ -27,11 +27,11 @@ public class InputItem implements DiffItem {
         this.value = value;
     }
 
-    public InputItem(String value, String hint, String name, int keyboardType, FormInputItemListener listener) {
+    public InputItem(String value, String hint, String name, int keyboardType, EventListener.FormInputItemListener listener) {
         this(value, hint, name, InputStyle.TEXT, keyboardType, listener);
     }
 
-    public InputItem(String hint, String name, InputStyle type, int keyboardType, FormInputItemListener listener) {
+    public InputItem(String hint, String name, InputStyle type, int keyboardType, EventListener.FormInputItemListener listener) {
         this("", hint, name, type, keyboardType, listener);
     }
 
@@ -51,11 +51,11 @@ public class InputItem implements DiffItem {
         this.name = name;
     }
 
-    public FormInputItemListener getListener() {
+    public EventListener.FormInputItemListener getListener() {
         return listener;
     }
 
-    public void setListener(FormInputItemListener listener) {
+    public void setListener(EventListener.FormInputItemListener listener) {
         this.listener = listener;
     }
 
