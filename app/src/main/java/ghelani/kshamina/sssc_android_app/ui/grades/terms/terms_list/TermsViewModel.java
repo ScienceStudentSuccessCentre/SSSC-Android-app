@@ -27,7 +27,7 @@ import io.reactivex.schedulers.Schedulers;
 public class TermsViewModel extends ViewModel {
 
     private TermDao termDao;
-    public MutableLiveData<ViewState<ListItem>> state = new MutableLiveData<>();
+    public MutableLiveData<ViewState<DiffItem>> state = new MutableLiveData<>();
     public MutableLiveData<TermEntity> termSelected = new MutableLiveData<>();
     private boolean isDeleteMode;
 
@@ -36,24 +36,6 @@ public class TermsViewModel extends ViewModel {
         super();
         this.termDao = db.getTermDao();
         isDeleteMode = false;
-    }
-
-    public void insertTerm(TermEntity newTerm){
-        Completable.fromAction(() -> termDao.insertTerm(newTerm))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {}
-
-                    @Override
-                    public void onComplete() {
-                        fetchTerms();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {}
-                });
     }
 
     public void fetchTerms() {
@@ -70,9 +52,10 @@ public class TermsViewModel extends ViewModel {
                     public void onSuccess(@NonNull List<TermEntity> terms) {
                         Collections.sort(terms);
                         Collections.reverse(terms);
-                        List<ListItem> items = new ArrayList<>();
+                        List<DiffItem> items = new ArrayList<>();
                         for(TermEntity term : terms){
-                            items.add(createListItem(term));
+                            ListItem displayableItem = createListItem(term);
+                            items.add(displayableItem);
                         }
                         state.setValue(new ViewState<>(false, false, true, "", items));
                     }
@@ -110,6 +93,13 @@ public class TermsViewModel extends ViewModel {
             }
 
             @Override
+            public boolean onItemLongClicked() {
+                setDeleteMode(!isDeleteMode);
+                fetchTerms();
+                return true;
+            }
+
+            @Override
             public void deleteItem(String id) {
                 Completable.fromAction(() -> termDao.deleteTerm(id))
                         .subscribeOn(Schedulers.io())
@@ -135,11 +125,13 @@ public class TermsViewModel extends ViewModel {
     }
 
     public List<DiffItem> getTermItems(){
-        List<DiffItem> termItems = new ArrayList<>();
-        for(ListItem listItem : state.getValue().getItems()){
-            termItems.add(listItem);
-        }
-        return termItems;
+        return state.getValue().getItems();
+
+    }
+
+    public void toggleDeleteMode(){
+        setDeleteMode(!isDeleteMode);
+        fetchTerms();
     }
 
     public boolean isDeleteMode() {

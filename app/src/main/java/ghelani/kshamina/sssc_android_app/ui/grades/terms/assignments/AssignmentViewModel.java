@@ -94,6 +94,13 @@ public class AssignmentViewModel extends ViewModel {
             }
 
             @Override
+            public boolean onItemLongClicked() {
+                setDeleteMode(!isDeleteMode());
+                return true;
+            }
+
+
+            @Override
             public void deleteItem(String id) {
                 AsyncTask.execute(() -> {
                     assignmentDao.deleteAssignment(id);

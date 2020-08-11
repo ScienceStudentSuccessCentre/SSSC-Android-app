@@ -52,6 +52,7 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
         switch (item.getType()) {
             case TEXT:
                 inputItemViewHolder.name.setText(item.getName());
+                inputItemViewHolder.textInput.setEnabled(item.isEnabled());
                 inputItemViewHolder.textInput.setHint(item.getHint());
                 inputItemViewHolder.textInput.setText(item.getValue());
                 inputItemViewHolder.textInput.setInputType(item.getKeyboardType());

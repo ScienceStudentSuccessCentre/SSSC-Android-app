@@ -113,7 +113,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
     private void loadCourseData() {
         Thread thread = new Thread(() -> {
             filteredCourseList.clear();
-
+/*
             TermEntity dummyTerm1 = new TermEntity(TermEntity.Season.WINTER, "2019");  // To satisfy foreign key constraint
             TermEntity dummyTerm2 = new TermEntity(TermEntity.Season.FALL, "2020");
             gradesDatabase.getTermDao().insertTerm(dummyTerm1);
@@ -160,7 +160,8 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
             courseDao.insertCourse(dummyCourseEntity2);
             courseDao.insertCourse(dummyCourseEntity3);
             courseDao.insertCourse(dummyCourseEntity4);
-
+*/
+            CourseDao courseDao = gradesDatabase.getCourseDao();
             filteredCourseList.addAll(courseDao.getAllCourses());
             updateAdapterList();
         });
@@ -208,6 +209,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
         super.onResume();
         PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Calculator");
+        loadCourseData();
     }
 
     @Override

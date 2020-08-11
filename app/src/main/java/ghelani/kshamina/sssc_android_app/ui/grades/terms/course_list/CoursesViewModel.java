@@ -87,6 +87,12 @@ public class CoursesViewModel extends ViewModel {
             }
 
             @Override
+            public boolean onItemLongClicked() {
+                setIsDeleteMode(!isDeleteMode);
+                return true;
+            }
+
+            @Override
             public void deleteItem(String courseId) {
                 Completable.fromAction(() -> courseDao.deleteCourse(courseId))
                         .subscribeOn(Schedulers.io())

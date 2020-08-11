@@ -70,6 +70,9 @@ public class AssignmentListFragment extends Fragment {
     @BindView(R.id.calculateDesiredGrade)
     TextView calculateDesiredGrade;
 
+    @BindView(R.id.emptyAssignmentListText)
+    TextView emptyAssignmentListMessage;
+
     public AssignmentListFragment() {
         // Required empty public constructor
     }
@@ -131,11 +134,22 @@ public class AssignmentListFragment extends Fragment {
             } else if (assignmentViewState.isError()) {
                 System.out.println("Course load ERROR: " + assignmentViewState.getError());
             } else if (assignmentViewState.isSuccess()) {
-                List<DiffItem> displayableItems = new ArrayList<>();
-                for (ListItem item : assignmentViewState.getItems()) {
-                    displayableItems.add(item);
+
+                if (assignmentViewState.getItems().isEmpty()) {
+                    emptyAssignmentListMessage.setVisibility(View.VISIBLE);
+                    assignmentRecyclerView.setVisibility(View.GONE);
+                } else {
+                    emptyAssignmentListMessage.setVisibility(View.GONE);
+                    assignmentRecyclerView.setVisibility(View.VISIBLE);
+
+                    List<DiffItem> displayableItems = new ArrayList<>();
+                    for (ListItem item : assignmentViewState.getItems()) {
+                        displayableItems.add(item);
+                    }
+                    assignmentRecyclerView.setAdapter(new MainListAdapter(getActivity(), displayableItems));
                 }
-                assignmentRecyclerView.setAdapter(new MainListAdapter(getActivity(), displayableItems));
+
+
             }
         });
 

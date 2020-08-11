@@ -82,9 +82,9 @@ public class RequiredFinalGradeViewModel extends SelectItemViewModel<Weight> {
 
         inputItems.add(new TextItem("COURSE DETAILS - " + course.courseCode));
 
-        inputItems.add(new InputItem(String.valueOf(currentCourseGrade), "90", "Current Course Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
-
-        }));
+        InputItem courseGrade = new InputItem(String.valueOf(currentCourseGrade), "90", "Current Course Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {});
+        courseGrade.setEnabled(false);
+        inputItems.add(courseGrade);
 
         inputItems.add(new InputItem(String.valueOf(desiredFinalGrade == -1 ? "" : desiredFinalGrade), "90%", "Desired Final Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
             desiredFinalGrade = value.isEmpty() ? -1 : Double.parseDouble(value);

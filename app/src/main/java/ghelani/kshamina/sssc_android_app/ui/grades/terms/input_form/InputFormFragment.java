@@ -151,6 +151,7 @@ public class InputFormFragment extends Fragment {
                 viewModel = new ViewModelProvider(this, viewModelFactory).get(AddCourseViewModel.class);
                 decoration = courseListDecoration();
                 ((AddCourseViewModel) viewModel).fetchCourseToUpdate(id);
+
                 break;
             case UPDATE_ASSIGNMENT:
                 title.setText("");
@@ -159,7 +160,7 @@ public class InputFormFragment extends Fragment {
                 if (updateAssignmentViewModel.getNewAssignment().assignmentName.isEmpty()) {
                     updateAssignmentViewModel.fetchAssignmentToUpdate(id);
                     viewModel = updateAssignmentViewModel;
-                }else{
+                } else {
                     viewModel = updateAssignmentViewModel;
                     viewModel.createItemsList();
                 }

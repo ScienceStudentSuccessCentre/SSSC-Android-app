@@ -57,7 +57,7 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
         }));
 
         displayItems.add(new InputItem(newAssignment.assignmentGradeEarned == -1 ? "" : String.valueOf(newAssignment.assignmentGradeEarned), "26", "Grade Earned", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
-            newAssignment.assignmentGradeEarned = Double.parseDouble(value);
+            newAssignment.assignmentGradeEarned = value.isEmpty() ? -1 : Double.parseDouble(value);
             ((InputItem) item).setValue(value);
             checkCreateAvailable();
         }));
@@ -78,7 +78,7 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
 
     @Override
     public void onSubmit() {
-        if(updating){
+        if (updating) {
             Completable.fromAction(() -> assignmentDao.updateAssignment(newAssignment))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -96,7 +96,7 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
                         public void onError(Throwable e) {
                         }
                     });
-        }else {
+        } else {
             Completable.fromAction(() -> assignmentDao.insertAssignment(newAssignment))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

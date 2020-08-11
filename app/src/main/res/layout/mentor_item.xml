@@ -32,10 +32,12 @@
         <TextView
             android:id="@+id/description"
             tools:text="Hi I am a third year software engineer"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:maxLines="2"
             app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/heading"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

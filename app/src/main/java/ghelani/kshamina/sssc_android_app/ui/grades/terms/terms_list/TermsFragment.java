@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.Collections;
 
 import javax.inject.Inject;
 
@@ -38,6 +41,8 @@ public class TermsFragment extends Fragment {
     private TermsViewModel termsViewModel;
 
     private RecyclerView recyclerView;
+
+    private TextView emptyTermsMessage;
 
     private MenuItem deleteItem;
 
@@ -70,8 +75,12 @@ public class TermsFragment extends Fragment {
         FloatingActionButton addTermBtn = view.findViewById(R.id.addTermFab);
         addTermBtn.setOnClickListener(v -> openAddTermScreen());
 
+        emptyTermsMessage = view.findViewById(R.id.emptyTermsListText);
+
         recyclerView = view.findViewById(R.id.termsRecyclerView);
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+        MainListAdapter adapter = new MainListAdapter(getActivity(), Collections.emptyList());
+        recyclerView.setAdapter(adapter);
 
         termsViewModel = new ViewModelProvider(this, viewModelFactory).get(TermsViewModel.class);
         termsViewModel.state.observe(this, termViewState -> {
@@ -80,7 +89,14 @@ public class TermsFragment extends Fragment {
             } else if (termViewState.isError()) {
                 System.out.println("Terms ERROR: " + termViewState.getError());
             } else if (termViewState.isSuccess()) {
-                recyclerView.setAdapter(new MainListAdapter(getActivity(), termsViewModel.getTermItems()));
+                if (termsViewModel.getTermItems().isEmpty()) {
+                    emptyTermsMessage.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                } else {
+                    emptyTermsMessage.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    adapter.setItems(termsViewModel.getTermItems());
+                }
             }
         });
 
@@ -103,14 +119,14 @@ public class TermsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         if (item.getItemId() == R.id.deleteActionItem) {
+            termsViewModel.toggleDeleteMode();
             if (termsViewModel.isDeleteMode()) {
                 item.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_delete));
-                termsViewModel.setDeleteMode(false);
+
             } else {
                 item.setIcon(R.drawable.ic_close);
-                termsViewModel.setDeleteMode(true);
             }
-            termsViewModel.fetchTerms();
+
 
             return true;
         }

@@ -62,6 +62,9 @@ public class CourseListFragment extends Fragment {
     @BindView(R.id.courseListToolbar)
     Toolbar toolbar;
 
+    @BindView(R.id.emptyCourseListText)
+    TextView emptyCourseListMessage;
+
     public static CourseListFragment newInstance(String termID, String termName) {
         Bundle args = new Bundle();
         args.putString(EXTRA_TERM_ID, termID);
@@ -117,7 +120,15 @@ public class CourseListFragment extends Fragment {
             } else if (termViewState.isError()) {
                 System.out.println("Course load ERROR: " + termViewState.getError());
             } else if (termViewState.isSuccess()) {
-                courseRecyclerView.setAdapter(new MainListAdapter(getActivity(), courseViewModel.getCourseItems()));
+
+                if (courseViewModel.getCourseItems().isEmpty()) {
+                    emptyCourseListMessage.setVisibility(View.VISIBLE);
+                    courseRecyclerView.setVisibility(View.GONE);
+                } else {
+                    emptyCourseListMessage.setVisibility(View.GONE);
+                    courseRecyclerView.setVisibility(View.VISIBLE);
+                    courseRecyclerView.setAdapter(new MainListAdapter(getActivity(), courseViewModel.getCourseItems()));
+                }
             }
         });
 

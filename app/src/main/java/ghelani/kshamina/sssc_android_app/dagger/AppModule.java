@@ -44,9 +44,12 @@ public abstract class AppModule {
     @Provides
     @Singleton
     public static GradesDatabase providesGradesDatabase(Context context) {
-        return Room.databaseBuilder(context, GradesDatabase.class, "grades-database")
+        GradesDatabase database = Room.databaseBuilder(context, GradesDatabase.class, "grades-database")
                 .fallbackToDestructiveMigration()
                 .build();
+        Thread thread = new Thread(() -> database.clearAllTables());
+        thread.start();
+        return database;
     }
 
     @Provides

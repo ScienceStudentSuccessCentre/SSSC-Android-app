@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,6 +39,8 @@ public class MentorListFragment extends Fragment {
     ViewModelFactory viewModelFactory;
 
     private RecyclerView mentorRecyclerView;
+
+    private TextView emptyListMessage;
 
     private MentorListViewModel mentorListViewModel;
 
@@ -71,30 +74,41 @@ public class MentorListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         FloatingActionButton emailFab = view.findViewById(R.id.sendEmailFab);
-        emailFab.setOnClickListener(v->sendBookingEmail());
+        emailFab.setOnClickListener(v -> sendBookingEmail());
+
+        emptyListMessage = view.findViewById(R.id.emptyMentorListText);
 
         mentorRecyclerView = view.findViewById(R.id.mentorRecyclerView);
         mentorRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
 
         mentorListViewModel = new ViewModelProvider(this, viewModelFactory).get(MentorListViewModel.class);
 
-        mentorListViewModel.getMentors().observe(this, mentors -> mentorRecyclerView.setAdapter(new MainListAdapter(getActivity(), mentors)));
+        mentorListViewModel.getMentors().observe(this, mentors -> {
+            if(mentors.isEmpty()){
+                emptyListMessage.setVisibility(View.VISIBLE);
+                mentorRecyclerView.setVisibility(View.GONE);
+            }else{
+                emptyListMessage.setVisibility(View.GONE);
+                mentorRecyclerView.setVisibility(View.VISIBLE);
+                mentorRecyclerView.setAdapter(new MainListAdapter(getActivity(), mentors));
+            }
+        });
 
         mentorListViewModel.getNavigationEvent().observe(this, newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
 
         mentorListViewModel.fetchMentors();
     }
 
-    private void sendBookingEmail(){
+    private void sendBookingEmail() {
         String[] recipients = {"sssc@carleton.ca"};
         String subject = "SSSC Mentor Appointment";
         String message = "Hello,\n\nI would like to book an appointment with a mentor at the SSSC!";
 
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.putExtra(Intent.EXTRA_EMAIL,recipients);
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT,subject);
-        emailIntent.putExtra(Intent.EXTRA_TEXT,message);
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, recipients);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
         emailIntent.setType("message/rfc822");
-        startActivity(Intent.createChooser(emailIntent,"Choose an email account"));
+        startActivity(Intent.createChooser(emailIntent, "Choose an email account"));
     }
 }

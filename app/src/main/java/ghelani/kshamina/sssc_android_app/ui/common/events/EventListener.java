@@ -13,6 +13,8 @@ public interface EventListener {
 
         void onItemClicked(String id);
 
+        boolean onItemLongClicked();
+
         void deleteItem(String courseId);
     }
 

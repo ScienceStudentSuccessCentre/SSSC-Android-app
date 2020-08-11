@@ -64,6 +64,16 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/emptyCourseListText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:text="Add a course to keep track of your grades!"
+        android:visibility="gone"
+        />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addCourseFab"
         android:layout_width="wrap_content"
