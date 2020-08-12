@@ -251,4 +251,10 @@ public class InputFormFragment extends Fragment {
         super.onPause();
         ((MainActivity) requireActivity()).getNavigatonView().setVisibility(View.VISIBLE);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        System.out.println("Destroy");
+    }
 }

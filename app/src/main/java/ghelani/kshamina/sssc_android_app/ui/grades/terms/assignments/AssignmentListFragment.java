@@ -35,6 +35,7 @@ import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
+import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
@@ -43,12 +44,8 @@ import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFra
 public class AssignmentListFragment extends Fragment {
 
     private static final String COURSE_ID = "courseID";
-    private static final String COURSE_NAME = "courseName";
-    private static final String COURSE_CODE = "courseCode";
 
-    private String courseId;
-    private String courseName;
-    private String courseCode;
+    private String courseID;
 
     private AssignmentViewModel assignmentViewModel;
 
@@ -77,12 +74,10 @@ public class AssignmentListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static AssignmentListFragment newInstance(String courseId, String courseName, String courseCode) {
+    public static AssignmentListFragment newInstance(String courseID) {
         AssignmentListFragment fragment = new AssignmentListFragment();
         Bundle args = new Bundle();
-        args.putString(COURSE_ID, courseId);
-        args.putString(COURSE_NAME, courseName);
-        args.putString(COURSE_CODE, courseCode);
+        args.putSerializable(COURSE_ID, courseID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -97,9 +92,7 @@ public class AssignmentListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            courseId = getArguments().getString(COURSE_ID);
-            courseCode = getArguments().getString(COURSE_CODE);
-            courseName = getArguments().getString(COURSE_NAME);
+            this.courseID = getArguments().getString(COURSE_ID);
         }
     }
 
@@ -118,12 +111,9 @@ public class AssignmentListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        toolbar.setTitle(courseCode);
-        toolbar.setSubtitle(courseName);
+        calculateDesiredGrade.setOnClickListener(v -> replaceFragment(InputFormFragment.newInstance(courseID, InputFormFragment.FormType.REQUIRED_FINAL_GRADE.toString())));
 
-        calculateDesiredGrade.setOnClickListener(v->replaceFragment(InputFormFragment.newInstance(courseId, InputFormFragment.FormType.REQUIRED_FINAL_GRADE.toString())));
-
-        addAssignmentFab.setOnClickListener(v -> replaceFragment(InputFormFragment.newInstance(courseId, InputFormFragment.FormType.ADD_ASSIGNMENT.toString())));
+        addAssignmentFab.setOnClickListener(v -> replaceFragment(InputFormFragment.newInstance(courseID, InputFormFragment.FormType.ADD_ASSIGNMENT.toString())));
 
         assignmentRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         assignmentViewModel = new ViewModelProvider(this, viewModelFactory).get(AssignmentViewModel.class);
@@ -134,7 +124,8 @@ public class AssignmentListFragment extends Fragment {
             } else if (assignmentViewState.isError()) {
                 System.out.println("Course load ERROR: " + assignmentViewState.getError());
             } else if (assignmentViewState.isSuccess()) {
-
+                toolbar.setTitle(assignmentViewModel.getCourse().courseCode);
+                toolbar.setSubtitle(assignmentViewModel.getCourse().courseName);
                 if (assignmentViewState.getItems().isEmpty()) {
                     emptyAssignmentListMessage.setVisibility(View.VISIBLE);
                     assignmentRecyclerView.setVisibility(View.GONE);
@@ -148,16 +139,21 @@ public class AssignmentListFragment extends Fragment {
                     }
                     assignmentRecyclerView.setAdapter(new MainListAdapter(getActivity(), displayableItems));
                 }
-
-
             }
         });
 
-        assignmentViewModel.getCourseGrade().observe(this, grade-> courseGradeText.setText("Overall Grade: " + grade));
+        assignmentViewModel.getCourseGrade().observe(this, grade -> {
+            if (!assignmentViewModel.getCourse().courseFinalGrade.isEmpty()) {
+                calculateDesiredGrade.setVisibility(View.GONE);
+            } else {
+                calculateDesiredGrade.setVisibility(View.VISIBLE);
+            }
+            courseGradeText.setText("Overall Grade: " + grade);
+        });
 
         assignmentViewModel.getNavigationEvent().observe(this, this::replaceFragment);
 
-        assignmentViewModel.fetchCourseAssignments(courseId);
+        assignmentViewModel.fetchCourseAssignments(courseID);
     }
 
     private void replaceFragment(Fragment newFragment) {
@@ -182,11 +178,11 @@ public class AssignmentListFragment extends Fragment {
                 item.setIcon(R.drawable.ic_close);
                 assignmentViewModel.setDeleteMode(true);
             }
-            assignmentViewModel.fetchCourseAssignments(courseId);
+            assignmentViewModel.fetchCourseAssignments(courseID);
 
             return true;
         } else if (item.getItemId() == R.id.editCourseAction) {
-            replaceFragment(InputFormFragment.newInstance(courseId, InputFormFragment.FormType.UPDATE_COURSE.toString()));
+            replaceFragment(InputFormFragment.newInstance(courseID, InputFormFragment.FormType.UPDATE_COURSE.toString()));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -194,6 +190,6 @@ public class AssignmentListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        assignmentViewModel.fetchCourseAssignments(courseId);
+        assignmentViewModel.fetchCourseAssignments(courseID);
     }
 }

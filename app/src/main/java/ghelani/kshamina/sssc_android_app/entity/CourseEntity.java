@@ -1,5 +1,7 @@
 package ghelani.kshamina.sssc_android_app.entity;
 
+import android.os.Parcelable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -7,6 +9,7 @@ import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity(tableName = "courses",
@@ -16,7 +19,7 @@ import java.util.UUID;
                 childColumns = "course_term_id",
                 onDelete = ForeignKey.CASCADE
         ))
-public class CourseEntity {
+public class CourseEntity implements Serializable {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "course_id")

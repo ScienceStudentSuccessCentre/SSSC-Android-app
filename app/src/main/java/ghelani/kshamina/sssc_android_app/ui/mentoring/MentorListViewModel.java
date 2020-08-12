@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -43,6 +44,7 @@ public class MentorListViewModel extends ViewModel {
 
                     @Override
                     public void onSuccess(List<Mentor> mentorsList) {
+                        Collections.sort(mentorsList);
                         mentors.setValue(createListOfDisplayableItem(mentorsList));
                     }
 

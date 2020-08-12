@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import ghelani.kshamina.sssc_android_app.R;
+import ghelani.kshamina.sssc_android_app.entity.Event;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.MyViewHolder> {
     private List<Event> eventsList;

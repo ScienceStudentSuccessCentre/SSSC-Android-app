@@ -78,43 +78,25 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
 
     @Override
     public void onSubmit() {
-        if (updating) {
-            Completable.fromAction(() -> assignmentDao.updateAssignment(newAssignment))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new CompletableObserver() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-                        }
 
-                        @Override
-                        public void onComplete() {
-                            submitted.setValue(true);
-                        }
+        Completable.fromAction(() -> assignmentDao.insertAssignment(newAssignment))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
 
-                        @Override
-                        public void onError(Throwable e) {
-                        }
-                    });
-        } else {
-            Completable.fromAction(() -> assignmentDao.insertAssignment(newAssignment))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new CompletableObserver() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-                        }
+                    @Override
+                    public void onComplete() {
+                        submitted.setValue(true);
+                    }
 
-                        @Override
-                        public void onComplete() {
-                            submitted.setValue(true);
-                        }
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+                });
 
-                        @Override
-                        public void onError(Throwable e) {
-                        }
-                    });
-        }
     }
 
     public void setWeight(Weight weight) {

@@ -58,7 +58,6 @@ public class RequiredFinalGradeViewModel extends SelectItemViewModel<Weight> {
                     public void onSuccess(CourseWithAssignmentsAndWeights courseWithAssignmentsAndWeights) {
                         course = courseWithAssignmentsAndWeights.course;
                         currentCourseGrade = courseWithAssignmentsAndWeights.calculateGradePercentage();
-                        // weightOptions = courseWithAssignmentsAndWeights.weight;
                         createItemsList();
                     }
 
@@ -82,9 +81,11 @@ public class RequiredFinalGradeViewModel extends SelectItemViewModel<Weight> {
 
         inputItems.add(new TextItem("COURSE DETAILS - " + course.courseCode));
 
-        InputItem courseGrade = new InputItem(String.valueOf(currentCourseGrade), "90", "Current Course Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {});
-        courseGrade.setEnabled(false);
-        inputItems.add(courseGrade);
+        inputItems.add(new InputItem(String.valueOf(currentCourseGrade == -1 ? "" : currentCourseGrade), "90", "Current Course Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
+            currentCourseGrade = value.isEmpty() ? -1 : Double.parseDouble(value);
+            ((InputItem) item).setValue(value);
+            calculateRequiredExamGrade();
+        }));
 
         inputItems.add(new InputItem(String.valueOf(desiredFinalGrade == -1 ? "" : desiredFinalGrade), "90%", "Desired Final Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
             desiredFinalGrade = value.isEmpty() ? -1 : Double.parseDouble(value);
@@ -99,14 +100,14 @@ public class RequiredFinalGradeViewModel extends SelectItemViewModel<Weight> {
 
         inputItems.add(new TextItem("MINIMUM FINAL GRADE REQUIRED"));
 
-        inputItems.add(new InputItem(isFormFilled()? String.valueOf(requiredExamGrade) : "", "Enter Info Above", "Grade", InputType.TYPE_CLASS_TEXT, (item, value) -> {
+        inputItems.add(new InputItem(isFormFilled() ? String.valueOf(requiredExamGrade) : "", "Enter Info Above", "Grade", InputType.TYPE_CLASS_TEXT, (item, value) -> {
 
         }));
 
         items.setValue(inputItems);
     }
 
-    private boolean isFormFilled(){
+    private boolean isFormFilled() {
         return desiredFinalGrade != -1 && finalExamWeight != null;
     }
 

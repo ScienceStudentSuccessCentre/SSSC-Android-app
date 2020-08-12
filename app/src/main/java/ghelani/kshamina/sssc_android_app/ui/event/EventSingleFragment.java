@@ -34,6 +34,7 @@ import java.net.URL;
 
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
+import ghelani.kshamina.sssc_android_app.entity.Event;
 
 import static android.app.Notification.VISIBILITY_PRIVATE;
 

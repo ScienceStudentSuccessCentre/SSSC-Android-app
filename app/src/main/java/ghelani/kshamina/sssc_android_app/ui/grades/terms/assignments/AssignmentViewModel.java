@@ -17,6 +17,7 @@ import ghelani.kshamina.sssc_android_app.database.CourseDao;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.entity.AssignmentWithWeight;
+import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.entity.CourseWithAssignmentsAndWeights;
 import ghelani.kshamina.sssc_android_app.ui.common.events.EventListener;
 import ghelani.kshamina.sssc_android_app.ui.common.events.SingleLiveEvent;
@@ -75,8 +76,12 @@ public class AssignmentViewModel extends ViewModel {
     }
 
     private void calculateCourseGrade() {
+        if (!course.course.courseFinalGrade.isEmpty()) {
+            courseGradeText.setValue(course.course.courseFinalGrade);
+            return;
+        }
         double percentage = course.calculateGradePercentage();
-        if(percentage == -1){
+        if (percentage == -1) {
             courseGradeText.setValue("N/A");
             return;
         }
@@ -129,5 +134,9 @@ public class AssignmentViewModel extends ViewModel {
 
     public void setDeleteMode(boolean deleteMode) {
         this.deleteMode = deleteMode;
+    }
+
+    public CourseEntity getCourse() {
+        return course.course;
     }
 }

@@ -79,11 +79,7 @@ public class CoursesViewModel extends ViewModel {
         return new ListItem(course.courseId, course.courseFinalGrade, course.courseCode, course.courseName, isDeleteMode, new EventListener.ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
-                for(ListItem item: courseItemList){
-                    if(item.getId().equals(id)){
-                        navigationEvent.setValue(AssignmentListFragment.newInstance(id,item.getDescriptionText(),item.getHeaderText()));
-                    }
-                }
+                navigationEvent.setValue(AssignmentListFragment.newInstance(id));
             }
 
             @Override
@@ -117,9 +113,9 @@ public class CoursesViewModel extends ViewModel {
         });
     }
 
-    public List<DiffItem> getCourseItems(){
+    public List<DiffItem> getCourseItems() {
         List<DiffItem> courseItems = new ArrayList<>();
-        for(ListItem listItem : courseItemList){
+        for (ListItem listItem : courseItemList) {
             courseItems.add(listItem);
         }
         return courseItems;
@@ -129,7 +125,7 @@ public class CoursesViewModel extends ViewModel {
         return isDeleteMode;
     }
 
-    public void setIsDeleteMode(boolean value){
+    public void setIsDeleteMode(boolean value) {
         isDeleteMode = value;
     }
 }

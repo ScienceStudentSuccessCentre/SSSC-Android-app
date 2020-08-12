@@ -1,6 +1,6 @@
 package ghelani.kshamina.sssc_android_app.entity;
 
-public class Mentor {
+public class Mentor implements Comparable<Mentor> {
 
     private String id;
     private String name;
@@ -74,5 +74,10 @@ public class Mentor {
 
     public void setTeam(String team) {
         this.team = team;
+    }
+
+    @Override
+    public int compareTo(Mentor otherMentor) {
+        return this.getName().compareTo(otherMentor.getName());
     }
 }

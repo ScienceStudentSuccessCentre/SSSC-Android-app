@@ -96,6 +96,7 @@ public class TermsFragment extends Fragment {
                     emptyTermsMessage.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
                     adapter.setItems(termsViewModel.getTermItems());
+                    recyclerView.getAdapter().notifyDataSetChanged();
                 }
             }
         });

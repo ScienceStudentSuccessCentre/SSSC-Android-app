@@ -81,7 +81,7 @@ public class AddCourseViewModel extends InputFormViewModel {
 
         inputItems.add(new TextItem("ASSIGNMENT WEIGHTS"));
 
-        for(Weight weight: weights){
+        for (Weight weight : weights) {
             inputItems.add(new WeightItem(weights.indexOf(weight), weight.weightName, weight.weightValue == 0 ? "" : String.valueOf(weight.weightValue),
                     (item, weightName) -> {
                         weights.get(((WeightItem) item).getIndex()).weightName = weightName;
@@ -134,11 +134,7 @@ public class AddCourseViewModel extends InputFormViewModel {
 
     @Override
     public void onSubmit() {
-        if (updating) {
-            updateCourse();
-        } else {
-            insertCourse();
-        }
+        insertCourse();
     }
 
     private void insertCourse() {
@@ -162,30 +158,17 @@ public class AddCourseViewModel extends InputFormViewModel {
                 });
     }
 
-    private void updateCourse() {
-        Completable.fromAction(() -> courseDao.updateCourse(newCourse))
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        addWeights();
-                        submitted.setValue(true);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                });
-    }
-
     public void fetchCourseToUpdate(String courseId) {
         updating = true;
+
+        if (!newCourse.courseName.isEmpty()) {
+            if (items.getValue() == null || items.getValue().isEmpty()) {
+                getWeights(newCourse.courseId);
+            }
+            isSubmitAvailable();
+            return;
+        }
+
         courseDao.getCourseByID(courseId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -198,9 +181,8 @@ public class AddCourseViewModel extends InputFormViewModel {
                     @Override
                     public void onSuccess(CourseEntity courseEntity) {
                         newCourse = courseEntity;
-                        if(items.getValue() == null || items.getValue().isEmpty()) {
+                        if (items.getValue() == null || items.getValue().isEmpty()) {
                             getWeights(newCourse.courseId);
-                            createItemsList();
                         }
                         isSubmitAvailable();
                     }
@@ -224,9 +206,8 @@ public class AddCourseViewModel extends InputFormViewModel {
 
                     @Override
                     public void onSuccess(List<Weight> weightList) {
-                        for (Weight weight : weightList) {
-                            createWeightInput(weight);
-                        }
+                        weights = weightList;
+                        createItemsList();
                     }
 
                     @Override
@@ -273,7 +254,12 @@ public class AddCourseViewModel extends InputFormViewModel {
         submitEnabled.setValue((!newCourse.courseName.isEmpty() && !newCourse.courseCode.isEmpty() && newCourse.courseCredits != -1));
     }
 
-    public void setTermId(String termID){
+    public void setTermId(String termID) {
         newCourse.courseTermId = termID;
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
     }
 }
