@@ -77,7 +77,7 @@ public class AssignmentListFragment extends Fragment {
     public static AssignmentListFragment newInstance(String courseID) {
         AssignmentListFragment fragment = new AssignmentListFragment();
         Bundle args = new Bundle();
-        args.putSerializable(COURSE_ID, courseID);
+        args.putString(COURSE_ID, courseID);
         fragment.setArguments(args);
         return fragment;
     }

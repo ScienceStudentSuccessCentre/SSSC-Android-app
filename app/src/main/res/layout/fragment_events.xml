@@ -29,7 +29,18 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/eventsList"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
     </LinearLayout>
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/eventsMessageText"
+        android:layout_width="wrap_content"
+        android:textAlignment="center"
+        android:layout_height="wrap_content"
+        android:text="Unable to fetch events. Try again soon!"
+        android:layout_gravity="center_vertical|center_horizontal"/>
 </FrameLayout>

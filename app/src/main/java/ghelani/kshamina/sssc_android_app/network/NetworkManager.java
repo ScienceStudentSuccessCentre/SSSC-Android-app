@@ -23,4 +23,8 @@ public class NetworkManager {
     public Single<List<Event>> getEvents() {
         return ssscAPI.getEvents();
     }
+
+    public Single<Features> getFeatures() {
+        return ssscAPI.getFeatures();
+    }
 }

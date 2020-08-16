@@ -1,5 +1,9 @@
 package ghelani.kshamina.sssc_android_app.entity;
 
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,10 +16,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class Event implements Serializable, Comparable<Event>{
+import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
+
+public class Event implements Serializable, Comparable<Event>, DiffItem {
     private String id;
     private String name;
-    private URL url;
+    private String url;
     private String description;
     private Date dateTime;
     private String rawTime;
@@ -23,7 +29,7 @@ public class Event implements Serializable, Comparable<Event>{
     private String imageURL;
     private String actionUrl;
 
-    public Event(String id, String name, URL url, String description, Date dateTime, String rawTime, String location, String imageURL, String actionUrl) {
+    public Event(String id, String name, String url, String description, Date dateTime, String rawTime, String location, String imageURL, String actionUrl) {
         this.id = id;
         this.name = name;
         this.url = url;
@@ -33,31 +39,6 @@ public class Event implements Serializable, Comparable<Event>{
         this.location = location;
         this.imageURL = imageURL;
         this.actionUrl = actionUrl;
-    }
-
-    public Event(JSONObject json) {
-        try {
-            this.id = (String) json.get("id");
-            this.name = (String) json.get("name");
-            if(json.has("url")) this.url = stringToURL((String) json.get("url"));
-            if(json.has("imageURL")) this.imageURL = (String) json.get("imageURL");
-            if(json.has("actionUrl")) this.actionUrl = (String) json.get("actionUrl");
-            this.description = (String) json.get("description");
-
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000Z'", Locale.CANADA);
-            try {
-                this.dateTime = format.parse((String) json.get("dateTime"));
-            } catch (ParseException e){
-
-            }
-
-            this.rawTime = (String) json.get("rawTime");
-            this.location = (String) json.get("location");
-
-        } catch (JSONException e) {
-            System.out.println("ERROR2");
-        }
-
     }
 
     public Date getDateTime() {
@@ -103,10 +84,8 @@ public class Event implements Serializable, Comparable<Event>{
         cal.setTime(this.dateTime);
         String month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA);
         String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
-
         if(day.length() == 1) day = "0" + day;
-
-        return month.substring(0, 3).toUpperCase() + "\n" + day;
+        return month.substring(0, 3) + "\n" + day;
     }
 
     public String getDateDisplayStringSingle() {
@@ -138,11 +117,11 @@ public class Event implements Serializable, Comparable<Event>{
         this.id = id;
     }
 
-    public URL getUrl() {
+    public String getUrl() {
         return url;
     }
 
-    public void setUrl(URL url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 

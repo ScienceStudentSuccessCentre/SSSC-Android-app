@@ -1,5 +1,6 @@
 package ghelani.kshamina.sssc_android_app;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
 import android.webkit.WebView;
@@ -19,8 +21,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
+import dagger.android.support.AndroidSupportInjection;
+import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.ui.ResourcesFragment;
 import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
+import ghelani.kshamina.sssc_android_app.ui.event.EventListViewModel;
 import ghelani.kshamina.sssc_android_app.ui.event.EventsFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.GradesFragment;
 import ghelani.kshamina.sssc_android_app.ui.mentoring.MentorListFragment;
@@ -28,10 +36,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 
 public class MainActivity extends AppCompatActivity {
+
     private BottomNavigationView navigatonView;
+
+    @Inject
+    ViewModelFactory viewModelFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
@@ -40,6 +53,16 @@ public class MainActivity extends AppCompatActivity {
         navigatonView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
         changeFragment(new EventsFragment());
         setupBottomNav();
+
+        FeaturesViewModel featuresViewModel = new ViewModelProvider(this, viewModelFactory).get(FeaturesViewModel.class);
+
+        featuresViewModel.getFeatures().observe(this, features -> {
+            MainApplication application = (MainApplication) getApplication();
+            application.setEnableEmailEventRegistration(features.isEnableEmailEventRegistration());
+            application.setEnableEmailMentorRegistration(features.isEnableEmailMentorRegistration());
+        });
+
+        featuresViewModel.fetchFeatures();
 
         // Initialize settings with its default values
         // false means do not override user's saved settings on start, if they exist
@@ -60,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         String tag = String.valueOf(getSupportFragmentManager().getBackStackEntryCount());
-        fragmentTransaction.replace(R.id.fragmentContainer, newFragment,tag);
+        fragmentTransaction.replace(R.id.fragmentContainer, newFragment, tag);
         fragmentTransaction.addToBackStack(tag);
         fragmentTransaction.commit();
     }
@@ -90,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     public BottomNavigationView getNavigatonView() {
         return navigatonView;
     }
-/*
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -98,14 +121,13 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(false);
         return true;
     }
-*/
+
     @Override
-    public void onBackPressed (){
+    public void onBackPressed() {
         WebView webView = findViewById(R.id.webView);
-        if(webView != null && webView.canGoBack()) webView.goBack();
+        if (webView != null && webView.canGoBack()) webView.goBack();
         else getSupportFragmentManager().popBackStackImmediate();
     }
-
 
 
 }

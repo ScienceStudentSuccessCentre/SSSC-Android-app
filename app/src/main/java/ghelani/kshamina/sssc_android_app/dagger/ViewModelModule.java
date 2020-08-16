@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
+import ghelani.kshamina.sssc_android_app.FeaturesViewModel;
+import ghelani.kshamina.sssc_android_app.ui.event.EventListViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.SelectWeightViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseViewModel;
@@ -69,5 +71,14 @@ public abstract class ViewModelModule {
     @ViewModelKey(MentorListViewModel.class)
     public abstract ViewModel bindMentorListViewModel(MentorListViewModel viewModel);
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(EventListViewModel.class)
+    public abstract ViewModel bindEventListViewModel(EventListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FeaturesViewModel.class)
+    public abstract ViewModel bindFeaturesViewModel(FeaturesViewModel viewModel);
 
 }
