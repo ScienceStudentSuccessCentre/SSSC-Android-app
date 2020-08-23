@@ -40,7 +40,22 @@
                 android:layout_height="wrap_content"
                 android:hint="Student Number"
                 android:imeOptions="actionDone"
-                android:inputType="textPhonetic" />
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputDegree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Degree"
+                android:imeOptions="actionDone"
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 </FrameLayout>

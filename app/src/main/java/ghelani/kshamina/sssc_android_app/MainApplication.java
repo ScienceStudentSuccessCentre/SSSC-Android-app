@@ -11,6 +11,7 @@ public class MainApplication extends DaggerApplication {
     private boolean enableEmailMentorRegistration = true;
     private String studentName = "";
     private String studentId = "";
+    private String degree  = "";
 
 
     public boolean isEnableEmailEventRegistration() {
@@ -46,7 +47,15 @@ public class MainApplication extends DaggerApplication {
     }
 
     public boolean hasStudentInformation(){
-        return !studentId.isEmpty() && !studentName.isEmpty();
+        return !studentId.isEmpty() && !studentName.isEmpty() && !degree.isEmpty();
+    }
+
+    public String getDegree() {
+        return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
     }
 
     @Override

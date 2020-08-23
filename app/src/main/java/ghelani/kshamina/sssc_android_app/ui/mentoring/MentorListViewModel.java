@@ -60,7 +60,6 @@ public class MentorListViewModel extends ViewModel {
 
         for (Mentor mentor : mentorList) {
             mentor.setImageUrl(mentor.getImageUrl().replace("http://", "https://"));
-            mentor.setBio(mentor.getBio().replace("<br /><br />", "\n\n"));
             displayableMentorItem.add(new TwoLineItem(mentor.getImageUrl(), mentor.getName(), mentor.getDegree(),
                     () -> navigationEvent.setValue(MentorDetailFragment.newInstance(mentor.getImageUrl(), mentor.getName(), mentor.getBio(), mentor.getDegree(), mentor.getTeam()))));
         }

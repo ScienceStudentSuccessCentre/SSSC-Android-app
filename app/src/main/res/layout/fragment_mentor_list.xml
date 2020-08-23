@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
-        android:text="Unable to fetch Mentors check back soon!\nOr use the button below to email the SSSC!"
+        android:text="Unable to fetch Mentors check back soon!\nOr use the button below to connect with the SSSC!"
         android:textAlignment="center"
         android:visibility="gone" />
 

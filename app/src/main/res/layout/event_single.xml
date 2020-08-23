@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -31,30 +33,34 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:autoSizeTextType="uniform"
+        android:text="Learn to use the Command Line"
         android:background="@color/lightGrey"
         android:gravity="center"
         android:padding="10dp"
         android:textColor="@android:color/black"
-        android:layout_alignParentTop="true"/>
+        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/footer"
-        android:layout_below="@+id/eventTitle">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/footer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventTitle">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/eventDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textColorLink="#7bc9c2"
                 android:textColor="@android:color/black"
-                android:textSize="17sp"
-                android:padding="10dp" />
+                android:textSize="17sp" />
 
             <ImageView
                 android:id="@+id/eventImage"
@@ -62,36 +68,41 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
+        android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="88dp"
-        android:layout_alignParentBottom="true"
-        android:id="@+id/footer">
+        android:layout_gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/rawTime"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="0.3"
             android:background="@color/red"
             android:gravity="center"
+            android:padding="10dp"
             android:textColor="@android:color/white"
             android:textSize="17sp"
-            android:padding="10dp"
-            android:layout_weight="0.3"/>
+            android:text="9:30am"/>
 
         <TextView
             android:id="@+id/location"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_alignTop="@+id/footer"
+            android:layout_weight="0.7"
             android:background="@color/lightGrey"
             android:gravity="center"
             android:textColor="@android:color/black"
             android:textSize="17sp"
-            android:layout_weight="0.7"/>
+            android:text="Online"
+            />
 
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

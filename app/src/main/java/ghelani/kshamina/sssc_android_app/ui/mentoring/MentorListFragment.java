@@ -2,6 +2,8 @@ package ghelani.kshamina.sssc_android_app.ui.mentoring;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.DrawableContainer;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -28,9 +30,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.MainActivity;
+import ghelani.kshamina.sssc_android_app.MainApplication;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
+import ghelani.kshamina.sssc_android_app.ui.email_dialog.EmailBuilder;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list.TermsViewModel;
 
 public class MentorListFragment extends Fragment {
@@ -74,7 +78,22 @@ public class MentorListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         FloatingActionButton emailFab = view.findViewById(R.id.sendEmailFab);
-        emailFab.setOnClickListener(v -> sendBookingEmail());
+        MainApplication appSettings = (MainApplication) getActivity().getApplication();
+        if (appSettings.isEnableEmailMentorRegistration()) {
+            emailFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_email_24, null));
+        } else {
+            emailFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_link_white_24dp, null));
+        }
+
+        emailFab.setOnClickListener(v -> {
+            if (appSettings.isEnableEmailMentorRegistration()) {
+                sendMentorRegistrationEmail();
+            } else {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://central.carleton.ca/"));
+                startActivity(browserIntent);
+            }
+        });
 
         emptyListMessage = view.findViewById(R.id.emptyMentorListText);
 
@@ -84,10 +103,10 @@ public class MentorListFragment extends Fragment {
         mentorListViewModel = new ViewModelProvider(this, viewModelFactory).get(MentorListViewModel.class);
 
         mentorListViewModel.getMentors().observe(this, mentors -> {
-            if(mentors.isEmpty()){
+            if (mentors.isEmpty()) {
                 emptyListMessage.setVisibility(View.VISIBLE);
                 mentorRecyclerView.setVisibility(View.GONE);
-            }else{
+            } else {
                 emptyListMessage.setVisibility(View.GONE);
                 mentorRecyclerView.setVisibility(View.VISIBLE);
                 mentorRecyclerView.setAdapter(new MainListAdapter(getActivity(), mentors));
@@ -99,16 +118,12 @@ public class MentorListFragment extends Fragment {
         mentorListViewModel.fetchMentors();
     }
 
-    private void sendBookingEmail() {
-        String[] recipients = {"sssc@carleton.ca"};
-        String subject = "SSSC Mentor Appointment";
-        String message = "Hello,\n\nI would like to book an appointment with a mentor at the SSSC!";
-
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, recipients);
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
-        emailIntent.setType("message/rfc822");
-        startActivity(Intent.createChooser(emailIntent, "Choose an email account"));
+    private void sendMentorRegistrationEmail() {
+        MainApplication appSettings = (MainApplication) getActivity().getApplication();
+        if (appSettings.hasStudentInformation()) {
+            EmailBuilder.confirmSendEmail(getActivity(), EmailBuilder.EmailType.MENTOR_BOOKING, null);
+        } else {
+            EmailBuilder.showStudentNameDialog(getActivity(), EmailBuilder.EmailType.MENTOR_BOOKING, null);
+        }
     }
 }
