@@ -3,7 +3,9 @@ package ghelani.kshamina.sssc_android_app.entity;
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
-public class AssignmentWithWeight {
+import java.io.Serializable;
+
+public class AssignmentWithWeight implements Serializable {
 
     @Embedded
     public Assignment assignment;

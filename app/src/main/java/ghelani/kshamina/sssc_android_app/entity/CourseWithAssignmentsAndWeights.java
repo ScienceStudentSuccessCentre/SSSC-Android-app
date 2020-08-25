@@ -3,9 +3,10 @@ package ghelani.kshamina.sssc_android_app.entity;
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class CourseWithAssignmentsAndWeights {
+public class CourseWithAssignmentsAndWeights implements Serializable {
 
     @Embedded
     public CourseEntity course;

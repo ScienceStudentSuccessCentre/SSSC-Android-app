@@ -17,7 +17,7 @@ import java.util.UUID;
                 childColumns = "assignment_course_id",
                 onDelete = ForeignKey.CASCADE
         ))
-public class Assignment {
+public class Assignment implements Serializable{
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "assignment_id")

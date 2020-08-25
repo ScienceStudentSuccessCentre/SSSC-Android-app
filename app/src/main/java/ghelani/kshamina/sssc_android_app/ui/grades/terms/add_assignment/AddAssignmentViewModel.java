@@ -14,7 +14,10 @@ import ghelani.kshamina.sssc_android_app.database.AssignmentDao;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.database.WeightDao;
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
+import ghelani.kshamina.sssc_android_app.entity.AssignmentWithWeight;
 import ghelani.kshamina.sssc_android_app.entity.Weight;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.select_weight.SelectWeightFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.select_weight.SelectWeightViewModel;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.InputItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.TextItem;
@@ -69,7 +72,8 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
         }));
 
         displayItems.add(new InputItem(weight == null ? "" : weight.weightName, "", "Weight", InputItem.InputStyle.SELECTION_SCREEN, InputType.TYPE_CLASS_TEXT, (item, value) -> {
-            navigationEvent.setValue(InputFormFragment.newInstance(newAssignment.assignmentCourseId, InputFormFragment.FormType.SELECT_WEIGHT.toString()));
+            //navigationEvent.setValue(InputFormFragment.newInstance(newAssignment.assignmentCourseId, InputFormFragment.FormType.SELECT_WEIGHT.toString()));
+            navigationEvent.setValue(SelectWeightFragment.newInstance(this, newAssignment.assignmentCourseId));
             ((InputItem) item).setValue(value);
         }));
         checkCreateAvailable();
@@ -163,8 +167,12 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
         }
     }
 
-    public void fetchAssignmentToUpdate(String id) {
+    public void fetchAssignmentToUpdate(AssignmentWithWeight assignmentWithWeight) {
         updating = true;
+        newAssignment = assignmentWithWeight.getAssignment();
+        weight = assignmentWithWeight.weight;
+        createItemsList();
+        /*
         assignmentDao.getAssignmentByID(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -183,6 +191,8 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
                     public void onError(Throwable e) {
                     }
                 });
+
+         */
     }
 
     @Override

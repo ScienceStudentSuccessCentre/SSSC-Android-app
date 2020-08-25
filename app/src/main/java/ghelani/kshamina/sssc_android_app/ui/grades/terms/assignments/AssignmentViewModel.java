@@ -19,6 +19,7 @@ import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.entity.AssignmentWithWeight;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.entity.CourseWithAssignmentsAndWeights;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.UpdateAssignmentFragment;
 import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
 import ghelani.kshamina.sssc_android_app.ui.utils.events.SingleLiveEvent;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.ViewState;
@@ -64,7 +65,7 @@ public class AssignmentViewModel extends ViewModel {
                         course = courseData;
                         List<DiffItem> assignmentItems = new ArrayList<>();
                         for (AssignmentWithWeight assignment : courseData.assignments) {
-                            assignmentItems.add(createListItem(assignment.getAssignment()));
+                            assignmentItems.add(createListItem(assignment));
                         }
                         calculateCourseGrade();
                         state.setValue(new ViewState<>(false, false, true, "", assignmentItems));
@@ -90,14 +91,15 @@ public class AssignmentViewModel extends ViewModel {
         courseGradeText.setValue(percentage + "%");
     }
 
-    private ListItem createListItem(Assignment assignment) {
-        int percentage = (int) ((assignment.assignmentGradeEarned / assignment.assignmentGradeTotal) * 100);
-        return new ListItem(assignment.assignmentId, Grading.gradeToLetter.floorEntry(percentage).getValue(),
-                assignment.assignmentName, percentage + "%",
+    private ListItem createListItem(AssignmentWithWeight assignment) {
+        int percentage = (int) ((assignment.getAssignment().assignmentGradeEarned / assignment.getAssignment().assignmentGradeTotal) * 100);
+        return new ListItem(assignment.getAssignment().assignmentId, Grading.gradeToLetter.floorEntry(percentage).getValue(),
+                assignment.getAssignment().assignmentName, percentage + "%",
                 deleteMode, new EventListener.ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
-                navigationEvent.setValue(InputFormFragment.newInstance(id, InputFormFragment.FormType.UPDATE_ASSIGNMENT.toString()));
+                //navigationEvent.setValue(InputFormFragment.newInstance(id, InputFormFragment.FormType.UPDATE_ASSIGNMENT.toString()));
+                navigationEvent.setValue(UpdateAssignmentFragment.newInstance(assignment));
             }
 
             @Override
@@ -143,6 +145,10 @@ public class AssignmentViewModel extends ViewModel {
 
     public CourseEntity getCourse() {
         return course.course;
+    }
+
+    public CourseWithAssignmentsAndWeights getCourseData() {
+        return course;
     }
 
     public boolean assignmentWeightsAvailable() {

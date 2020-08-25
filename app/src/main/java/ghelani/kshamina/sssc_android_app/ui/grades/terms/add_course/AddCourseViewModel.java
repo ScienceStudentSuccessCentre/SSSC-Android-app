@@ -12,6 +12,9 @@ import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.database.WeightDao;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.entity.Weight;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.SelectItemViewModel;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.select_grade.SelectGradeFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.select_weight.SelectWeightFragment;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.InputItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.TextItem;
@@ -26,7 +29,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class AddCourseViewModel extends InputFormViewModel {
+public class AddCourseViewModel extends SelectItemViewModel<String> {
 
     private CourseDao courseDao;
     private WeightDao weightDao;
@@ -104,7 +107,7 @@ public class AddCourseViewModel extends InputFormViewModel {
         inputItems.add(new TextItem("OVERRIDE CALCULATED GRADE"));
 
         inputItems.add(new InputItem(newCourse.courseFinalGrade, "", "Final Grade", InputItem.InputStyle.SELECTION_SCREEN, InputType.TYPE_CLASS_TEXT, (item, value) -> {
-            navigationEvent.setValue(InputFormFragment.newInstance("", InputFormFragment.FormType.SELECT_FINAL_GRADE.toString()));
+           navigationEvent.setValue(SelectGradeFragment.newInstance(this));
             newCourse.courseFinalGrade = value;
             ((InputItem) item).setValue(value);
             isSubmitAvailable();
@@ -184,40 +187,13 @@ public class AddCourseViewModel extends InputFormViewModel {
                 });
     }
 
-    public void fetchCourseToUpdate(String courseId) {
+    public void fetchCourseToUpdate(CourseEntity course) {
         updating = true;
-
-        if (!newCourse.courseName.isEmpty()) {
-            if (items.getValue() == null || items.getValue().isEmpty()) {
-                getWeights(newCourse.courseId);
-            }
-            isSubmitAvailable();
-            return;
+        newCourse = course;
+        if (items.getValue() == null || items.getValue().isEmpty()) {
+            getWeights(newCourse.courseId);
         }
-
-        courseDao.getCourseByID(courseId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<CourseEntity>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(CourseEntity courseEntity) {
-                        newCourse = courseEntity;
-                        if (items.getValue() == null || items.getValue().isEmpty()) {
-                            getWeights(newCourse.courseId);
-                        }
-                        isSubmitAvailable();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                });
+        isSubmitAvailable();
     }
 
     private void getWeights(String courseID) {
@@ -295,5 +271,12 @@ public class AddCourseViewModel extends InputFormViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
+    }
+
+    @Override
+    public void setSelectedItem(String grade) {
+        ((InputItem) items.getValue().get(items.getValue().size() - 2)).setValue(grade);
+        newCourse.courseFinalGrade = grade;
+        items.setValue(items.getValue());
     }
 }

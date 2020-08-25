@@ -2,7 +2,6 @@ package ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,9 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -41,12 +38,10 @@ import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentViewModel;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.UpdateCourseFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.required_final_grade.RequiredFinalGradeFragment;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.SwipeToDeleteCallback;
-import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.utils.list.model.ListItem;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -166,13 +161,15 @@ public class AssignmentListFragment extends Fragment {
 
         assignmentViewModel.getNavigationEvent().observe(this, this::replaceFragment);
 
-        calculateDesiredGrade.setOnClickListener(v -> replaceFragment(InputFormFragment.newInstance(courseID, InputFormFragment.FormType.REQUIRED_FINAL_GRADE.toString())));
+        calculateDesiredGrade.setOnClickListener(v -> {
+            replaceFragment(RequiredFinalGradeFragment.newInstance(assignmentViewModel.getCourseData()));
+        });//replaceFragment(InputFormFragment.newInstance(courseID, InputFormFragment.FormType.REQUIRED_FINAL_GRADE.toString())));
 
         addAssignmentFab.setOnClickListener(v -> {
             if (assignmentViewModel.assignmentWeightsAvailable()) {
                 Assignment newAssignment = new Assignment("", -1, 0, "", courseID);
-                //replaceFragment(AddAssignmentFragment.newInstance(newAssignment));
-                replaceFragment(InputFormFragment.newInstance(courseID , InputFormFragment.FormType.ADD_ASSIGNMENT.toString()));
+                replaceFragment(AddAssignmentFragment.newInstance(newAssignment));
+                ///replaceFragment(InputFormFragment.newInstance(courseID , InputFormFragment.FormType.ADD_ASSIGNMENT.toString()));
             } else {
                 showNoWeightsDialog();
             }
@@ -216,7 +213,8 @@ public class AssignmentListFragment extends Fragment {
 
             return true;
         } else if (item.getItemId() == R.id.editCourseAction) {
-            replaceFragment(InputFormFragment.newInstance(courseID, InputFormFragment.FormType.UPDATE_COURSE.toString()));
+           //replaceFragment(InputFormFragment.newInstance(courseID, InputFormFragment.FormType.UPDATE_COURSE.toString()));
+           replaceFragment(UpdateCourseFragment.newInstance(assignmentViewModel.getCourse()));
         }
         return super.onOptionsItemSelected(item);
     }

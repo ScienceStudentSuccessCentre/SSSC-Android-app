@@ -30,6 +30,7 @@ import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermFragment;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CourseListFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
@@ -107,7 +108,7 @@ public class TermsFragment extends Fragment {
 
         termsViewModel.termSelected.observe(this, term -> {
             setHasOptionsMenu(false);
-            ((MainActivity) requireActivity()).replaceFragment(CourseListFragment.newInstance(term.getTermId(), term.toString()));
+            ((MainActivity) requireActivity()).replaceFragment(CourseListFragment.newInstance(term));
         });
 
         termsViewModel.fetchTerms();
@@ -137,7 +138,7 @@ public class TermsFragment extends Fragment {
     }
 
     private void openAddTermScreen() {
-        ((MainActivity) requireActivity()).replaceFragment(InputFormFragment.newInstance("", InputFormFragment.FormType.ADD_TERM.toString()));
+        ((MainActivity) requireActivity()).replaceFragment(AddTermFragment.newInstance());
     }
 
     @Override

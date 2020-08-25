@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment;
+package ghelani.kshamina.sssc_android_app.ui.grades.terms.select_weight;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -23,19 +23,24 @@ import java.util.Collections;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
 import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
-import ghelani.kshamina.sssc_android_app.entity.Assignment;
+import ghelani.kshamina.sssc_android_app.entity.Weight;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.SelectItemViewModel;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermViewModel;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 
-public class AddAssignmentFragment extends Fragment {
+public class SelectWeightFragment extends Fragment {
 
-    private static final String ASSIGNMENT_OBJECT = "assignment";
+    private static final String ARG_VIEW_MODEL = "viewmodel";
+    private static final String ARG_COURSE_ID = "courseId";
 
-    private Assignment assignment;
+    private String courseId;
+
+    private SelectItemViewModel<Weight> selectItemViewModel;
 
     private MainListAdapter adapter;
 
@@ -50,9 +55,9 @@ public class AddAssignmentFragment extends Fragment {
 
     private Button cancelButton;
 
-    private AddAssignmentViewModel addAssignmentViewModel;
+    private SelectWeightViewModel selectWeightViewModel;
 
-    public AddAssignmentFragment() {
+    public SelectWeightFragment() {
         // Required empty public constructor
     }
 
@@ -62,10 +67,11 @@ public class AddAssignmentFragment extends Fragment {
         super.onAttach(context);
     }
 
-    public static AddAssignmentFragment newInstance(Assignment assignment) {
-        AddAssignmentFragment fragment = new AddAssignmentFragment();
+    public static SelectWeightFragment newInstance(SelectItemViewModel<Weight> viewModel, String courseId) {
+        SelectWeightFragment fragment = new SelectWeightFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ASSIGNMENT_OBJECT, assignment);
+        args.putSerializable(ARG_VIEW_MODEL, viewModel);
+        args.putString(ARG_COURSE_ID, courseId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,14 +80,14 @@ public class AddAssignmentFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            assignment = (Assignment) getArguments().getSerializable(ASSIGNMENT_OBJECT);
+            selectItemViewModel = (SelectItemViewModel<Weight>) getArguments().getSerializable(ARG_VIEW_MODEL);
+            courseId = getArguments().getString(ARG_COURSE_ID);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_input_form, container, false);
 
         recyclerView = view.findViewById(R.id.inputRecyclerView);
@@ -96,9 +102,9 @@ public class AddAssignmentFragment extends Fragment {
         adapter = new MainListAdapter(getActivity(), Collections.emptyList());
         recyclerView.setAdapter(adapter);
 
-        title.setText("New Assignment");
+        title.setText("Select a Weight");
 
-        submitButton.setOnClickListener(v -> addAssignmentViewModel.onSubmit());
+        submitButton.setOnClickListener(v -> selectWeightViewModel.onSubmit());
 
         cancelButton.setOnClickListener(v -> returnToPreviousScreen());
 
@@ -108,31 +114,31 @@ public class AddAssignmentFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        addAssignmentViewModel = new ViewModelProvider(this, viewModelFactory).get(AddAssignmentViewModel.class);
 
-        addAssignmentViewModel.getInputItems().observe(this, items -> {
-            adapter.setItems(items);
-            adapter.notifyDataSetChanged();
-        });
-        addAssignmentViewModel.isSubmitEnabled().observe(this, isEnabled -> submitButton.setEnabled(isEnabled));
-        addAssignmentViewModel.getNavigationEvent().observe(this, newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
-        addAssignmentViewModel.isSubmitted().observe(this, isComplete -> {
+        submitButton.setVisibility(View.GONE);
+        selectWeightViewModel = new ViewModelProvider(this, viewModelFactory).get(SelectWeightViewModel.class);
+        selectWeightViewModel.setId(courseId);
+        selectWeightViewModel.createItemsList();
+
+        selectWeightViewModel.getInputItems().observe(this, items -> recyclerView.setAdapter(new MainListAdapter(requireActivity(), items)));
+        selectWeightViewModel.isSubmitEnabled().observe(this, isEnabled -> submitButton.setEnabled(isEnabled));
+        selectWeightViewModel.getNavigationEvent().observe(this, newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
+        selectWeightViewModel.isSubmitted().observe(this, isComplete -> {
             if (isComplete) {
                 returnToPreviousScreen();
             }
         });
+        selectWeightViewModel.getSelectedWeight().observe(this, weight -> {
+            selectItemViewModel.setSelectedItem(weight);
+            returnToPreviousScreen();
+        });
 
-        addAssignmentViewModel.setNewAssignment(assignment);
-        addAssignmentViewModel.createItemsList();
+        cancelButton.setOnClickListener(v -> returnToPreviousScreen());
     }
 
     private void returnToPreviousScreen() {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.popBackStackImmediate();
-    }
-
-    public AddAssignmentViewModel getViewModel() {
-        return addAssignmentViewModel;
     }
 
     @Override

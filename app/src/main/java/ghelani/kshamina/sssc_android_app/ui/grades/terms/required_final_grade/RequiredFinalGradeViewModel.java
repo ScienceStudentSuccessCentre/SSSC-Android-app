@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments;
+package ghelani.kshamina.sssc_android_app.ui.grades.terms.required_final_grade;
 
 import android.text.InputType;
 
@@ -13,11 +13,11 @@ import ghelani.kshamina.sssc_android_app.database.WeightDao;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.entity.CourseWithAssignmentsAndWeights;
 import ghelani.kshamina.sssc_android_app.entity.Weight;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.select_weight.SelectWeightFragment;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.InputItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.TextItem;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.SelectItemViewModel;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
 import io.reactivex.Scheduler;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -67,6 +67,12 @@ public class RequiredFinalGradeViewModel extends SelectItemViewModel<Weight> {
                 });
     }
 
+    public void setCourse(CourseWithAssignmentsAndWeights course) {
+        this.course = course.course;
+        currentCourseGrade = course.calculateGradePercentage();
+        createItemsList();
+    }
+
     @Override
     public void onSubmit() {
 
@@ -94,7 +100,8 @@ public class RequiredFinalGradeViewModel extends SelectItemViewModel<Weight> {
         }));
 
         inputItems.add(new InputItem(finalExamWeight != null ? finalExamWeight.weightName : "", "", "Final Exam Weight", InputItem.InputStyle.SELECTION_SCREEN, InputType.TYPE_CLASS_TEXT, (item, value) -> {
-            navigationEvent.setValue(InputFormFragment.newInstance(course.courseId, InputFormFragment.FormType.SELECT_WEIGHT.toString()));
+            //  navigationEvent.setValue(InputFormFragment.newInstance(course.courseId, InputFormFragment.FormType.SELECT_WEIGHT.toString()));
+            navigationEvent.setValue(SelectWeightFragment.newInstance(this, course.courseId));
 
         }));
 

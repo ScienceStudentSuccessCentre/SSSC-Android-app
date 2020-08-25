@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment;
+package ghelani.kshamina.sssc_android_app.ui.grades.terms.select_weight;
 import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;

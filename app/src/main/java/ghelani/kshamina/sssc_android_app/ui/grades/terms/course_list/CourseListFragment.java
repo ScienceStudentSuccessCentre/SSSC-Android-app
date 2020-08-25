@@ -36,6 +36,8 @@ import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
+import ghelani.kshamina.sssc_android_app.entity.TermEntity;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseFragment;
 import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
@@ -43,11 +45,9 @@ import ghelani.kshamina.sssc_android_app.ui.utils.list.SwipeToDeleteCallback;
 
 public class CourseListFragment extends Fragment {
 
-    public static final String EXTRA_TERM_ID = "termID";
-    public static final String EXTRA_TERM_NAME = "termName";
+    public static final String EXTRA_TERM = "term";
 
-    private String termID;
-    private String termName;
+    private TermEntity term;
 
     @Inject
     ViewModelFactory viewModelFactory;
@@ -69,11 +69,9 @@ public class CourseListFragment extends Fragment {
     @BindView(R.id.emptyCourseListText)
     TextView emptyCourseListMessage;
 
-    public static CourseListFragment newInstance(String termID, String termName) {
+    public static CourseListFragment newInstance(TermEntity term) {
         Bundle args = new Bundle();
-        args.putString(EXTRA_TERM_ID, termID);
-        args.putString(EXTRA_TERM_NAME, termName);
-
+        args.putSerializable(EXTRA_TERM, term);
         CourseListFragment fragment = new CourseListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -96,12 +94,11 @@ public class CourseListFragment extends Fragment {
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         if (getArguments() != null) {
-            termID = getArguments().getString(EXTRA_TERM_ID, "");
-            termName = getArguments().getString(EXTRA_TERM_NAME, "");
+            term = (TermEntity) getArguments().getSerializable(EXTRA_TERM);
         }
         View view = inflater.inflate(R.layout.fragment_course_list, container, false);
         ButterKnife.bind(this, view);
-        toolbar.setTitle(termName);
+        toolbar.setTitle(term.toString());
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         return view;
     }
@@ -111,7 +108,7 @@ public class CourseListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         FloatingActionButton addCourseBtn = view.findViewById(R.id.addCourseFab);
-        addCourseBtn.setOnClickListener(v -> replaceFragment(InputFormFragment.newInstance(termID, InputFormFragment.FormType.ADD_COURSE.toString())));
+        addCourseBtn.setOnClickListener(v -> replaceFragment(AddCourseFragment.newInstance(term)));
 
 
         MainListAdapter adapter = new MainListAdapter(getActivity(), Collections.emptyList());
@@ -143,7 +140,7 @@ public class CourseListFragment extends Fragment {
         courseViewModel.navigationEvent.observe(this, newFragment -> replaceFragment(newFragment));
         courseViewModel.creditsState.observe(this, credits -> creditsText.setText("Credits: " + credits));
         courseViewModel.termGPA.observe(this, gpa -> gpaText.setText("Term GPA: " + (gpa == -1 ? "N/A" : gpa)));
-        courseViewModel.fetchCoursesByTermId(termID);
+        courseViewModel.fetchCoursesByTermId(term.termId);
     }
 
     private void replaceFragment(Fragment newFragment) {
@@ -170,7 +167,7 @@ public class CourseListFragment extends Fragment {
                 item.setIcon(R.drawable.ic_close);
                 courseViewModel.setIsDeleteMode(true);
             }
-            courseViewModel.fetchCoursesByTermId(termID);
+            courseViewModel.fetchCoursesByTermId(term.termId);
 
             return true;
         }

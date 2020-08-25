@@ -1,7 +1,12 @@
-package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment;
+package ghelani.kshamina.sssc_android_app.ui.grades.terms.select_grade;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,31 +16,27 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
 import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
-import ghelani.kshamina.sssc_android_app.entity.Assignment;
+import ghelani.kshamina.sssc_android_app.entity.Weight;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.SelectItemViewModel;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseViewModel;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.select_weight.SelectWeightViewModel;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 
-public class AddAssignmentFragment extends Fragment {
+public class SelectGradeFragment extends Fragment {
 
-    private static final String ASSIGNMENT_OBJECT = "assignment";
+    private static final String ARG_VIEW_MODEL = "viewmodel";
 
-    private Assignment assignment;
+    private SelectItemViewModel<String> selectItemViewModel;
 
     private MainListAdapter adapter;
 
@@ -50,9 +51,9 @@ public class AddAssignmentFragment extends Fragment {
 
     private Button cancelButton;
 
-    private AddAssignmentViewModel addAssignmentViewModel;
+    private SelectFinalGradeViewModel selectFinalGradeViewModel;
 
-    public AddAssignmentFragment() {
+    public SelectGradeFragment() {
         // Required empty public constructor
     }
 
@@ -62,10 +63,10 @@ public class AddAssignmentFragment extends Fragment {
         super.onAttach(context);
     }
 
-    public static AddAssignmentFragment newInstance(Assignment assignment) {
-        AddAssignmentFragment fragment = new AddAssignmentFragment();
+    public static SelectGradeFragment newInstance(SelectItemViewModel<String> viewModel) {
+        SelectGradeFragment fragment = new SelectGradeFragment();
         Bundle args = new Bundle();
-        args.putSerializable(ASSIGNMENT_OBJECT, assignment);
+        args.putSerializable(ARG_VIEW_MODEL, viewModel);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,14 +75,13 @@ public class AddAssignmentFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            assignment = (Assignment) getArguments().getSerializable(ASSIGNMENT_OBJECT);
+            selectItemViewModel = (SelectItemViewModel) getArguments().getSerializable(ARG_VIEW_MODEL);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_input_form, container, false);
 
         recyclerView = view.findViewById(R.id.inputRecyclerView);
@@ -96,9 +96,9 @@ public class AddAssignmentFragment extends Fragment {
         adapter = new MainListAdapter(getActivity(), Collections.emptyList());
         recyclerView.setAdapter(adapter);
 
-        title.setText("New Assignment");
+        title.setText("Select a Grade");
 
-        submitButton.setOnClickListener(v -> addAssignmentViewModel.onSubmit());
+        submitButton.setOnClickListener(v -> selectFinalGradeViewModel.onSubmit());
 
         cancelButton.setOnClickListener(v -> returnToPreviousScreen());
 
@@ -108,31 +108,30 @@ public class AddAssignmentFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        addAssignmentViewModel = new ViewModelProvider(this, viewModelFactory).get(AddAssignmentViewModel.class);
 
-        addAssignmentViewModel.getInputItems().observe(this, items -> {
-            adapter.setItems(items);
-            adapter.notifyDataSetChanged();
-        });
-        addAssignmentViewModel.isSubmitEnabled().observe(this, isEnabled -> submitButton.setEnabled(isEnabled));
-        addAssignmentViewModel.getNavigationEvent().observe(this, newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
-        addAssignmentViewModel.isSubmitted().observe(this, isComplete -> {
+        submitButton.setVisibility(View.GONE);
+        selectFinalGradeViewModel = new ViewModelProvider(this, viewModelFactory).get(SelectFinalGradeViewModel.class);
+        selectFinalGradeViewModel.createItemsList();
+
+        selectFinalGradeViewModel.getInputItems().observe(this, items -> recyclerView.setAdapter(new MainListAdapter(requireActivity(), items)));
+        selectFinalGradeViewModel.isSubmitEnabled().observe(this, isEnabled -> submitButton.setEnabled(isEnabled));
+        selectFinalGradeViewModel.getNavigationEvent().observe(this, newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
+        selectFinalGradeViewModel.isSubmitted().observe(this, isComplete -> {
             if (isComplete) {
                 returnToPreviousScreen();
             }
         });
+        selectFinalGradeViewModel.getSelectedGrade().observe(this, grade -> {
+            selectItemViewModel.setSelectedItem(grade);
+            returnToPreviousScreen();
+        });
 
-        addAssignmentViewModel.setNewAssignment(assignment);
-        addAssignmentViewModel.createItemsList();
+        cancelButton.setOnClickListener(v -> returnToPreviousScreen());
     }
 
     private void returnToPreviousScreen() {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.popBackStackImmediate();
-    }
-
-    public AddAssignmentViewModel getViewModel() {
-        return addAssignmentViewModel;
     }
 
     @Override
