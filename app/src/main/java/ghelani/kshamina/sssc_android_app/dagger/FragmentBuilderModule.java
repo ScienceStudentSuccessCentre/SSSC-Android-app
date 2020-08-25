@@ -7,6 +7,7 @@ import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.entity.Event;
 import ghelani.kshamina.sssc_android_app.ui.event.EventsFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.calculator.CalculatorFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments.AssignmentListFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CourseListFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
@@ -38,5 +39,8 @@ abstract class FragmentBuilderModule {
 
     @ContributesAndroidInjector(modules = {ViewModelModule.class})
     abstract MentorListFragment injectMentorListFragment();
+
+    @ContributesAndroidInjector(modules = {ViewModelModule.class})
+    abstract AddAssignmentFragment injectAddAsignmentFragment();
 
 }

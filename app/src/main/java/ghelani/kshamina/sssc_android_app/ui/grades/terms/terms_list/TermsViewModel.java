@@ -12,10 +12,10 @@ import javax.inject.Inject;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.database.TermDao;
 import ghelani.kshamina.sssc_android_app.entity.TermEntity;
-import ghelani.kshamina.sssc_android_app.ui.common.events.EventListener;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.ViewState;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.ListItem;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
@@ -29,6 +29,7 @@ public class TermsViewModel extends ViewModel {
     private TermDao termDao;
     public MutableLiveData<ViewState<DiffItem>> state = new MutableLiveData<>();
     public MutableLiveData<TermEntity> termSelected = new MutableLiveData<>();
+    private List<TermEntity> termsList = Collections.emptyList();
     private boolean isDeleteMode;
 
     @Inject
@@ -52,10 +53,10 @@ public class TermsViewModel extends ViewModel {
                     public void onSuccess(@NonNull List<TermEntity> terms) {
                         Collections.sort(terms);
                         Collections.reverse(terms);
+                        termsList = terms;
                         List<DiffItem> items = new ArrayList<>();
-                        for(TermEntity term : terms){
-                            ListItem displayableItem = createListItem(term);
-                            items.add(displayableItem);
+                        for (TermEntity term : terms) {
+                            items.add(createListItem(term));
                         }
                         state.setValue(new ViewState<>(false, false, true, "", items));
                     }
@@ -67,8 +68,8 @@ public class TermsViewModel extends ViewModel {
                 });
     }
 
-    private ListItem createListItem(TermEntity term){
-        return new ListItem(term.getTermId(),term.asShortString(),"",term.toString(), isDeleteMode, new EventListener.ListItemEventListener() {
+    private ListItem createListItem(TermEntity term) {
+        return new ListItem(term.getTermId(), term.asShortString(), "", term.toString(), isDeleteMode, new EventListener.ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
                 termDao.getTermById(id)
@@ -100,36 +101,35 @@ public class TermsViewModel extends ViewModel {
             }
 
             @Override
-            public void deleteItem(String id) {
-                Completable.fromAction(() -> termDao.deleteTerm(id))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new CompletableObserver() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-
-                            }
-
-                            @Override
-                            public void onComplete() {
-                                fetchTerms();
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-                        });
+            public void deleteItem(int index) {
+             deleteTerm(index);
             }
         });
     }
 
-    public List<DiffItem> getTermItems(){
-        return state.getValue().getItems();
+    public void deleteTerm(int index) {
+        Completable.fromAction(() -> termDao.deleteTerm(termsList.get(index).termId))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        fetchTerms();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
-    public void toggleDeleteMode(){
+    public void toggleDeleteMode() {
         setDeleteMode(!isDeleteMode);
         fetchTerms();
     }

@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity(tableName = "assignments",

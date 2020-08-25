@@ -13,10 +13,10 @@ import javax.inject.Inject;
 
 import ghelani.kshamina.sssc_android_app.entity.Event;
 import ghelani.kshamina.sssc_android_app.network.NetworkManager;
-import ghelani.kshamina.sssc_android_app.ui.common.events.EventListener;
-import ghelani.kshamina.sssc_android_app.ui.common.events.SingleLiveEvent;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.SingleLiveEvent;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.ListItem;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -73,7 +73,7 @@ public class EventListViewModel extends ViewModel {
             }
 
             @Override
-            public void deleteItem(String courseId) {
+            public void deleteItem(int index) {
 
             }
         });

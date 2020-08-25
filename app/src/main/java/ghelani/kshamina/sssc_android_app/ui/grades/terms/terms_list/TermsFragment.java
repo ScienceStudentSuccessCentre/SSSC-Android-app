@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,9 +30,10 @@ import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
-import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CourseListFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.SwipeToDeleteCallback;
 
 public class TermsFragment extends Fragment {
 
@@ -80,6 +82,8 @@ public class TermsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.termsRecyclerView);
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         MainListAdapter adapter = new MainListAdapter(getActivity(), Collections.emptyList());
+        ItemTouchHelper swipeHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(),adapter, recyclerView, (index -> termsViewModel.deleteTerm(index))));
+        swipeHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(adapter);
 
         termsViewModel = new ViewModelProvider(this, viewModelFactory).get(TermsViewModel.class);
@@ -89,14 +93,14 @@ public class TermsFragment extends Fragment {
             } else if (termViewState.isError()) {
                 System.out.println("Terms ERROR: " + termViewState.getError());
             } else if (termViewState.isSuccess()) {
-                if (termsViewModel.getTermItems().isEmpty()) {
+                if (termViewState.getItems().isEmpty()) {
                     emptyTermsMessage.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.GONE);
                 } else {
                     emptyTermsMessage.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
-                    adapter.setItems(termsViewModel.getTermItems());
-                    recyclerView.getAdapter().notifyDataSetChanged();
+                    adapter.setItems(termViewState.getItems());
+                    adapter.notifyDataSetChanged();
                 }
             }
         });

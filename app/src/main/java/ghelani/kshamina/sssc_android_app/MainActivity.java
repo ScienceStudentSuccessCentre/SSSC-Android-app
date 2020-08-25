@@ -1,6 +1,5 @@
 package ghelani.kshamina.sssc_android_app;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -16,28 +15,20 @@ import android.webkit.WebView;
 
 import com.facebook.stetho.Stetho;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
-import com.squareup.picasso.OkHttp3Downloader;
-import com.squareup.picasso.Picasso;
-
-import java.util.Collections;
 
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
-import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.ui.ResourcesFragment;
 import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
-import ghelani.kshamina.sssc_android_app.ui.event.EventListViewModel;
 import ghelani.kshamina.sssc_android_app.ui.event.EventsFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.GradesFragment;
 import ghelani.kshamina.sssc_android_app.ui.mentoring.MentorListFragment;
-import okhttp3.OkHttpClient;
-import okhttp3.Protocol;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BottomNavigationView navigatonView;
+    private BottomNavigationView navigationView;
 
     @Inject
     ViewModelFactory viewModelFactory;
@@ -49,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
         Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
 
-        navigatonView = findViewById(R.id.navigation);
-        navigatonView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
+        navigationView = findViewById(R.id.navigation);
+        navigationView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
         changeFragment(new EventsFragment());
         setupBottomNav();
 
@@ -89,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupBottomNav() {
-        navigatonView.setOnNavigationItemSelectedListener(item -> {
+        navigationView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     changeFragment(new EventsFragment());
@@ -105,13 +96,14 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.navigation_settings:
                     changeFragment(new SettingsFragment());
+                    break;
             }
             return true;
         });
     }
 
-    public BottomNavigationView getNavigatonView() {
-        return navigatonView;
+    public BottomNavigationView getNavigationView() {
+        return navigationView;
     }
 
     @Override

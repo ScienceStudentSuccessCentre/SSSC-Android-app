@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.ui.common.list.model;
+package ghelani.kshamina.sssc_android_app.ui.utils.list.model;
 
 public class TextItem  implements DiffItem {
 

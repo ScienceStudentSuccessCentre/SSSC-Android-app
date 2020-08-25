@@ -2,6 +2,7 @@ package ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,13 +19,16 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,11 +39,17 @@ import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
-import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
-import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
+import ghelani.kshamina.sssc_android_app.entity.Assignment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentViewModel;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.SwipeToDeleteCallback;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.ListItem;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class AssignmentListFragment extends Fragment {
 
@@ -111,12 +121,13 @@ public class AssignmentListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        calculateDesiredGrade.setOnClickListener(v -> replaceFragment(InputFormFragment.newInstance(courseID, InputFormFragment.FormType.REQUIRED_FINAL_GRADE.toString())));
-
-        addAssignmentFab.setOnClickListener(v -> replaceFragment(InputFormFragment.newInstance(courseID, InputFormFragment.FormType.ADD_ASSIGNMENT.toString())));
-
         assignmentRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         assignmentViewModel = new ViewModelProvider(this, viewModelFactory).get(AssignmentViewModel.class);
+
+        MainListAdapter adapter = new MainListAdapter(getActivity(), Collections.emptyList());
+        ItemTouchHelper swipeHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(), adapter, assignmentRecyclerView, (index -> assignmentViewModel.deleteAssignment(index))));
+        swipeHelper.attachToRecyclerView(assignmentRecyclerView);
+        assignmentRecyclerView.setAdapter(adapter);
 
         assignmentViewModel.getState().observe(this, assignmentViewState -> {
             if (assignmentViewState.isLoading()) {
@@ -132,12 +143,8 @@ public class AssignmentListFragment extends Fragment {
                 } else {
                     emptyAssignmentListMessage.setVisibility(View.GONE);
                     assignmentRecyclerView.setVisibility(View.VISIBLE);
-
-                    List<DiffItem> displayableItems = new ArrayList<>();
-                    for (ListItem item : assignmentViewState.getItems()) {
-                        displayableItems.add(item);
-                    }
-                    assignmentRecyclerView.setAdapter(new MainListAdapter(getActivity(), displayableItems));
+                    adapter.setItems(assignmentViewState.getItems());
+                    adapter.notifyDataSetChanged();
                 }
             }
         });
@@ -145,7 +152,13 @@ public class AssignmentListFragment extends Fragment {
         assignmentViewModel.getCourseGrade().observe(this, grade -> {
             if (!assignmentViewModel.getCourse().courseFinalGrade.isEmpty()) {
                 calculateDesiredGrade.setVisibility(View.GONE);
+                ViewGroup.LayoutParams params = courseGradeText.getLayoutParams();
+                params.height = MATCH_PARENT;
+                courseGradeText.setLayoutParams(params);
             } else {
+                ViewGroup.LayoutParams params = courseGradeText.getLayoutParams();
+                params.height = WRAP_CONTENT;
+                courseGradeText.setLayoutParams(params);
                 calculateDesiredGrade.setVisibility(View.VISIBLE);
             }
             courseGradeText.setText("Overall Grade: " + grade);
@@ -153,7 +166,28 @@ public class AssignmentListFragment extends Fragment {
 
         assignmentViewModel.getNavigationEvent().observe(this, this::replaceFragment);
 
+        calculateDesiredGrade.setOnClickListener(v -> replaceFragment(InputFormFragment.newInstance(courseID, InputFormFragment.FormType.REQUIRED_FINAL_GRADE.toString())));
+
+        addAssignmentFab.setOnClickListener(v -> {
+            if (assignmentViewModel.assignmentWeightsAvailable()) {
+                Assignment newAssignment = new Assignment("", -1, 0, "", courseID);
+                //replaceFragment(AddAssignmentFragment.newInstance(newAssignment));
+                replaceFragment(InputFormFragment.newInstance(courseID , InputFormFragment.FormType.ADD_ASSIGNMENT.toString()));
+            } else {
+                showNoWeightsDialog();
+            }
+        });
+
         assignmentViewModel.fetchCourseAssignments(courseID);
+    }
+
+    private void showNoWeightsDialog() {
+        new MaterialAlertDialogBuilder(getContext())
+                .setTitle("Unable to create assignment!")
+                .setMessage("You must add a weight to your course before you can create an assignment.")
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
     }
 
     private void replaceFragment(Fragment newFragment) {

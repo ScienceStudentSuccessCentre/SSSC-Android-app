@@ -1,14 +1,14 @@
-package ghelani.kshamina.sssc_android_app.ui.common.list.model;
+package ghelani.kshamina.sssc_android_app.ui.utils.list.model;
 
-import ghelani.kshamina.sssc_android_app.ui.common.events.EventListener;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
 
-public class TwoLineItem implements DiffItem {
+public class MentorItem implements DiffItem {
     private String imageUrl;
     private String header;
     private String description;
     private EventListener.OpenItemEventListener clickListener;
 
-    public TwoLineItem(String imageUrl, String header, String description, EventListener.OpenItemEventListener clickListener) {
+    public MentorItem(String imageUrl, String header, String description, EventListener.OpenItemEventListener clickListener) {
         this.imageUrl = imageUrl;
         this.header = header;
         this.description = description;

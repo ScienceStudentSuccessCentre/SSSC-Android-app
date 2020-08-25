@@ -1,12 +1,5 @@
 package ghelani.kshamina.sssc_android_app.entity;
 
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,7 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 
 public class Event implements Serializable, Comparable<Event>, DiffItem {
     private String id;
@@ -66,14 +59,14 @@ public class Event implements Serializable, Comparable<Event>, DiffItem {
     }
 
     /*
-    *   Convert string dateTime format from https://sssc.carleton.ca/events to Date
-    *   Format: Wednesday, September 18, 2019
+     *   Convert string dateTime format from https://sssc.carleton.ca/events to Date
+     *   Format: Wednesday, September 18, 2019
      */
     public static Date stringToDate(String stringDate) {
         Date date = new Date();
         try {
             date = new SimpleDateFormat("E, MMM dd, yyyy").parse(stringDate);
-        } catch (ParseException e){
+        } catch (ParseException e) {
             System.out.println("Date cannot be parsed.");
         }
         return date;
@@ -84,7 +77,7 @@ public class Event implements Serializable, Comparable<Event>, DiffItem {
         cal.setTime(this.dateTime);
         String month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA);
         String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
-        if(day.length() == 1) day = "0" + day;
+        if (day.length() == 1) day = "0" + day;
         return month.substring(0, 3) + "\n" + day;
     }
 
@@ -95,7 +88,7 @@ public class Event implements Serializable, Comparable<Event>, DiffItem {
         String month = cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.CANADA);
         String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
 
-        if(day.length() == 1) day = "0" + day;
+        if (day.length() == 1) day = "0" + day;
 
         return month.substring(0, 3) + " " + day;
     }
@@ -118,7 +111,7 @@ public class Event implements Serializable, Comparable<Event>, DiffItem {
     }
 
     public String getUrl() {
-        return url;
+        return "https://sssc.carleton.ca" + url;
     }
 
     public void setUrl(String url) {
@@ -161,13 +154,14 @@ public class Event implements Serializable, Comparable<Event>, DiffItem {
         URL url = null;
         try {
             url = new URL("https://sssc.carleton.ca" + string);
-        } catch(MalformedURLException e) {
+        } catch (MalformedURLException e) {
 
         }
         return url;
     }
 
-    @Override public int compareTo(Event event) {
+    @Override
+    public int compareTo(Event event) {
         return getDateTime().compareTo(event.getDateTime());
     }
 

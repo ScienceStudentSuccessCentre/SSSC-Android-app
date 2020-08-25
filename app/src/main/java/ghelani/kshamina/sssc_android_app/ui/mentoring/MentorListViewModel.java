@@ -13,9 +13,9 @@ import javax.inject.Inject;
 
 import ghelani.kshamina.sssc_android_app.entity.Mentor;
 import ghelani.kshamina.sssc_android_app.network.NetworkManager;
-import ghelani.kshamina.sssc_android_app.ui.common.events.SingleLiveEvent;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.TwoLineItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.SingleLiveEvent;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.MentorItem;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -60,7 +60,7 @@ public class MentorListViewModel extends ViewModel {
 
         for (Mentor mentor : mentorList) {
             mentor.setImageUrl(mentor.getImageUrl().replace("http://", "https://"));
-            displayableMentorItem.add(new TwoLineItem(mentor.getImageUrl(), mentor.getName(), mentor.getDegree(),
+            displayableMentorItem.add(new MentorItem(mentor.getImageUrl(), mentor.getName(), mentor.getDegree(),
                     () -> navigationEvent.setValue(MentorDetailFragment.newInstance(mentor.getImageUrl(), mentor.getName(), mentor.getBio(), mentor.getDegree(), mentor.getTeam()))));
         }
 

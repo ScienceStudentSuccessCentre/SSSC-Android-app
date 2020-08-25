@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
+import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.database.CourseDao;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
@@ -34,6 +37,7 @@ import ghelani.kshamina.sssc_android_app.entity.TermEntity;
 import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments.AssignmentListFragment;
 
 public class CalculatorFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -84,7 +88,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
         recyclerView = calculatorView.findViewById(R.id.coursesList);
         recyclerView.setHasFixedSize(true);
 
-        adapter = new CoursesAdapter(adapterList, getActivity());
+        adapter = new CoursesAdapter(adapterList, getActivity(),gradesDatabase);
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -113,54 +117,6 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
     private void loadCourseData() {
         Thread thread = new Thread(() -> {
             filteredCourseList.clear();
-/*
-            TermEntity dummyTerm1 = new TermEntity(TermEntity.Season.WINTER, "2019");  // To satisfy foreign key constraint
-            TermEntity dummyTerm2 = new TermEntity(TermEntity.Season.FALL, "2020");
-            gradesDatabase.getTermDao().insertTerm(dummyTerm1);
-            gradesDatabase.getTermDao().insertTerm(dummyTerm2);
-            String termId1 = dummyTerm1.getTermId();
-
-            String termId2 = dummyTerm2.getTermId();
-
-            CourseEntity dummyCourseEntity1 = new CourseEntity(
-                    "Introduction to Computer Science I",
-                    "COMP 1405",
-                    0.5,
-                    true,
-                    "A",
-                    termId1
-            );
-            CourseEntity dummyCourseEntity2 = new CourseEntity(
-                    "Introduction to Computer Science II",
-                    "COMP 1406",
-                    0.5,
-                    true,
-                    "A+",
-                    termId1
-            );
-            CourseEntity dummyCourseEntity3 = new CourseEntity(
-                    "Introduction to Logic",
-                    "PHIL 2001",
-                    0.5,
-                    false,
-                    null,
-                    termId2
-            );
-            CourseEntity dummyCourseEntity4 = new CourseEntity(
-                    "Introduction to Organizational Behaviour",
-                    "BUSI 2121",
-                    0.5,
-                    false,
-                    "D-",
-                    termId2
-            );
-
-            CourseDao courseDao = gradesDatabase.getCourseDao();
-            courseDao.insertCourse(dummyCourseEntity1);
-            courseDao.insertCourse(dummyCourseEntity2);
-            courseDao.insertCourse(dummyCourseEntity3);
-            courseDao.insertCourse(dummyCourseEntity4);
-*/
             CourseDao courseDao = gradesDatabase.getCourseDao();
             filteredCourseList.addAll(courseDao.getAllCourses());
             updateAdapterList();
@@ -191,7 +147,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
 
     private void openCourseSingle(CourseEntity courseEntity, View view) {
         // TODO implement
-        Toast.makeText(getActivity(), "Opening " + courseEntity.courseCode, Toast.LENGTH_SHORT).show();
+            ((MainActivity) requireActivity()).replaceFragment(AssignmentListFragment.newInstance(courseEntity.courseId));
     }
 
 
@@ -209,12 +165,14 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
         super.onResume();
         PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Calculator");
+        setHasOptionsMenu(true);
         loadCourseData();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        setHasOptionsMenu(false);
         PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
     }
 
@@ -274,5 +232,10 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+    }
 
 }

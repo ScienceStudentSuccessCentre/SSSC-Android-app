@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -24,7 +25,8 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
+
+import java.util.Collections;
 
 import javax.inject.Inject;
 
@@ -34,8 +36,10 @@ import dagger.android.support.AndroidSupportInjection;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
-import ghelani.kshamina.sssc_android_app.ui.common.list.MainListAdapter;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.SwipeToDeleteCallback;
 
 public class CourseListFragment extends Fragment {
 
@@ -107,27 +111,31 @@ public class CourseListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         FloatingActionButton addCourseBtn = view.findViewById(R.id.addCourseFab);
-        addCourseBtn.setOnClickListener(v -> {
-            replaceFragment(InputFormFragment.newInstance(termID, InputFormFragment.FormType.ADD_COURSE.toString()));
-        });
+        addCourseBtn.setOnClickListener(v -> replaceFragment(InputFormFragment.newInstance(termID, InputFormFragment.FormType.ADD_COURSE.toString())));
 
+
+        MainListAdapter adapter = new MainListAdapter(getActivity(), Collections.emptyList());
+        ItemTouchHelper swipeHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(), adapter, courseRecyclerView, (index) -> courseViewModel.deleteItem(index)));
+        swipeHelper.attachToRecyclerView(courseRecyclerView);
         courseRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+        courseRecyclerView.setAdapter(adapter);
 
         courseViewModel = new ViewModelProvider(this, viewModelFactory).get(CoursesViewModel.class);
-        courseViewModel.state.observe(this, termViewState -> {
-            if (termViewState.isLoading()) {
+        courseViewModel.state.observe(this, courseListViewState -> {
+            if (courseListViewState.isLoading()) {
                 System.out.println("Courses Loading");
-            } else if (termViewState.isError()) {
-                System.out.println("Course load ERROR: " + termViewState.getError());
-            } else if (termViewState.isSuccess()) {
+            } else if (courseListViewState.isError()) {
+                System.out.println("Course load ERROR: " + courseListViewState.getError());
+            } else if (courseListViewState.isSuccess()) {
 
-                if (courseViewModel.getCourseItems().isEmpty()) {
+                if (courseListViewState.getItems().isEmpty()) {
                     emptyCourseListMessage.setVisibility(View.VISIBLE);
                     courseRecyclerView.setVisibility(View.GONE);
                 } else {
                     emptyCourseListMessage.setVisibility(View.GONE);
                     courseRecyclerView.setVisibility(View.VISIBLE);
-                    courseRecyclerView.setAdapter(new MainListAdapter(getActivity(), courseViewModel.getCourseItems()));
+                    adapter.setItems(courseListViewState.getItems());
+                    adapter.notifyDataSetChanged();
                 }
             }
         });

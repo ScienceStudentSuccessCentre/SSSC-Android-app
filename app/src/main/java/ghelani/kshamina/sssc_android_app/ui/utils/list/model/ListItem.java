@@ -1,6 +1,6 @@
-package ghelani.kshamina.sssc_android_app.ui.common.list.model;
+package ghelani.kshamina.sssc_android_app.ui.utils.list.model;
 
-import ghelani.kshamina.sssc_android_app.ui.common.events.EventListener;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
 
 /**
  * List view item to display Terms, Courses, and Assignments

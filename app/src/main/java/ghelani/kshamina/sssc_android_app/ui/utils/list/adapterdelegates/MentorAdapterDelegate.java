@@ -1,44 +1,37 @@
-package ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates;
+package ghelani.kshamina.sssc_android_app.ui.utils.list.adapterdelegates;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate;
 import com.squareup.picasso.Callback;
-import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
-import java.util.Collections;
 import java.util.List;
 
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.TextItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.TwoLineItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.MentorItem;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
-import okhttp3.OkHttpClient;
-import okhttp3.Protocol;
 
-public class TwoLineItemAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
+public class MentorAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
 
     private LayoutInflater inflater;
 
-    public TwoLineItemAdapterDelegate(Activity activity) {
+    public MentorAdapterDelegate(Activity activity) {
         inflater = activity.getLayoutInflater();
     }
 
     @Override
     protected boolean isForViewType(@NonNull List<DiffItem> items, int position) {
-        return items.get(position) instanceof TwoLineItem;
+        return items.get(position) instanceof MentorItem;
     }
 
     @NonNull
@@ -49,7 +42,7 @@ public class TwoLineItemAdapterDelegate extends AdapterDelegate<List<DiffItem>> 
 
     @Override
     protected void onBindViewHolder(@NonNull List<DiffItem> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
-        TwoLineItem item = (TwoLineItem) items.get(position);
+        MentorItem item = (MentorItem) items.get(position);
 
         TwoLineItemViewHolder twoLineItemViewHolder = (TwoLineItemViewHolder) holder;
         twoLineItemViewHolder.onBind(item);
@@ -69,7 +62,7 @@ public class TwoLineItemAdapterDelegate extends AdapterDelegate<List<DiffItem>> 
             image = itemView.findViewById(R.id.avatar);
         }
 
-        public void onBind(TwoLineItem item){
+        public void onBind(MentorItem item){
             itemView.setOnClickListener(v -> item.getClickListener().onItemClicked());
             header.setText(item.getHeader());
             content.setText(item.getDescription());

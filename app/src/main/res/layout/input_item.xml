@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/itemLayout"
+    android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:background="@color/white">
@@ -69,4 +70,4 @@
         android:visibility="gone" />
 
 
-</RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

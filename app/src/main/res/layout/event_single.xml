@@ -33,10 +33,10 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:autoSizeTextType="uniform"
-        android:text="Learn to use the Command Line"
         android:background="@color/lightGrey"
         android:gravity="center"
         android:padding="10dp"
+        android:text="Learn to use the Command Line"
         android:textColor="@android:color/black"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 
@@ -58,8 +58,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
-                android:textColorLink="#7bc9c2"
                 android:textColor="@android:color/black"
+                android:textColorLink="#7bc9c2"
                 android:textSize="17sp" />
 
             <ImageView
@@ -73,7 +73,7 @@
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="88dp"
+        android:layout_height="64dp"
         android:layout_gravity="bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,25 +83,25 @@
             android:id="@+id/rawTime"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.3"
+            android:layout_weight="0.4"
             android:background="@color/red"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="8dp"
+            android:text="Sep 15 9:30am"
             android:textColor="@android:color/white"
-            android:textSize="17sp"
-            android:text="9:30am"/>
+            android:textSize="17sp" />
 
         <TextView
             android:id="@+id/location"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.7"
+            android:layout_weight="0.6"
             android:background="@color/lightGrey"
             android:gravity="center"
-            android:textColor="@android:color/black"
-            android:textSize="17sp"
+            android:padding="8dp"
             android:text="Online"
-            />
+            android:textColor="@android:color/black"
+            android:textSize="17sp" />
 
     </LinearLayout>
 

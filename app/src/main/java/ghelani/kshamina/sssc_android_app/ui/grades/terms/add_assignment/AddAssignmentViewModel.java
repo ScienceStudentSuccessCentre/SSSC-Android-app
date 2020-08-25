@@ -15,9 +15,9 @@ import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.database.WeightDao;
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.entity.Weight;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.InputItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.TextItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.InputItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.TextItem;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.SelectItemViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
 import io.reactivex.Completable;
@@ -33,7 +33,6 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
     private Assignment newAssignment;
     private AssignmentDao assignmentDao;
     private Weight weight;
-    private boolean updating;
     private WeightDao weightDao;
 
     @Inject
@@ -41,7 +40,6 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
         newAssignment = new Assignment("", -1, 0, "", "");
         this.assignmentDao = db.getAssignmentDao();
         this.weightDao = db.getWeightDao();
-        updating = false;
     }
 
     @Override
@@ -144,7 +142,6 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
     }
 
     public void fetchAssignmentToUpdate(String id) {
-        updating = true;
         assignmentDao.getAssignmentByID(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -174,5 +171,9 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
 
     public Assignment getNewAssignment() {
         return newAssignment;
+    }
+
+    public void setNewAssignment(Assignment newAssignment) {
+        this.newAssignment = newAssignment;
     }
 }

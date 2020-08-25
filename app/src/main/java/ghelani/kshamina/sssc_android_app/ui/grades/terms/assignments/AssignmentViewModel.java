@@ -19,10 +19,11 @@ import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.entity.AssignmentWithWeight;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.entity.CourseWithAssignmentsAndWeights;
-import ghelani.kshamina.sssc_android_app.ui.common.events.EventListener;
-import ghelani.kshamina.sssc_android_app.ui.common.events.SingleLiveEvent;
-import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.SingleLiveEvent;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.ViewState;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.ListItem;
 import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
 import io.reactivex.SingleObserver;
@@ -34,7 +35,7 @@ public class AssignmentViewModel extends ViewModel {
 
     private AssignmentDao assignmentDao;
     private CourseDao courseDao;
-    private MutableLiveData<ViewState<ListItem>> state = new MutableLiveData<>();
+    private MutableLiveData<ViewState<DiffItem>> state = new MutableLiveData<>();
     private MutableLiveData<String> courseGradeText = new MutableLiveData<>();
     private SingleLiveEvent<Fragment> navigationEvent = new SingleLiveEvent<>();
     private CourseWithAssignmentsAndWeights course;
@@ -48,6 +49,7 @@ public class AssignmentViewModel extends ViewModel {
     }
 
     public void fetchCourseAssignments(String courseID) {
+
         courseDao.getCourseWithWeightsByID(courseID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -60,7 +62,7 @@ public class AssignmentViewModel extends ViewModel {
                     @Override
                     public void onSuccess(CourseWithAssignmentsAndWeights courseData) {
                         course = courseData;
-                        List<ListItem> assignmentItems = new ArrayList<>();
+                        List<DiffItem> assignmentItems = new ArrayList<>();
                         for (AssignmentWithWeight assignment : courseData.assignments) {
                             assignmentItems.add(createListItem(assignment.getAssignment()));
                         }
@@ -106,13 +108,16 @@ public class AssignmentViewModel extends ViewModel {
 
 
             @Override
-            public void deleteItem(String id) {
-                AsyncTask.execute(() -> {
-                    assignmentDao.deleteAssignment(id);
-                    fetchCourseAssignments(assignment.assignmentCourseId);
-                });
-
+            public void deleteItem(int index) {
+                deleteAssignment(index);
             }
+        });
+    }
+
+    public void deleteAssignment(int index) {
+        AsyncTask.execute(() -> {
+            assignmentDao.deleteAssignment(course.assignments.get(index).getAssignment().assignmentId);
+            fetchCourseAssignments(course.course.courseId);
         });
     }
 
@@ -120,7 +125,7 @@ public class AssignmentViewModel extends ViewModel {
         return navigationEvent;
     }
 
-    public LiveData<ViewState<ListItem>> getState() {
+    public LiveData<ViewState<DiffItem>> getState() {
         return state;
     }
 
@@ -138,5 +143,9 @@ public class AssignmentViewModel extends ViewModel {
 
     public CourseEntity getCourse() {
         return course.course;
+    }
+
+    public boolean assignmentWeightsAvailable() {
+        return !course.weight.isEmpty();
     }
 }

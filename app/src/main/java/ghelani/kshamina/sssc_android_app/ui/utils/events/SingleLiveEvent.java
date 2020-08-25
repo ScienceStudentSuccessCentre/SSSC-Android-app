@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.ui.common.events;
+package ghelani.kshamina.sssc_android_app.ui.utils.events;
 
 import android.util.Log;
 

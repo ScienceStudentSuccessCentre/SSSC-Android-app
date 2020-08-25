@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates;
+package ghelani.kshamina.sssc_android_app.ui.utils.list.adapterdelegates;
 
 import android.app.Activity;
 import android.text.Editable;
@@ -9,21 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate;
 
 import java.util.List;
 
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.InputItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.InputItem;
 
 public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
 
@@ -56,6 +56,7 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
                 inputItemViewHolder.textInput.setHint(item.getHint());
                 inputItemViewHolder.textInput.setText(item.getValue());
                 inputItemViewHolder.textInput.setInputType(item.getKeyboardType());
+                inputItemViewHolder.itemLayout.setOnClickListener(v ->  inputItemViewHolder.textInput.requestFocus());
                 if(item.getName().equals("Code")) {
                     inputItemViewHolder.textInput.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
                 }
@@ -108,7 +109,7 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
         public EditText textInput;
         public SwitchMaterial switchInput;
         public ConstraintLayout inputLayout;
-        public RelativeLayout itemLayout;
+        public MaterialCardView itemLayout;
         public Button inputButton;
 
         public InputItemViewHolder(View itemView) {

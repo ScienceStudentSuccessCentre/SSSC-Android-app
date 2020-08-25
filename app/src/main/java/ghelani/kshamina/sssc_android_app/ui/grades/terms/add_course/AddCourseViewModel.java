@@ -12,10 +12,10 @@ import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.database.WeightDao;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.entity.Weight;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.InputItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.TextItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.WeightItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.InputItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.TextItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.WeightItem;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormViewModel;
 import io.reactivex.Completable;
@@ -252,6 +252,14 @@ public class AddCourseViewModel extends InputFormViewModel {
             }
         }
         submitEnabled.setValue((!newCourse.courseName.isEmpty() && !newCourse.courseCode.isEmpty() && newCourse.courseCredits != -1));
+    }
+
+    public int getWeightsStartIndex(){
+        return 6;
+    }
+
+    public int getWeightsEndIndex(){
+        return weights.size()-5;
     }
 
     public void setTermId(String termID) {

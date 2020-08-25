@@ -142,7 +142,7 @@ public class EventSingleFragment extends Fragment {
                 ShareCompat.IntentBuilder.from(getActivity())
                         .setType("text/plain")
                         .setChooserTitle("Share event link!")
-                        .setText(event.getUrl().toString())
+                        .setText(event.getUrl())
                         .startChooser();
                 break;
 
@@ -256,4 +256,9 @@ public class EventSingleFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Events");
+        super.onResume();
+    }
 }

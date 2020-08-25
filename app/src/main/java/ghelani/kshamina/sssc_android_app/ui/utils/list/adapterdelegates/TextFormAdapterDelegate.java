@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates;
+package ghelani.kshamina.sssc_android_app.ui.utils.list.adapterdelegates;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -14,8 +14,8 @@ import com.hannesdorfmann.adapterdelegates4.AdapterDelegate;
 
 import java.util.List;
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.TextItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.TextItem;
 
 public class TextFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
 

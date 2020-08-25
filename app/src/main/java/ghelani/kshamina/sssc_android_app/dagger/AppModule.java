@@ -48,7 +48,7 @@ public abstract class AppModule {
                 .fallbackToDestructiveMigration()
                 .build();
        // Thread thread = new Thread(() -> database.clearAllTables());
-        //thread.start();
+       // thread.start();
         return database;
     }
 

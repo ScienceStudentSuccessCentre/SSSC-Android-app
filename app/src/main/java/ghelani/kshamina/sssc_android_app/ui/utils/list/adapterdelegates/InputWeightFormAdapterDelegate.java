@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates;
+package ghelani.kshamina.sssc_android_app.ui.utils.list.adapterdelegates;
 
 import android.app.Activity;
 import android.text.Editable;
@@ -17,8 +17,8 @@ import com.hannesdorfmann.adapterdelegates4.AdapterDelegate;
 import java.util.List;
 
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.WeightItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.WeightItem;
 
 public class InputWeightFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
     private LayoutInflater inflater;

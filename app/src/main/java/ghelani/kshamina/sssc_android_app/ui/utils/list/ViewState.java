@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.ui.common.list;
+package ghelani.kshamina.sssc_android_app.ui.utils.list;
 
 import java.util.List;
 

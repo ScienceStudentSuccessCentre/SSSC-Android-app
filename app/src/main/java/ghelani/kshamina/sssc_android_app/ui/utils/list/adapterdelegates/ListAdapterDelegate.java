@@ -1,4 +1,4 @@
-package ghelani.kshamina.sssc_android_app.ui.common.list.adapterdelegates;
+package ghelani.kshamina.sssc_android_app.ui.utils.list.adapterdelegates;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -16,8 +16,8 @@ import com.hannesdorfmann.adapterdelegates4.AdapterDelegate;
 import java.util.List;
 
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.ListItem;
 
 public class ListAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
 
@@ -45,7 +45,7 @@ public class ListAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
 
         listViewHolder.itemCard.setOnClickListener(v -> item.getClickListener().onItemClicked(item.getId()));
         listViewHolder.itemCard.setOnLongClickListener(v -> item.getClickListener().onItemLongClicked());
-        listViewHolder.deleteIcon.setOnClickListener(v -> item.getClickListener().deleteItem(item.getId()));
+        listViewHolder.deleteIcon.setOnClickListener(v -> item.getClickListener().deleteItem(position));
         listViewHolder.deleteIcon.setVisibility(item.isDeleteIconVisible() ? View.VISIBLE : View.GONE);
         listViewHolder.shortForm.setText((item.getShortFormText() == null || item.getShortFormText().isEmpty()) ? "N/A" : item.getShortFormText());
         listViewHolder.description.setText(item.getDescriptionText());
