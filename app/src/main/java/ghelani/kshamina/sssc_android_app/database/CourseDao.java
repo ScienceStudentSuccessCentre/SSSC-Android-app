@@ -14,7 +14,7 @@ import io.reactivex.Single;
 
 @Dao
 public interface CourseDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     void insertCourse(CourseEntity courseEntity);
 
     @Update

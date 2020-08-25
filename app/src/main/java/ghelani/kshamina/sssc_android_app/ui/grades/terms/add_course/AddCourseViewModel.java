@@ -134,7 +134,33 @@ public class AddCourseViewModel extends InputFormViewModel {
 
     @Override
     public void onSubmit() {
-        insertCourse();
+        if (updating) {
+            updateCourse();
+        } else {
+            insertCourse();
+        }
+    }
+
+    private void updateCourse() {
+        Completable.fromAction(() -> courseDao.updateCourse(newCourse))
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        addWeights();
+                        submitted.setValue(true);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
     private void insertCourse() {
@@ -254,12 +280,12 @@ public class AddCourseViewModel extends InputFormViewModel {
         submitEnabled.setValue((!newCourse.courseName.isEmpty() && !newCourse.courseCode.isEmpty() && newCourse.courseCredits != -1));
     }
 
-    public int getWeightsStartIndex(){
+    public int getWeightsStartIndex() {
         return 6;
     }
 
-    public int getWeightsEndIndex(){
-        return weights.size()-5;
+    public int getWeightsEndIndex() {
+        return weights.size() - 5;
     }
 
     public void setTermId(String termID) {

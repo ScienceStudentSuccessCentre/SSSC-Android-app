@@ -34,12 +34,14 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
     private AssignmentDao assignmentDao;
     private Weight weight;
     private WeightDao weightDao;
+    private boolean updating;
 
     @Inject
     public AddAssignmentViewModel(GradesDatabase db) {
         newAssignment = new Assignment("", -1, 0, "", "");
         this.assignmentDao = db.getAssignmentDao();
         this.weightDao = db.getWeightDao();
+        updating = false;
     }
 
     @Override
@@ -77,23 +79,43 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
     @Override
     public void onSubmit() {
 
-        Completable.fromAction(() -> assignmentDao.insertAssignment(newAssignment))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
+        if (updating) {
+            Completable.fromAction(() -> assignmentDao.updateAssignment(newAssignment))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new CompletableObserver() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                        }
 
-                    @Override
-                    public void onComplete() {
-                        submitted.setValue(true);
-                    }
+                        @Override
+                        public void onComplete() {
+                            submitted.setValue(true);
+                        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-                });
+                        @Override
+                        public void onError(Throwable e) {
+                        }
+                    });
+        } else {
+            Completable.fromAction(() -> assignmentDao.insertAssignment(newAssignment))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new CompletableObserver() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            submitted.setValue(true);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                        }
+                    });
+        }
 
     }
 
@@ -142,6 +164,7 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
     }
 
     public void fetchAssignmentToUpdate(String id) {
+        updating = true;
         assignmentDao.getAssignmentByID(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

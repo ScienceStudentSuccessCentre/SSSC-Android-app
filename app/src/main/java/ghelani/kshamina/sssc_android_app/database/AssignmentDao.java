@@ -15,8 +15,12 @@ import io.reactivex.Single;
 
 @Dao
 public interface AssignmentDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+
+    @Insert
     void insertAssignment(Assignment assignment);
+
+    @Update
+    void updateAssignment(Assignment assignment);
 
     @Delete
     void deleteAssignment(Assignment assignment);
