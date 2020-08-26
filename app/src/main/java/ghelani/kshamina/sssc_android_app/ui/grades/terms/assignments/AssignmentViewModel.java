@@ -3,30 +3,29 @@ package ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments;
 import android.os.AsyncTask;
 
 import androidx.fragment.app.Fragment;
+import androidx.hilt.Assisted;
+import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import ghelani.kshamina.sssc_android_app.database.AssignmentDao;
 import ghelani.kshamina.sssc_android_app.database.CourseDao;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
-import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.entity.AssignmentWithWeight;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.entity.CourseWithAssignmentsAndWeights;
+import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.UpdateAssignmentFragment;
 import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
 import ghelani.kshamina.sssc_android_app.ui.utils.events.SingleLiveEvent;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.ViewState;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.ListItem;
-import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -41,12 +40,14 @@ public class AssignmentViewModel extends ViewModel {
     private SingleLiveEvent<Fragment> navigationEvent = new SingleLiveEvent<>();
     private CourseWithAssignmentsAndWeights course;
     private boolean deleteMode;
+    private final SavedStateHandle savedStateHandle;
 
-    @Inject
-    public AssignmentViewModel(GradesDatabase gradesDatabase) {
+    @ViewModelInject
+    public AssignmentViewModel(GradesDatabase gradesDatabase, @Assisted SavedStateHandle savedStateHandle) {
         super();
         this.assignmentDao = gradesDatabase.getAssignmentDao();
         this.courseDao = gradesDatabase.getCourseDao();
+        this.savedStateHandle = savedStateHandle;
     }
 
     public void fetchCourseAssignments(String courseID) {

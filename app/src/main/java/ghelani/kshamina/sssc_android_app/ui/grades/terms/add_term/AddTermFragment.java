@@ -1,7 +1,11 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,34 +15,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Collections;
 
-import javax.inject.Inject;
-
-import dagger.android.support.AndroidSupportInjection;
+import dagger.hilt.android.AndroidEntryPoint;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
-import ghelani.kshamina.sssc_android_app.entity.Assignment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentViewModel;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 
+@AndroidEntryPoint
 public class AddTermFragment extends Fragment {
 
-    private Assignment assignment;
-
     private MainListAdapter adapter;
-
-    @Inject
-    ViewModelFactory viewModelFactory;
 
     private TextView title;
 
@@ -54,12 +41,6 @@ public class AddTermFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-    @Override
-    public void onAttach(@NotNull Context context) {
-        AndroidSupportInjection.inject(this);
-        super.onAttach(context);
-    }
 
     public static AddTermFragment newInstance() {
         AddTermFragment fragment = new AddTermFragment();
@@ -100,15 +81,15 @@ public class AddTermFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        addTermViewModel = new ViewModelProvider(this, viewModelFactory).get(AddTermViewModel.class);
+        addTermViewModel = new ViewModelProvider(this).get(AddTermViewModel.class);
 
-        addTermViewModel.getInputItems().observe(this, items -> {
+        addTermViewModel.getInputItems().observe(getViewLifecycleOwner(), items -> {
             adapter.setItems(items);
             adapter.notifyDataSetChanged();
         });
-        addTermViewModel.isSubmitEnabled().observe(this, isEnabled -> submitButton.setEnabled(isEnabled));
-        addTermViewModel.getNavigationEvent().observe(this, newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
-        addTermViewModel.isSubmitted().observe(this, isComplete -> {
+        addTermViewModel.isSubmitEnabled().observe(getViewLifecycleOwner(), isEnabled -> submitButton.setEnabled(isEnabled));
+        addTermViewModel.getNavigationEvent().observe(getViewLifecycleOwner(), newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
+        addTermViewModel.isSubmitted().observe(getViewLifecycleOwner(), isComplete -> {
             if (isComplete) {
                 returnToPreviousScreen();
             }

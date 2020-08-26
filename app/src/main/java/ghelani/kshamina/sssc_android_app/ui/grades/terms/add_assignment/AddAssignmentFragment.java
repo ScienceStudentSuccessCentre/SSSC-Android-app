@@ -1,7 +1,11 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,26 +15,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Collections;
 
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import dagger.android.support.AndroidSupportInjection;
+import dagger.hilt.android.AndroidEntryPoint;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 
+@AndroidEntryPoint
 public class AddAssignmentFragment extends Fragment {
 
     private static final String ASSIGNMENT_OBJECT = "assignment";
@@ -38,9 +31,6 @@ public class AddAssignmentFragment extends Fragment {
     private Assignment assignment;
 
     private MainListAdapter adapter;
-
-    @Inject
-    ViewModelFactory viewModelFactory;
 
     private TextView title;
 
@@ -54,12 +44,6 @@ public class AddAssignmentFragment extends Fragment {
 
     public AddAssignmentFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onAttach(@NotNull Context context) {
-        AndroidSupportInjection.inject(this);
-        super.onAttach(context);
     }
 
     public static AddAssignmentFragment newInstance(Assignment assignment) {
@@ -108,15 +92,15 @@ public class AddAssignmentFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        addAssignmentViewModel = new ViewModelProvider(this, viewModelFactory).get(AddAssignmentViewModel.class);
+        addAssignmentViewModel = new ViewModelProvider(this).get(AddAssignmentViewModel.class);
 
-        addAssignmentViewModel.getInputItems().observe(this, items -> {
+        addAssignmentViewModel.getInputItems().observe(getViewLifecycleOwner(), items -> {
             adapter.setItems(items);
             adapter.notifyDataSetChanged();
         });
-        addAssignmentViewModel.isSubmitEnabled().observe(this, isEnabled -> submitButton.setEnabled(isEnabled));
-        addAssignmentViewModel.getNavigationEvent().observe(this, newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
-        addAssignmentViewModel.isSubmitted().observe(this, isComplete -> {
+        addAssignmentViewModel.isSubmitEnabled().observe(getViewLifecycleOwner(), isEnabled -> submitButton.setEnabled(isEnabled));
+        addAssignmentViewModel.getNavigationEvent().observe(getViewLifecycleOwner(), newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
+        addAssignmentViewModel.isSubmitted().observe(getViewLifecycleOwner(), isComplete -> {
             if (isComplete) {
                 returnToPreviousScreen();
             }

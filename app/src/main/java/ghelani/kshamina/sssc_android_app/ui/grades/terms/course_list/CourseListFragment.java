@@ -1,7 +1,13 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,43 +20,28 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dagger.android.support.AndroidSupportInjection;
+import dagger.hilt.android.AndroidEntryPoint;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.entity.TermEntity;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseFragment;
-import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.SwipeToDeleteCallback;
 
+@AndroidEntryPoint
 public class CourseListFragment extends Fragment {
 
     public static final String EXTRA_TERM = "term";
 
     private TermEntity term;
-
-    @Inject
-    ViewModelFactory viewModelFactory;
 
     private CoursesViewModel courseViewModel;
 
@@ -75,12 +66,6 @@ public class CourseListFragment extends Fragment {
         CourseListFragment fragment = new CourseListFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onAttach(@NotNull Context context) {
-        AndroidSupportInjection.inject(this);
-        super.onAttach(context);
     }
 
     @Override
@@ -117,8 +102,8 @@ public class CourseListFragment extends Fragment {
         courseRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         courseRecyclerView.setAdapter(adapter);
 
-        courseViewModel = new ViewModelProvider(this, viewModelFactory).get(CoursesViewModel.class);
-        courseViewModel.state.observe(this, courseListViewState -> {
+        courseViewModel = new ViewModelProvider(this).get(CoursesViewModel.class);
+        courseViewModel.state.observe(getViewLifecycleOwner(), courseListViewState -> {
             if (courseListViewState.isLoading()) {
                 System.out.println("Courses Loading");
             } else if (courseListViewState.isError()) {
@@ -137,9 +122,9 @@ public class CourseListFragment extends Fragment {
             }
         });
 
-        courseViewModel.navigationEvent.observe(this, newFragment -> replaceFragment(newFragment));
-        courseViewModel.creditsState.observe(this, credits -> creditsText.setText("Credits: " + credits));
-        courseViewModel.termGPA.observe(this, gpa -> gpaText.setText("Term GPA: " + (gpa == -1 ? "N/A" : gpa)));
+        courseViewModel.navigationEvent.observe(getViewLifecycleOwner(), newFragment -> replaceFragment(newFragment));
+        courseViewModel.creditsState.observe(getViewLifecycleOwner(), credits -> creditsText.setText("Credits: " + credits));
+        courseViewModel.termGPA.observe(getViewLifecycleOwner(), gpa -> gpaText.setText("Term GPA: " + (gpa == -1 ? "N/A" : gpa)));
         courseViewModel.fetchCoursesByTermId(term.termId);
     }
 

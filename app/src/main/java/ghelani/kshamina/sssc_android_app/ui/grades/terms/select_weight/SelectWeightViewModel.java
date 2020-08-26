@@ -1,5 +1,8 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.select_weight;
+import androidx.hilt.Assisted;
+import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.SavedStateHandle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +28,13 @@ public class SelectWeightViewModel extends InputFormViewModel {
     private String courseId;
     private int selectedIndex;
     private SingleLiveEvent<Weight> selectedWeight = new SingleLiveEvent<>();
+    private final SavedStateHandle savedStateHandle;
 
-    @Inject
-    public SelectWeightViewModel(GradesDatabase db){
+    @ViewModelInject
+    public SelectWeightViewModel(GradesDatabase db, @Assisted SavedStateHandle savedStateHandle){
         weightDao = db.getWeightDao();
         selectedIndex = -1;
+        this.savedStateHandle = savedStateHandle;
     }
 
     @Override

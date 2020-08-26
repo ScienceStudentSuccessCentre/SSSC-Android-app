@@ -1,11 +1,11 @@
 package ghelani.kshamina.sssc_android_app;
 
 
-import dagger.android.AndroidInjector;
-import dagger.android.support.DaggerApplication;
-import ghelani.kshamina.sssc_android_app.dagger.DaggerAppComponent;
+import android.app.Application;
 
-public class MainApplication extends DaggerApplication {
+import dagger.hilt.android.HiltAndroidApp;
+@HiltAndroidApp
+public class MainApplication extends Application {
 
     private boolean enableEmailEventRegistration = true;
     private boolean enableEmailMentorRegistration = true;
@@ -56,10 +56,5 @@ public class MainApplication extends DaggerApplication {
 
     public void setDegree(String degree) {
         this.degree = degree;
-    }
-
-    @Override
-    protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
-        return DaggerAppComponent.builder().application(this).build();
     }
 }

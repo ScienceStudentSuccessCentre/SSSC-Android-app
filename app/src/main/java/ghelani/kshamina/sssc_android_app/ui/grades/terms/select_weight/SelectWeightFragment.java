@@ -1,7 +1,11 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.select_weight;
 
-import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,28 +15,16 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Collections;
 
-import javax.inject.Inject;
-
-import dagger.android.support.AndroidSupportInjection;
+import dagger.hilt.android.AndroidEntryPoint;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.entity.Weight;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.SelectItemViewModel;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermViewModel;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 
+@AndroidEntryPoint
 public class SelectWeightFragment extends Fragment {
 
     private static final String ARG_VIEW_MODEL = "viewmodel";
@@ -43,9 +35,6 @@ public class SelectWeightFragment extends Fragment {
     private SelectItemViewModel<Weight> selectItemViewModel;
 
     private MainListAdapter adapter;
-
-    @Inject
-    ViewModelFactory viewModelFactory;
 
     private TextView title;
 
@@ -59,12 +48,6 @@ public class SelectWeightFragment extends Fragment {
 
     public SelectWeightFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onAttach(@NotNull Context context) {
-        AndroidSupportInjection.inject(this);
-        super.onAttach(context);
     }
 
     public static SelectWeightFragment newInstance(SelectItemViewModel<Weight> viewModel, String courseId) {
@@ -116,7 +99,7 @@ public class SelectWeightFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         submitButton.setVisibility(View.GONE);
-        selectWeightViewModel = new ViewModelProvider(this, viewModelFactory).get(SelectWeightViewModel.class);
+        selectWeightViewModel = new ViewModelProvider(this).get(SelectWeightViewModel.class);
         selectWeightViewModel.setId(courseId);
         selectWeightViewModel.createItemsList();
 

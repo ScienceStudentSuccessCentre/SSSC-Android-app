@@ -1,6 +1,5 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,18 +23,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Collections;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dagger.android.support.AndroidSupportInjection;
+import dagger.hilt.android.AndroidEntryPoint;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.UpdateCourseFragment;
@@ -46,6 +40,7 @@ import ghelani.kshamina.sssc_android_app.ui.utils.list.SwipeToDeleteCallback;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
+@AndroidEntryPoint
 public class AssignmentListFragment extends Fragment {
 
     private static final String COURSE_ID = "courseID";
@@ -53,9 +48,6 @@ public class AssignmentListFragment extends Fragment {
     private String courseID;
 
     private AssignmentViewModel assignmentViewModel;
-
-    @Inject
-    ViewModelFactory viewModelFactory;
 
     @BindView(R.id.assignmentsRecyclerView)
     RecyclerView assignmentRecyclerView;
@@ -88,12 +80,6 @@ public class AssignmentListFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(@NotNull Context context) {
-        AndroidSupportInjection.inject(this);
-        super.onAttach(context);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -117,7 +103,7 @@ public class AssignmentListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         assignmentRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
-        assignmentViewModel = new ViewModelProvider(this, viewModelFactory).get(AssignmentViewModel.class);
+        assignmentViewModel = new ViewModelProvider(this).get(AssignmentViewModel.class);
 
         MainListAdapter adapter = new MainListAdapter(getActivity(), Collections.emptyList());
         ItemTouchHelper swipeHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(), adapter, assignmentRecyclerView, (index -> assignmentViewModel.deleteAssignment(index))));

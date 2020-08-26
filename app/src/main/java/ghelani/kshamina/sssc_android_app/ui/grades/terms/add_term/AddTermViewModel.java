@@ -1,5 +1,9 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term;
 
+import androidx.hilt.Assisted;
+import androidx.hilt.lifecycle.ViewModelInject;
+import androidx.lifecycle.SavedStateHandle;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -28,14 +32,16 @@ public class AddTermViewModel extends InputFormViewModel {
     private int selectedYearIndex;
     private int selectedSeasonIndex;
     private TermDao termDao;
+    private final SavedStateHandle savedStateHandle;
 
-    @Inject
-    public AddTermViewModel(GradesDatabase db) {
+    @ViewModelInject
+    public AddTermViewModel(GradesDatabase db, @Assisted SavedStateHandle savedStateHandle) {
         season = "";
         year = "";
         selectedSeasonIndex = -1;
         selectedYearIndex = -1;
         this.termDao = db.getTermDao();
+        this.savedStateHandle = savedStateHandle;
     }
 
     @Override

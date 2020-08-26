@@ -2,6 +2,10 @@ package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course;
 
 import android.text.InputType;
 
+import androidx.hilt.Assisted;
+import androidx.hilt.lifecycle.ViewModelInject;
+import androidx.lifecycle.SavedStateHandle;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +18,10 @@ import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.entity.Weight;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.SelectItemViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.select_grade.SelectGradeFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.select_weight.SelectWeightFragment;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.InputItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.TextItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.WeightItem;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormViewModel;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Scheduler;
@@ -38,9 +39,10 @@ public class AddCourseViewModel extends SelectItemViewModel<String> {
     private List<Weight> weights;
     private CourseEntity newCourse;
     private boolean updating;
+    private final SavedStateHandle savedStateHandle;
 
-    @Inject
-    public AddCourseViewModel(GradesDatabase gradesDatabase) {
+    @ViewModelInject
+    public AddCourseViewModel(GradesDatabase gradesDatabase, @Assisted SavedStateHandle savedStateHandle) {
 
         this.courseDao = gradesDatabase.getCourseDao();
         this.weightDao = gradesDatabase.getWeightDao();
@@ -49,6 +51,7 @@ public class AddCourseViewModel extends SelectItemViewModel<String> {
         weights = new ArrayList<>();
         newCourse = new CourseEntity();
         updating = false;
+        this.savedStateHandle = savedStateHandle;
     }
 
     @Override

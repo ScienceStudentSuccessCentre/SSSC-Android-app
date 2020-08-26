@@ -2,6 +2,10 @@ package ghelani.kshamina.sssc_android_app.ui.grades.terms.required_final_grade;
 
 import android.text.InputType;
 
+import androidx.hilt.Assisted;
+import androidx.hilt.lifecycle.ViewModelInject;
+import androidx.lifecycle.SavedStateHandle;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,14 +39,16 @@ public class RequiredFinalGradeViewModel extends SelectItemViewModel<Weight> {
     private double desiredFinalGrade;
     private Weight finalExamWeight;
     private double requiredExamGrade;
+    private final SavedStateHandle savedStateHandle;
 
-    @Inject
-    public RequiredFinalGradeViewModel(GradesDatabase gradesDatabase) {
+    @ViewModelInject
+    public RequiredFinalGradeViewModel(GradesDatabase gradesDatabase, @Assisted SavedStateHandle savedStateHandle) {
         this.courseDao = gradesDatabase.getCourseDao();
         this.weightDao = gradesDatabase.getWeightDao();
         this.backgroundScheduler = Schedulers.io();
         this.mainScheduler = AndroidSchedulers.mainThread();
         desiredFinalGrade = -1;
+        this.savedStateHandle = savedStateHandle;
     }
 
     public void getCourseAndWeights(String courseID) {

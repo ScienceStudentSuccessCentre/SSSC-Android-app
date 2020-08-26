@@ -1,6 +1,9 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.select_grade;
 
+import androidx.hilt.Assisted;
+import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.SavedStateHandle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +21,13 @@ public class SelectFinalGradeViewModel extends InputFormViewModel {
     private SingleLiveEvent<String> selectGrade = new SingleLiveEvent<>();
     private int selectedIndex;
     private String[] letterGrades;
+    private final SavedStateHandle savedStateHandle;
 
-    @Inject
-    public SelectFinalGradeViewModel(String[] letterGrades) {
+    @ViewModelInject
+    public SelectFinalGradeViewModel(String[] letterGrades, @Assisted SavedStateHandle savedStateHandle) {
         selectedIndex = -1;
         this.letterGrades = letterGrades;
+        this.savedStateHandle = savedStateHandle;
     }
 
     @Override

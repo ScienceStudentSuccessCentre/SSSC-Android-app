@@ -1,6 +1,5 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,22 +23,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Collections;
 
-import javax.inject.Inject;
-
-import dagger.android.support.AndroidSupportInjection;
+import dagger.hilt.android.AndroidEntryPoint;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermFragment;
-import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CourseListFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.SwipeToDeleteCallback;
 
+@AndroidEntryPoint
 public class TermsFragment extends Fragment {
-
-    @Inject
-    ViewModelFactory viewModelFactory;
 
     private TermsViewModel termsViewModel;
 
@@ -65,12 +58,6 @@ public class TermsFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        AndroidSupportInjection.inject(this);
-        super.onAttach(context);
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Terms");
@@ -87,7 +74,7 @@ public class TermsFragment extends Fragment {
         swipeHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(adapter);
 
-        termsViewModel = new ViewModelProvider(this, viewModelFactory).get(TermsViewModel.class);
+        termsViewModel = new ViewModelProvider(this).get(TermsViewModel.class);
         termsViewModel.state.observe(this, termViewState -> {
             if (termViewState.isLoading()) {
                 System.out.println("Terms Loading");

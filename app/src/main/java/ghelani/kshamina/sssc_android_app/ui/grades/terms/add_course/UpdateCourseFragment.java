@@ -1,6 +1,5 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,30 +17,20 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
-
-import javax.inject.Inject;
-
-import dagger.android.support.AndroidSupportInjection;
+import dagger.hilt.android.AndroidEntryPoint;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
-import ghelani.kshamina.sssc_android_app.entity.TermEntity;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 
+@AndroidEntryPoint
 public class UpdateCourseFragment extends Fragment {
 
     private static final String UPDATE_COURSE= "update_course";
 
     private CourseEntity updateCourse;
 
-    private TermEntity term;
-
     private MainListAdapter adapter;
-
-    @Inject
-    ViewModelFactory viewModelFactory;
 
     private TextView title;
 
@@ -64,13 +53,6 @@ public class UpdateCourseFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-    @Override
-    public void onAttach(@NotNull Context context) {
-        AndroidSupportInjection.inject(this);
-        super.onAttach(context);
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,7 +86,7 @@ public class UpdateCourseFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        addCourseViewModel = new ViewModelProvider(this, viewModelFactory).get(AddCourseViewModel.class);
+        addCourseViewModel = new ViewModelProvider(this).get(AddCourseViewModel.class);
 
         addCourseViewModel.setTermId(updateCourse.courseTermId);
 

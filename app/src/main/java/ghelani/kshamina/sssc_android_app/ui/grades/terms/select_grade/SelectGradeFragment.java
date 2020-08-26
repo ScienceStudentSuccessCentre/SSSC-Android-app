@@ -1,6 +1,5 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.select_grade;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,22 +15,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Collections;
 
-import javax.inject.Inject;
-
-import dagger.android.support.AndroidSupportInjection;
+import dagger.hilt.android.AndroidEntryPoint;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
-import ghelani.kshamina.sssc_android_app.entity.Weight;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.SelectItemViewModel;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseViewModel;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.select_weight.SelectWeightViewModel;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 
+@AndroidEntryPoint
 public class SelectGradeFragment extends Fragment {
 
     private static final String ARG_VIEW_MODEL = "viewmodel";
@@ -39,9 +31,6 @@ public class SelectGradeFragment extends Fragment {
     private SelectItemViewModel<String> selectItemViewModel;
 
     private MainListAdapter adapter;
-
-    @Inject
-    ViewModelFactory viewModelFactory;
 
     private TextView title;
 
@@ -55,12 +44,6 @@ public class SelectGradeFragment extends Fragment {
 
     public SelectGradeFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onAttach(@NotNull Context context) {
-        AndroidSupportInjection.inject(this);
-        super.onAttach(context);
     }
 
     public static SelectGradeFragment newInstance(SelectItemViewModel<String> viewModel) {
@@ -110,7 +93,7 @@ public class SelectGradeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         submitButton.setVisibility(View.GONE);
-        selectFinalGradeViewModel = new ViewModelProvider(this, viewModelFactory).get(SelectFinalGradeViewModel.class);
+        selectFinalGradeViewModel = new ViewModelProvider(this).get(SelectFinalGradeViewModel.class);
         selectFinalGradeViewModel.createItemsList();
 
         selectFinalGradeViewModel.getInputItems().observe(this, items -> recyclerView.setAdapter(new MainListAdapter(requireActivity(), items)));

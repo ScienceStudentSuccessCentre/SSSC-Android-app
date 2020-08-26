@@ -2,8 +2,11 @@ package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment;
 
 import android.text.InputType;
 
+import androidx.hilt.Assisted;
+import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.SavedStateHandle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +19,11 @@ import ghelani.kshamina.sssc_android_app.database.WeightDao;
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.entity.AssignmentWithWeight;
 import ghelani.kshamina.sssc_android_app.entity.Weight;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.SelectItemViewModel;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.select_weight.SelectWeightFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.select_weight.SelectWeightViewModel;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.InputItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.TextItem;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.SelectItemViewModel;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormFragment;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
@@ -38,13 +39,15 @@ public class AddAssignmentViewModel extends SelectItemViewModel<Weight> {
     private Weight weight;
     private WeightDao weightDao;
     private boolean updating;
+    private final SavedStateHandle savedStateHandle;
 
-    @Inject
-    public AddAssignmentViewModel(GradesDatabase db) {
+    @ViewModelInject
+    public AddAssignmentViewModel(GradesDatabase db, @Assisted SavedStateHandle savedStateHandle) {
         newAssignment = new Assignment("", -1, 0, "", "");
         this.assignmentDao = db.getAssignmentDao();
         this.weightDao = db.getWeightDao();
         updating = false;
+        this.savedStateHandle = savedStateHandle;
     }
 
     @Override

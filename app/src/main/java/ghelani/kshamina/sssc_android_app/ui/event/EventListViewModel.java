@@ -1,8 +1,11 @@
 package ghelani.kshamina.sssc_android_app.ui.event;
 
 import androidx.fragment.app.Fragment;
+import androidx.hilt.Assisted;
+import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
@@ -27,10 +30,13 @@ public class EventListViewModel extends ViewModel {
     private NetworkManager networkManager;
     private MutableLiveData<List<DiffItem>> events = new MutableLiveData<>();
     private SingleLiveEvent<Fragment> navigationEvent = new SingleLiveEvent<>();
+    private final SavedStateHandle savedStateHandle;
 
-    @Inject
-    public EventListViewModel(NetworkManager networkManager) {
+
+    @ViewModelInject
+    public EventListViewModel(NetworkManager networkManager, @Assisted SavedStateHandle savedStateHandle) {
         this.networkManager = networkManager;
+        this.savedStateHandle = savedStateHandle;
     }
 
     public void fetchEvents() {

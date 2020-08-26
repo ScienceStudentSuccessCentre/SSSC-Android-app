@@ -1,9 +1,12 @@
 package ghelani.kshamina.sssc_android_app.ui.mentoring;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,28 +15,18 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import javax.inject.Inject;
-
 import butterknife.ButterKnife;
-import dagger.android.support.AndroidSupportInjection;
+import dagger.hilt.android.AndroidEntryPoint;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.MainApplication;
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
-import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.email_dialog.EmailBuilder;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 
-public class MentorListFragment extends Fragment {
-
-    @Inject
-    ViewModelFactory viewModelFactory;
+@AndroidEntryPoint
+public class MentorListFragment extends Fragment { ;
 
     private RecyclerView mentorRecyclerView;
 
@@ -48,12 +41,6 @@ public class MentorListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        AndroidSupportInjection.inject(this);
-        super.onAttach(context);
     }
 
     @Override
@@ -93,7 +80,7 @@ public class MentorListFragment extends Fragment {
         mentorRecyclerView = view.findViewById(R.id.mentorRecyclerView);
         mentorRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
 
-        mentorListViewModel = new ViewModelProvider(this, viewModelFactory).get(MentorListViewModel.class);
+        mentorListViewModel = new ViewModelProvider(this).get(MentorListViewModel.class);
 
         mentorListViewModel.getMentors().observe(this, mentors -> {
             if (mentors.isEmpty()) {

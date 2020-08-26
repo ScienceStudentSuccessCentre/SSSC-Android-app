@@ -1,7 +1,10 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list;
 
 import androidx.fragment.app.Fragment;
+import androidx.hilt.Assisted;
+import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
@@ -36,12 +39,14 @@ public class CoursesViewModel extends ViewModel {
     public MutableLiveData<Double> creditsState = new MutableLiveData<>();
     public MutableLiveData<Double> termGPA = new MutableLiveData<>();
     public final SingleLiveEvent<Fragment> navigationEvent = new SingleLiveEvent<>();
+    private final SavedStateHandle savedStateHandle;
 
-    @Inject
-    public CoursesViewModel(GradesDatabase gradesDatabase) {
+    @ViewModelInject
+    public CoursesViewModel(GradesDatabase gradesDatabase, @Assisted SavedStateHandle savedStateHandle) {
         super();
         this.courseDao = gradesDatabase.getCourseDao();
         isDeleteMode = false;
+        this.savedStateHandle = savedStateHandle;
     }
 
     public void fetchCoursesByTermId(String termId) {

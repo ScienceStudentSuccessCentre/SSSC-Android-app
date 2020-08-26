@@ -1,41 +1,33 @@
 package ghelani.kshamina.sssc_android_app;
 
 import android.os.Bundle;
+import android.webkit.WebView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
-import android.webkit.WebView;
-
 import com.facebook.stetho.Stetho;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 
-import javax.inject.Inject;
-
-import dagger.android.AndroidInjection;
-import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
+import dagger.hilt.android.AndroidEntryPoint;
 import ghelani.kshamina.sssc_android_app.ui.ResourcesFragment;
 import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
 import ghelani.kshamina.sssc_android_app.ui.event.EventsFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.GradesFragment;
 import ghelani.kshamina.sssc_android_app.ui.mentoring.MentorListFragment;
 
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView navigationView;
 
-    @Inject
-    ViewModelFactory viewModelFactory;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         Stetho.initializeWithDefaults(this);
         setContentView(R.layout.activity_main);
@@ -45,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         changeFragment(new EventsFragment());
         setupBottomNav();
 
-        FeaturesViewModel featuresViewModel = new ViewModelProvider(this, viewModelFactory).get(FeaturesViewModel.class);
+        FeaturesViewModel featuresViewModel = new ViewModelProvider(this).get(FeaturesViewModel.class);
 
         featuresViewModel.getFeatures().observe(this, features -> {
             MainApplication application = (MainApplication) getApplication();

@@ -1,6 +1,9 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list;
 
+import androidx.hilt.Assisted;
+import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
@@ -31,12 +34,14 @@ public class TermsViewModel extends ViewModel {
     public MutableLiveData<TermEntity> termSelected = new MutableLiveData<>();
     private List<TermEntity> termsList = Collections.emptyList();
     private boolean isDeleteMode;
+    private final SavedStateHandle savedStateHandle;
 
-    @Inject
-    public TermsViewModel(GradesDatabase db) {
+    @ViewModelInject
+    public TermsViewModel(GradesDatabase db, @Assisted SavedStateHandle savedStateHandle) {
         super();
         this.termDao = db.getTermDao();
         isDeleteMode = false;
+        this.savedStateHandle = savedStateHandle;
     }
 
     public void fetchTerms() {

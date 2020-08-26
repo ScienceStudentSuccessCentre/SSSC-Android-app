@@ -1,6 +1,5 @@
 package ghelani.kshamina.sssc_android_app.ui.event;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,24 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Collections;
 
-import javax.inject.Inject;
-
-import dagger.android.support.AndroidSupportInjection;
+import dagger.hilt.android.AndroidEntryPoint;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
-import ghelani.kshamina.sssc_android_app.dagger.ViewModelFactory;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 
+@AndroidEntryPoint
 public class EventsFragment extends Fragment {
-
-    @Inject
-    ViewModelFactory viewModelFactory;
-
-    @Override
-    public void onAttach(Context context) {
-        AndroidSupportInjection.inject(this);
-        super.onAttach(context);
-    }
 
     public EventsFragment() {
     }
@@ -57,7 +45,7 @@ public class EventsFragment extends Fragment {
         MainListAdapter listAdapter = new MainListAdapter(getActivity(), Collections.emptyList());
         recyclerView.setAdapter(listAdapter);
 
-        EventListViewModel eventListViewModel = new ViewModelProvider(this, viewModelFactory).get(EventListViewModel.class);
+        EventListViewModel eventListViewModel = new ViewModelProvider(this).get(EventListViewModel.class);
 
         eventListViewModel.getEvents().observe(this, events -> {
             listAdapter.setItems(events);
