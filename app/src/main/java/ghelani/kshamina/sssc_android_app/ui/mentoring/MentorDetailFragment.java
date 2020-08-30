@@ -1,61 +1,42 @@
 package ghelani.kshamina.sssc_android_app.ui.mentoring;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import ghelani.kshamina.sssc_android_app.MainApplication;
 import ghelani.kshamina.sssc_android_app.R;
+import ghelani.kshamina.sssc_android_app.entity.Mentor;
 import ghelani.kshamina.sssc_android_app.ui.email_dialog.EmailBuilder;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class MentorDetailFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_IMAGE_URL = "imageURL";
-    private static final String ARG_NAME = "name";
-    private static final String ARG_BIO = "bio";
-    private static final String ARG_DEGREE = "degree";
-    private static final String ARG_TEAM = "team";
+    private static final String ARG_MENTOR = "mentor";
 
-    // TODO: Rename and change types of parameters
-    private String imageURL;
-    private String mentorName;
-    private String mentorBio;
-    private String mentorDegree;
-    private String mentorTeam;
+    private Mentor mentor;
 
     public MentorDetailFragment() {
         // Required empty public constructor
     }
 
-
-    // TODO: Rename and change types and number of parameters
-    public static MentorDetailFragment newInstance(String url, String name, String bio, String degree, String team) {
+    public static MentorDetailFragment newInstance(Mentor mentor) {
         MentorDetailFragment fragment = new MentorDetailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_IMAGE_URL, url);
-        args.putString(ARG_NAME, name);
-        args.putString(ARG_BIO, bio);
-        args.putString(ARG_DEGREE, degree);
-        args.putString(ARG_TEAM, team);
+        args.putSerializable(ARG_MENTOR, mentor);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,11 +45,7 @@ public class MentorDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            imageURL = getArguments().getString(ARG_IMAGE_URL);
-            mentorName = getArguments().getString(ARG_NAME);
-            mentorBio = getArguments().getString(ARG_BIO);
-            mentorDegree = getArguments().getString(ARG_DEGREE);
-            mentorTeam = getArguments().getString(ARG_TEAM);
+            mentor = (Mentor) getArguments().getSerializable(ARG_MENTOR);
         }
     }
 
@@ -107,11 +84,11 @@ public class MentorDetailFragment extends Fragment {
         TextView mentorDegreeTextView = view.findViewById(R.id.mentorDegree);
         TextView mentorTeamTextView = view.findViewById(R.id.mentorTeam);
 
-        mentorNameTextView.setText(mentorName);
-        mentorBioTextView.setText(Html.fromHtml(mentorBio));
-        mentorDegreeTextView.setText(mentorDegree);
-        mentorTeamTextView.setText(mentorTeam);
-        Picasso.get().load(imageURL).transform(new RoundedCornersTransformation(250, 5)).into(mentorImage);
+        mentorNameTextView.setText(mentor.getName());
+        mentorBioTextView.setText(Html.fromHtml(mentor.getBio()));
+        mentorDegreeTextView.setText(mentor.getDegree());
+        mentorTeamTextView.setText(mentor.getTeam());
+        Picasso.get().load(mentor.getImageUrl()).transform(new RoundedCornersTransformation(250, 5)).into(mentorImage);
     }
 
     private void sendMentorRegistrationEmail() {

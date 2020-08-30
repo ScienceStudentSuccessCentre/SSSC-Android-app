@@ -10,14 +10,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.database.TermDao;
 import ghelani.kshamina.sssc_android_app.entity.TermEntity;
 import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
-import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.ViewState;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.ListItem;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;

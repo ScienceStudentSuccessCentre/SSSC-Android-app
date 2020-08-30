@@ -29,6 +29,9 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.ShareCompat;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -74,14 +77,16 @@ public class EventSingleFragment extends Fragment {
         setHasOptionsMenu(true);
 
         Toolbar toolbar = view.findViewById(R.id.eventDetailToolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        event = (Event) getArguments().getSerializable("event");
+        if (getArguments() != null) {
+            event = (Event) getArguments().getSerializable("event");
+        }
 
         preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         eventNotification = preferences.getBoolean(event.getId(), false);
@@ -108,7 +113,7 @@ public class EventSingleFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.main_menu, menu);
@@ -116,7 +121,7 @@ public class EventSingleFragment extends Fragment {
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NotNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         MenuItem notification = menu.findItem(R.id.notification);
         MenuItem bookEvent = menu.findItem(R.id.actionURL);
@@ -127,7 +132,7 @@ public class EventSingleFragment extends Fragment {
             notification.setIcon(R.drawable.ic_notifications_none_white_24dp);
         }
 
-        MainApplication appSettings = (MainApplication) getActivity().getApplication();
+        MainApplication appSettings = (MainApplication) requireActivity().getApplication();
         if (appSettings.isEnableEmailEventRegistration() && event.getActionUrl().contains("https://central.carleton.ca")) {
             bookEvent.setIcon(R.drawable.ic_email_24);
         } else {
@@ -139,7 +144,7 @@ public class EventSingleFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.share:
-                ShareCompat.IntentBuilder.from(getActivity())
+                ShareCompat.IntentBuilder.from(requireActivity())
                         .setType("text/plain")
                         .setChooserTitle("Share event link!")
                         .setText(event.getUrl())
@@ -147,7 +152,7 @@ public class EventSingleFragment extends Fragment {
                 break;
 
             case R.id.actionURL:
-                if (((MainApplication) getActivity().getApplication()).isEnableEmailEventRegistration() && event.getActionUrl().contains("https://central.carleton.ca/")) {
+                if (((MainApplication) requireActivity().getApplication()).isEnableEmailEventRegistration() && event.getActionUrl().contains("https://central.carleton.ca/")) {
                     sendEventRegistrationEmail();
                 } else {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW,
@@ -174,7 +179,7 @@ public class EventSingleFragment extends Fragment {
         notificationIntent.putExtra("notification", notification);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 34232, notificationIntent, 0);
 
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) requireActivity().getSystemService(Context.ALARM_SERVICE);
 
         if (eventNotification) {
             alarmManager.set(AlarmManager.RTC_WAKEUP, event.getNotificationTime(), pendingIntent);
@@ -202,7 +207,7 @@ public class EventSingleFragment extends Fragment {
                     .setMessage("You'll be sent a notification an hour before this event starts.")
                     .show();
         }
-        getActivity().invalidateOptionsMenu();
+        requireActivity().invalidateOptionsMenu();
     }
 
     private Notification getNotification() {
@@ -211,12 +216,12 @@ public class EventSingleFragment extends Fragment {
 
         Intent resultIntent = new Intent(getContext(), MainActivity.class);
         resultIntent.putExtra("event", event);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getContext());
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(requireContext());
         stackBuilder.addNextIntentWithParentStack(resultIntent);
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), "channel_id")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(requireContext(), "channel_id")
                 .setSmallIcon(R.drawable.ic_sssc)
                 .setColor(Color.RED)
                 .setContentTitle(title)
@@ -236,11 +241,7 @@ public class EventSingleFragment extends Fragment {
                 //download the drawable
                 final Drawable drawable = Drawable.createFromStream((InputStream) new URL(event.getImageURL()).getContent(), "src");
                 //edit the view in the UI thread
-                imageView.post(new Runnable() {
-                    public void run() {
-                        imageView.setImageDrawable(drawable);
-                    }
-                });
+                imageView.post(() -> imageView.setImageDrawable(drawable));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -248,11 +249,11 @@ public class EventSingleFragment extends Fragment {
     }
 
     private void sendEventRegistrationEmail() {
-        MainApplication appSettings = (MainApplication) getActivity().getApplication();
+        MainApplication appSettings = (MainApplication) requireActivity().getApplication();
         if (appSettings.hasStudentInformation()) {
-            EmailBuilder.confirmSendEmail(getActivity(), EmailBuilder.EmailType.EVENT_REGISTRATION, event);
+            EmailBuilder.confirmSendEmail(requireActivity(), EmailBuilder.EmailType.EVENT_REGISTRATION, event);
         } else {
-            EmailBuilder.showStudentNameDialog(getActivity(), EmailBuilder.EmailType.EVENT_REGISTRATION, event);
+            EmailBuilder.showStudentNameDialog(requireActivity(), EmailBuilder.EmailType.EVENT_REGISTRATION, event);
         }
     }
 

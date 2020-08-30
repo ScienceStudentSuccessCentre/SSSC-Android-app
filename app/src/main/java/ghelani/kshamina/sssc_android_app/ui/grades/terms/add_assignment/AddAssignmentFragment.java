@@ -32,13 +32,7 @@ public class AddAssignmentFragment extends Fragment {
 
     private MainListAdapter adapter;
 
-    private TextView title;
-
-    private RecyclerView recyclerView;
-
     private Button submitButton;
-
-    private Button cancelButton;
 
     private AddAssignmentViewModel addAssignmentViewModel;
 
@@ -68,10 +62,10 @@ public class AddAssignmentFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_input_form, container, false);
 
-        recyclerView = view.findViewById(R.id.inputRecyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.inputRecyclerView);
         submitButton = view.findViewById(R.id.submitButton);
-        title = view.findViewById(R.id.title);
-        cancelButton = view.findViewById(R.id.cancelButton);
+        TextView title = view.findViewById(R.id.title);
+        Button cancelButton = view.findViewById(R.id.cancelButton);
 
         DividerItemDecoration decoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
 
@@ -111,12 +105,8 @@ public class AddAssignmentFragment extends Fragment {
     }
 
     private void returnToPreviousScreen() {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.popBackStackImmediate();
-    }
-
-    public AddAssignmentViewModel getViewModel() {
-        return addAssignmentViewModel;
     }
 
     @Override

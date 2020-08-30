@@ -15,29 +15,34 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
-import ghelani.kshamina.sssc_android_app.entity.TermEntity;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.SwipeToDeleteCallback;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.WeightItem;
 
 @AndroidEntryPoint
 public class AddCourseFragment extends Fragment {
 
-    private static final String TERM = "term";
+    private static final String ARG_COURSE = "course";
+    private static final String ARG_UPDATE = "update";
 
-    private CourseEntity updateCourse;
+    private boolean updating;
 
-    private TermEntity term;
+    private CourseEntity course;
 
     private MainListAdapter adapter;
-
-    private TextView title;
-
-    private RecyclerView recyclerView;
 
     private Button submitButton;
 
@@ -45,14 +50,17 @@ public class AddCourseFragment extends Fragment {
 
     private AddCourseViewModel addCourseViewModel;
 
+    private List<DiffItem> listItems = new ArrayList<>();
+
     public AddCourseFragment() {
         // Required empty public constructor
     }
 
-    public static AddCourseFragment newInstance(TermEntity term) {
+    public static AddCourseFragment newInstance(CourseEntity course, boolean update) {
         AddCourseFragment fragment = new AddCourseFragment();
         Bundle args = new Bundle();
-        args.putSerializable(TERM, term);
+        args.putSerializable(ARG_COURSE, course);
+        args.putBoolean(ARG_UPDATE, update);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,7 +69,8 @@ public class AddCourseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            term = (TermEntity) getArguments().getSerializable(TERM);
+            course = (CourseEntity) getArguments().getSerializable(ARG_COURSE);
+            updating = getArguments().getBoolean(ARG_UPDATE);
         }
     }
 
@@ -70,16 +79,24 @@ public class AddCourseFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_input_form, container, false);
 
-        recyclerView = view.findViewById(R.id.inputRecyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.inputRecyclerView);
         submitButton = view.findViewById(R.id.submitButton);
-        title = view.findViewById(R.id.title);
+        TextView title = view.findViewById(R.id.title);
         cancelButton = view.findViewById(R.id.cancelButton);
 
         DividerItemDecoration decoration = courseListDecoration();
 
         recyclerView.addItemDecoration(decoration);
 
-        title.setText(updateCourse != null ? "Update Course" : "New Course");
+        adapter = new MainListAdapter(requireActivity(), listItems);
+        recyclerView.setAdapter(adapter);
+
+        ItemTouchHelper swipeHelper = new ItemTouchHelper(
+                new SwipeToDeleteCallback(getContext(), (index) -> addCourseViewModel.removeWeight(index)));
+        swipeHelper.attachToRecyclerView(recyclerView);
+
+        title.setText(updating ? "Update Course" : "New Course");
+        submitButton.setText(updating ? "UPDATE" : "CREATE");
 
         return view;
     }
@@ -90,14 +107,32 @@ public class AddCourseFragment extends Fragment {
 
         addCourseViewModel = new ViewModelProvider(this).get(AddCourseViewModel.class);
 
-        addCourseViewModel.setTermId(term.termId);
+        addCourseViewModel.setTermId(course.courseTermId);
 
-        addCourseViewModel.getInputItems().observe(this, items -> {
-            recyclerView.setAdapter(new MainListAdapter(requireActivity(), items));
+        addCourseViewModel.getInputItems().observe(getViewLifecycleOwner(), items -> {
+
+            listItems.clear();
+            listItems.addAll(items);
+            adapter.notifyDataSetChanged();
+
         });
-        addCourseViewModel.isSubmitEnabled().observe(this, isEnabled -> submitButton.setEnabled(isEnabled));
-        addCourseViewModel.getNavigationEvent().observe(this, newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
-        addCourseViewModel.isSubmitted().observe(this, isComplete -> {
+
+        addCourseViewModel.getRemoveWeightItem().observe(getViewLifecycleOwner(), index -> {
+            listItems.remove(index.intValue());
+            adapter.notifyItemRemoved(index);
+        });
+
+        addCourseViewModel.getAddWeightItem().observe(getViewLifecycleOwner(), diffItem -> {
+            int position = ((WeightItem) diffItem).getIndex() + 6;
+            listItems.add(position, diffItem);
+            adapter.notifyItemInserted(position);
+        });
+
+        addCourseViewModel.getShowDialog().observe(getViewLifecycleOwner(), diffItem -> showDialog());
+
+        addCourseViewModel.isSubmitEnabled().observe(getViewLifecycleOwner(), isEnabled -> submitButton.setEnabled(isEnabled));
+        addCourseViewModel.getNavigationEvent().observe(getViewLifecycleOwner(), newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
+        addCourseViewModel.isSubmitted().observe(getViewLifecycleOwner(), isComplete -> {
             if (isComplete) {
                 returnToPreviousScreen();
             }
@@ -107,11 +142,16 @@ public class AddCourseFragment extends Fragment {
 
         cancelButton.setOnClickListener(v -> returnToPreviousScreen());
 
-        addCourseViewModel.createItemsList();
+        if (updating) {
+            addCourseViewModel.fetchCourseToUpdate(course);
+        } else {
+
+            addCourseViewModel.createItemsList();
+        }
     }
 
     private void returnToPreviousScreen() {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.popBackStackImmediate();
     }
 
@@ -141,6 +181,15 @@ public class AddCourseFragment extends Fragment {
                 }
             }
         };
+    }
+
+    private void showDialog() {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Cannot Modify Weight!")
+                .setMessage("Please modify or delete all assignments marked with the weight you are trying to delete.")
+                .setPositiveButton("Dismiss", (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
     }
 
     @Override

@@ -50,12 +50,12 @@
             app:endIconMode="clear_text">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputDegree"
+                android:id="@+id/inputEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Degree"
+                android:hint="example@cmail.carleton.ca"
                 android:imeOptions="actionDone"
-                android:inputType="text" />
+                android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 </FrameLayout>

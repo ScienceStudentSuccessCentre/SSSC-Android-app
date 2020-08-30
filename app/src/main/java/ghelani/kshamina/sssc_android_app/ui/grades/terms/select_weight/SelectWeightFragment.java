@@ -34,10 +34,6 @@ public class SelectWeightFragment extends Fragment {
 
     private SelectItemViewModel<Weight> selectItemViewModel;
 
-    private MainListAdapter adapter;
-
-    private TextView title;
-
     private RecyclerView recyclerView;
 
     private Button submitButton;
@@ -75,14 +71,14 @@ public class SelectWeightFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.inputRecyclerView);
         submitButton = view.findViewById(R.id.submitButton);
-        title = view.findViewById(R.id.title);
+        TextView title = view.findViewById(R.id.title);
         cancelButton = view.findViewById(R.id.cancelButton);
 
         DividerItemDecoration decoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
 
         recyclerView.addItemDecoration(decoration);
 
-        adapter = new MainListAdapter(getActivity(), Collections.emptyList());
+        MainListAdapter adapter = new MainListAdapter(getActivity(), Collections.emptyList());
         recyclerView.setAdapter(adapter);
 
         title.setText("Select a Weight");
@@ -103,15 +99,15 @@ public class SelectWeightFragment extends Fragment {
         selectWeightViewModel.setId(courseId);
         selectWeightViewModel.createItemsList();
 
-        selectWeightViewModel.getInputItems().observe(this, items -> recyclerView.setAdapter(new MainListAdapter(requireActivity(), items)));
-        selectWeightViewModel.isSubmitEnabled().observe(this, isEnabled -> submitButton.setEnabled(isEnabled));
-        selectWeightViewModel.getNavigationEvent().observe(this, newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
-        selectWeightViewModel.isSubmitted().observe(this, isComplete -> {
+        selectWeightViewModel.getInputItems().observe(getViewLifecycleOwner(), items -> recyclerView.setAdapter(new MainListAdapter(requireActivity(), items)));
+        selectWeightViewModel.isSubmitEnabled().observe(getViewLifecycleOwner(), isEnabled -> submitButton.setEnabled(isEnabled));
+        selectWeightViewModel.getNavigationEvent().observe(getViewLifecycleOwner(), newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
+        selectWeightViewModel.isSubmitted().observe(getViewLifecycleOwner(), isComplete -> {
             if (isComplete) {
                 returnToPreviousScreen();
             }
         });
-        selectWeightViewModel.getSelectedWeight().observe(this, weight -> {
+        selectWeightViewModel.getSelectedWeight().observe(getViewLifecycleOwner(), weight -> {
             selectItemViewModel.setSelectedItem(weight);
             returnToPreviousScreen();
         });
@@ -120,7 +116,7 @@ public class SelectWeightFragment extends Fragment {
     }
 
     private void returnToPreviousScreen() {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.popBackStackImmediate();
     }
 

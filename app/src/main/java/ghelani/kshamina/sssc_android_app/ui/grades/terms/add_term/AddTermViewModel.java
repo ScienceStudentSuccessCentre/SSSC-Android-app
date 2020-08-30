@@ -9,16 +9,14 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.database.TermDao;
 import ghelani.kshamina.sssc_android_app.entity.TermEntity;
+import ghelani.kshamina.sssc_android_app.ui.grades.GradesFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormViewModel;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.SelectionItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.TextItem;
-import ghelani.kshamina.sssc_android_app.ui.grades.GradesFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormViewModel;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;

@@ -34,7 +34,14 @@ public class EmailBuilder {
     public static void sendMentorBookingEmail(Activity context, String studentName, String studentId, String degree) {
         String[] recipients = {"sssc@carleton.ca"};
         String subject = "SSSC Mentor Appointment";
-        String message = "Hello,\n\nI would like to book an appointment with a mentor at the SSSC!";
+        String message = "Hello," +
+                "\n\nI would like to book an appointment with an SSSC mentor for.\n" +
+                "\nName: " + studentName +
+                "\nStudent Number: " + studentId +
+                "\nDegree: " + degree +
+                "\nThank you!" +
+                "\n" + studentName +
+                "\n" + studentId;
         sendEmail(context, recipients, subject, message);
     }
 
@@ -51,10 +58,10 @@ public class EmailBuilder {
         MainApplication appSettings = (MainApplication) context.getApplication();
         switch (type) {
             case EVENT_REGISTRATION:
-                sendEventBookingEmail(context, appSettings.getStudentName(), appSettings.getStudentId(), appSettings.getDegree(), (Event) emailItem);
+                sendEventBookingEmail(context, appSettings.getStudentName(), appSettings.getStudentId(), appSettings.getEmail(), (Event) emailItem);
                 break;
             case MENTOR_BOOKING:
-                sendMentorBookingEmail(context, appSettings.getStudentName(), appSettings.getStudentId(), appSettings.getDegree());
+                sendMentorBookingEmail(context, appSettings.getStudentName(), appSettings.getStudentId(), appSettings.getEmail());
                 break;
         }
     }
@@ -63,7 +70,7 @@ public class EmailBuilder {
         View dialogView = context.getLayoutInflater().inflate(R.layout.dialog_student_information, null);
         TextInputEditText studentNameInput = dialogView.findViewById(R.id.inputStudentName);
         TextInputEditText studentIdInput = dialogView.findViewById(R.id.inputStudentId);
-        TextInputEditText degreeInput = dialogView.findViewById(R.id.inputDegree);
+        TextInputEditText degreeInput = dialogView.findViewById(R.id.inputEmail);
 
 
         new MaterialAlertDialogBuilder(context)
@@ -75,7 +82,7 @@ public class EmailBuilder {
                     MainApplication appSettings = (MainApplication) context.getApplication();
                     appSettings.setStudentName(studentNameInput.getText().toString());
                     appSettings.setStudentId(studentIdInput.getText().toString());
-                    appSettings.setDegree(degreeInput.getText().toString());
+                    appSettings.setEmail(degreeInput.getText().toString());
                     createEmail(context, type, emailItem);
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
@@ -91,7 +98,7 @@ public class EmailBuilder {
                 .setMessage("Do you want to continue to send an email with these credentials?\n" +
                         "\nName: " + appSettings.getStudentName() +
                         "\nStudent Number: " + appSettings.getStudentId() +
-                        "\nDegree: " + appSettings.getDegree()
+                        "\nDegree: " + appSettings.getEmail()
                 )
                 .setPositiveButton("Continue", (dialog, which) -> {
                     dialog.dismiss();

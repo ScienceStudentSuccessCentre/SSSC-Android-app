@@ -59,6 +59,7 @@
             android:id="@+id/coursesRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 
@@ -68,11 +69,10 @@
         android:id="@+id/emptyCourseListText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
         android:layout_gravity="center_horizontal|center_vertical"
         android:text="Add a course to keep track of your grades!"
-        android:visibility="gone"
-        />
+        android:textAlignment="center"
+        android:visibility="gone" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addCourseFab"

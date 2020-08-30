@@ -1,22 +1,19 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.select_weight;
+
 import androidx.hilt.Assisted;
 import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.SavedStateHandle;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
-
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.database.WeightDao;
 import ghelani.kshamina.sssc_android_app.entity.Weight;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormViewModel;
 import ghelani.kshamina.sssc_android_app.ui.utils.events.SingleLiveEvent;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.SelectionItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.TextItem;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormViewModel;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;

@@ -12,39 +12,36 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
-import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.adapterdelegates.InputWeightFormAdapterDelegate;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.adapterdelegates.ListAdapterDelegate;
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
-
     private Drawable icon;
     private ColorDrawable background = new ColorDrawable(Color.RED);
-    private MainListAdapter adapter;
-    private RecyclerView recyclerView;
     private EventListener.SwipeEventListener listener;
-    private int minItemRange = -1, maxItemRange = -1;
 
-    public SwipeToDeleteCallback(Context context, MainListAdapter adapter, RecyclerView recyclerView, EventListener.SwipeEventListener listener) {
+    public SwipeToDeleteCallback(Context context, EventListener.SwipeEventListener listener) {
         super(0, ItemTouchHelper.LEFT);
         icon = ContextCompat.getDrawable(context, R.drawable.ic_delete);
-        this.adapter = adapter;
-        this.recyclerView = recyclerView;
         this.listener = listener;
     }
 
-    public SwipeToDeleteCallback(Context context, MainListAdapter adapter, RecyclerView recyclerView, EventListener.SwipeEventListener listener, int minItemRange, int maxItemRange) {
-        this(context, adapter, recyclerView, listener);
-        this.minItemRange = minItemRange;
-        this.maxItemRange = maxItemRange;
+    @Override
+    public int getSwipeDirs(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+        if(viewHolder instanceof InputWeightFormAdapterDelegate.InputWeightViewHolder || viewHolder instanceof ListAdapterDelegate.ListViewHolder) {
+            return super.getSwipeDirs(recyclerView, viewHolder);
+        }else{
+            return 0;
+        }
     }
 
     @Override
     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+
         View itemView = viewHolder.itemView;
         double backgroundCornerOffset = 20;
 
@@ -86,16 +83,6 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         int position = viewHolder.getAdapterPosition();
 
-        DiffItem item = adapter.getItems().get(position);
-
         listener.onItemSwiped(position);
-        adapter.getItems().remove(position);
-        adapter.notifyItemRemoved(position);
-
-        Snackbar.make(recyclerView, "Deleted Item", Snackbar.LENGTH_LONG)
-                .setAction("Undo", v -> {
-                    adapter.getItems().add(position, item);
-                    adapter.notifyItemInserted(position);
-                }).show();
     }
 }

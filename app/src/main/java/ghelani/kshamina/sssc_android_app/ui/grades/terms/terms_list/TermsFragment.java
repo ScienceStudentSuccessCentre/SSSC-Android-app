@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collections;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -39,10 +41,6 @@ public class TermsFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private TextView emptyTermsMessage;
-
-    private MenuItem deleteItem;
-
-    private MenuItem cancelDeleteItem;
 
     @Nullable
     @Override
@@ -70,12 +68,12 @@ public class TermsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.termsRecyclerView);
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         MainListAdapter adapter = new MainListAdapter(getActivity(), Collections.emptyList());
-        ItemTouchHelper swipeHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(),adapter, recyclerView, (index -> termsViewModel.deleteTerm(index))));
+        ItemTouchHelper swipeHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(), (index -> termsViewModel.deleteTerm(index))));
         swipeHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(adapter);
 
         termsViewModel = new ViewModelProvider(this).get(TermsViewModel.class);
-        termsViewModel.state.observe(this, termViewState -> {
+        termsViewModel.state.observe(getViewLifecycleOwner(), termViewState -> {
             if (termViewState.isLoading()) {
                 System.out.println("Terms Loading");
             } else if (termViewState.isError()) {
@@ -93,7 +91,7 @@ public class TermsFragment extends Fragment {
             }
         });
 
-        termsViewModel.termSelected.observe(this, term -> {
+        termsViewModel.termSelected.observe(getViewLifecycleOwner(), term -> {
             setHasOptionsMenu(false);
             ((MainActivity) requireActivity()).replaceFragment(CourseListFragment.newInstance(term));
         });
@@ -102,7 +100,7 @@ public class TermsFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.term_list_menu, menu);
@@ -113,7 +111,7 @@ public class TermsFragment extends Fragment {
         // Handle item selection
         if (item.getItemId() == R.id.deleteActionItem) {
             if (termsViewModel.isDeleteMode()) {
-                item.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_delete));
+                item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete));
 
             } else {
                 item.setIcon(R.drawable.ic_close);

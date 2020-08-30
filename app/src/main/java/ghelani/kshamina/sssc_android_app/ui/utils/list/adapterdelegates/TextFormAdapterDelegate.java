@@ -42,8 +42,6 @@ public class TextFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
 
         TextFormAdapterDelegate.TextItemViewHolder textItemViewHolder = (TextFormAdapterDelegate.TextItemViewHolder) holder;
 
-        int margin = item.isMarginTop()? R.dimen.text_item_margin_top : R.dimen.text_item_margin_top;
-        //textItemViewHolder.text.setPadding(R.dimen.activity_horizontal_margin,margin,R.dimen.activity_horizontal_margin,R.dimen.text_item_margin_top);
         textItemViewHolder.text.setPadding(20,20,20,20);
         textItemViewHolder.text.setText(item.getText());
     }

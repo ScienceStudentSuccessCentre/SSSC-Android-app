@@ -154,7 +154,7 @@ public class Event implements Serializable, Comparable<Event>, DiffItem {
         URL url = null;
         try {
             url = new URL("https://sssc.carleton.ca" + string);
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException ignored) {
 
         }
         return url;

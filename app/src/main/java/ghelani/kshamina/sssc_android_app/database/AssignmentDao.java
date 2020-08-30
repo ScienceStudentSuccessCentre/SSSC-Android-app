@@ -3,7 +3,6 @@ package ghelani.kshamina.sssc_android_app.database;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -30,6 +29,9 @@ public interface AssignmentDao {
 
     @Query("SELECT * FROM assignments")
     List<Assignment> getAllAssignments();
+
+    @Query("SELECT * FROM assignments WHERE assignment_weight_id = :weightId")
+    Single<List<Assignment>> getAssignmentsByWeight(String weightId);
 
     @Query("SELECT * From assignments WHERE assignment_id = :id")
     Single<Assignment> getAssignmentByID(String id);

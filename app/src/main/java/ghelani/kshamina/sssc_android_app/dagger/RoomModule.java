@@ -33,5 +33,5 @@ public abstract class RoomModule {
     @Singleton
     public static String[] providesLetterGradeArray(@ApplicationContext  Context context){
         return context.getResources().getStringArray(R.array.grades_array);
-    };
+    }
 }

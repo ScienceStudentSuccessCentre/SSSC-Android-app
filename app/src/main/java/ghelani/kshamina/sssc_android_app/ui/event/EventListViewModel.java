@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import ghelani.kshamina.sssc_android_app.entity.Event;
 import ghelani.kshamina.sssc_android_app.network.NetworkManager;
 import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;

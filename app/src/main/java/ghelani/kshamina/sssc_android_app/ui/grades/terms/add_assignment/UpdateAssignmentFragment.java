@@ -32,8 +32,6 @@ public class UpdateAssignmentFragment extends Fragment {
 
     private MainListAdapter adapter;
 
-    private TextView title;
-
     private RecyclerView recyclerView;
 
     private Button updateButton;
@@ -70,7 +68,7 @@ public class UpdateAssignmentFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.inputRecyclerView);
         updateButton = view.findViewById(R.id.submitButton);
-        title = view.findViewById(R.id.title);
+        TextView title = view.findViewById(R.id.title);
         cancelButton = view.findViewById(R.id.cancelButton);
 
         DividerItemDecoration decoration = courseListDecoration();
@@ -89,12 +87,12 @@ public class UpdateAssignmentFragment extends Fragment {
 
         updateAssignmentViewModel = new ViewModelProvider(this).get(AddAssignmentViewModel.class);
 
-        updateAssignmentViewModel.getInputItems().observe(this, items -> {
+        updateAssignmentViewModel.getInputItems().observe(getViewLifecycleOwner(), items -> {
             recyclerView.setAdapter(new MainListAdapter(requireActivity(), items));
         });
-        updateAssignmentViewModel.isSubmitEnabled().observe(this, isEnabled -> updateButton.setEnabled(isEnabled));
-        updateAssignmentViewModel.getNavigationEvent().observe(this, newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
-        updateAssignmentViewModel.isSubmitted().observe(this, isComplete -> {
+        updateAssignmentViewModel.isSubmitEnabled().observe(getViewLifecycleOwner(), isEnabled -> updateButton.setEnabled(isEnabled));
+        updateAssignmentViewModel.getNavigationEvent().observe(getViewLifecycleOwner(), newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
+        updateAssignmentViewModel.isSubmitted().observe(getViewLifecycleOwner(), isComplete -> {
             if (isComplete) {
                 returnToPreviousScreen();
             }
@@ -108,7 +106,7 @@ public class UpdateAssignmentFragment extends Fragment {
     }
 
     private void returnToPreviousScreen() {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.popBackStackImmediate();
     }
 

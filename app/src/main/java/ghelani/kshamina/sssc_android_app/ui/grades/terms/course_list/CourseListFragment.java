@@ -31,6 +31,7 @@ import butterknife.ButterKnife;
 import dagger.hilt.android.AndroidEntryPoint;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
+import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.entity.TermEntity;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseFragment;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
@@ -84,7 +85,7 @@ public class CourseListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_course_list, container, false);
         ButterKnife.bind(this, view);
         toolbar.setTitle(term.toString());
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
         return view;
     }
 
@@ -93,11 +94,11 @@ public class CourseListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         FloatingActionButton addCourseBtn = view.findViewById(R.id.addCourseFab);
-        addCourseBtn.setOnClickListener(v -> replaceFragment(AddCourseFragment.newInstance(term)));
+        addCourseBtn.setOnClickListener(v -> replaceFragment(AddCourseFragment.newInstance(new CourseEntity("", "", 0, false, "", term.termId), false)));
 
 
         MainListAdapter adapter = new MainListAdapter(getActivity(), Collections.emptyList());
-        ItemTouchHelper swipeHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(), adapter, courseRecyclerView, (index) -> courseViewModel.deleteItem(index)));
+        ItemTouchHelper swipeHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(), (index) -> courseViewModel.deleteCourse(index)));
         swipeHelper.attachToRecyclerView(courseRecyclerView);
         courseRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         courseRecyclerView.setAdapter(adapter);
@@ -122,7 +123,7 @@ public class CourseListFragment extends Fragment {
             }
         });
 
-        courseViewModel.navigationEvent.observe(getViewLifecycleOwner(), newFragment -> replaceFragment(newFragment));
+        courseViewModel.navigationEvent.observe(getViewLifecycleOwner(), this::replaceFragment);
         courseViewModel.creditsState.observe(getViewLifecycleOwner(), credits -> creditsText.setText("Credits: " + credits));
         courseViewModel.termGPA.observe(getViewLifecycleOwner(), gpa -> gpaText.setText("Term GPA: " + (gpa == -1 ? "N/A" : gpa)));
         courseViewModel.fetchCoursesByTermId(term.termId);
@@ -146,7 +147,7 @@ public class CourseListFragment extends Fragment {
         // Handle item selection
         if (item.getItemId() == R.id.deleteActionItem) {
             if (courseViewModel.isDeleteMode) {
-                item.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_delete));
+                item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete));
                 courseViewModel.setIsDeleteMode(false);
             } else {
                 item.setIcon(R.drawable.ic_close);

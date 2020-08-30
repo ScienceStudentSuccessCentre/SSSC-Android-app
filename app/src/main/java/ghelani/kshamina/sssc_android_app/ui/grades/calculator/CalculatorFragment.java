@@ -48,17 +48,14 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
     // Components
     private TextView calculatedOverallCGPA;
     private TextView calculatedMajorCGPA;
-
-    private RecyclerView recyclerView;
     private CoursesAdapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
 
     // OnClick Listener for a single CourseEntity
     private View.OnClickListener onItemClickListener = view -> {
         RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
         int position = viewHolder.getAdapterPosition();
         CourseEntity courseEntity = filteredCourseList.get(position);
-        openCourseSingle(courseEntity, view);
+        openCourseSingle(courseEntity);
     };
 
     @Nullable
@@ -76,11 +73,11 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
         this.adapterList = new ArrayList<>();
 
         // Setup RecyclerView
-        recyclerView = calculatorView.findViewById(R.id.coursesList);
+        RecyclerView recyclerView = calculatorView.findViewById(R.id.coursesList);
         recyclerView.setHasFixedSize(true);
 
-        adapter = new CoursesAdapter(adapterList, getActivity(),gradesDatabase);
-        layoutManager = new LinearLayoutManager(getActivity());
+        adapter = new CoursesAdapter(adapterList, getActivity(), gradesDatabase);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(onItemClickListener);
@@ -136,9 +133,8 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
                 "Major CGPA: N/A" : String.format(Locale.CANADA, "Major CGPA: %.1f", overallMajorCGPA));
     }
 
-    private void openCourseSingle(CourseEntity courseEntity, View view) {
-        // TODO implement
-            ((MainActivity) requireActivity()).replaceFragment(AssignmentListFragment.newInstance(courseEntity.courseId));
+    private void openCourseSingle(CourseEntity courseEntity) {
+        ((MainActivity) requireActivity()).replaceFragment(AssignmentListFragment.newInstance(courseEntity.courseId));
     }
 
 
@@ -178,7 +174,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
     /**
      * A List, except it can switch between filtered and non-filtered mode
      */
-    private class FilteredCourseList {
+    private static class FilteredCourseList {
         private List<CourseEntity> allCourses = new ArrayList<>();
         private List<CourseEntity> filteredCourses = new ArrayList<>();
 

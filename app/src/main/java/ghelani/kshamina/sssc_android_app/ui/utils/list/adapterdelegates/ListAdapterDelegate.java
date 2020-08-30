@@ -53,7 +53,7 @@ public class ListAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
         listViewHolder.heading.setVisibility(item.getHeaderText().isEmpty() ? View.GONE : View.VISIBLE);
     }
 
-    static class ListViewHolder extends RecyclerView.ViewHolder {
+    public static class ListViewHolder extends RecyclerView.ViewHolder {
 
         public MaterialCardView itemCard;
         public ImageView deleteIcon;

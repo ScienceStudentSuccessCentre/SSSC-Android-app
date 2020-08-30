@@ -3,10 +3,6 @@ package ghelani.kshamina.sssc_android_app.ui;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceFragmentCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +10,16 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import ghelani.kshamina.sssc_android_app.R;
 
 public class SettingsFragment extends Fragment {
 
     // Settings keys -- these should match the keys defined in settings.xml
     public static final String KEY_PREF_INCLUDE_IN_PROGRESS_COURSES = "include_in_progress_switch";
-
-    // Components
-    private Switch inProgressCoursesFilterSwitch;
-    private Button backupGradesButton;
 
     // Data model
     private SharedPreferences settings;
@@ -35,8 +31,9 @@ public class SettingsFragment extends Fragment {
         ViewGroup settingsView = (ViewGroup) inflater.inflate(R.layout.fragment_settings, container,false);
 
         // Inflate components
-        inProgressCoursesFilterSwitch = settingsView.findViewById(R.id.include_in_progress_switch);
-        backupGradesButton = settingsView.findViewById(R.id.backup_grades_button);
+        // Components
+        Switch inProgressCoursesFilterSwitch = settingsView.findViewById(R.id.include_in_progress_switch);
+        Button backupGradesButton = settingsView.findViewById(R.id.backup_grades_button);
 
         // Add action listeners
         inProgressCoursesFilterSwitch.setOnCheckedChangeListener(this::handleInProgressCoursesFilterSwitchChanged);

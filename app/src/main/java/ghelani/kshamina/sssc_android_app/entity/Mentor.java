@@ -1,6 +1,8 @@
 package ghelani.kshamina.sssc_android_app.entity;
 
-public class Mentor implements Comparable<Mentor> {
+import java.io.Serializable;
+
+public class Mentor implements Comparable<Mentor>, Serializable {
 
     private String id;
     private String name;

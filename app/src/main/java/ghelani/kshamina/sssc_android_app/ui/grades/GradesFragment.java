@@ -1,6 +1,5 @@
 package ghelani.kshamina.sssc_android_app.ui.grades;
 
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,20 +18,15 @@ import android.view.ViewGroup;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import org.jetbrains.annotations.NotNull;
+
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.ui.grades.calculator.CalculatorFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.planner.PlannerFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list.TermsFragment;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class GradesFragment extends Fragment {
-    private ViewPager2 viewPager;
-    private FragmentStateAdapter pagerAdapter;
     private String[] tabTitles;
-    private Toolbar toolbar;
 
     public GradesFragment() {
         // Required empty public constructor
@@ -50,8 +44,8 @@ public class GradesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        toolbar = view.findViewById(R.id.gradesToolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        Toolbar toolbar = view.findViewById(R.id.gradesToolbar);
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
        // Set tab titles
         tabTitles = new String[] {
                 getString(R.string.terms_tab),
@@ -60,8 +54,8 @@ public class GradesFragment extends Fragment {
         };
 
         //Create viewpager to add swipe navigation
-        viewPager = view.findViewById(R.id.grades_viewpager);
-        pagerAdapter = new ScreenSlidePagerAdapter(getActivity());
+        ViewPager2 viewPager = view.findViewById(R.id.grades_viewpager);
+        FragmentStateAdapter pagerAdapter = new ScreenSlidePagerAdapter(getActivity());
         viewPager.setAdapter(pagerAdapter);
 
         //Link viewpager to TabLayout
@@ -73,11 +67,12 @@ public class GradesFragment extends Fragment {
 
     }
 
-    private class ScreenSlidePagerAdapter extends FragmentStateAdapter {
+    private static class ScreenSlidePagerAdapter extends FragmentStateAdapter {
         public ScreenSlidePagerAdapter(FragmentActivity fa) {
             super(fa);
         }
 
+        @NotNull
         @Override
         public Fragment createFragment(int position) {
             switch(position){
@@ -87,10 +82,8 @@ public class GradesFragment extends Fragment {
                     return new CalculatorFragment();
                 case 2:
                     return new PlannerFragment();
-                default:
-                    return null;
-
             }
+            return new TermsFragment();
         }
 
         @Override

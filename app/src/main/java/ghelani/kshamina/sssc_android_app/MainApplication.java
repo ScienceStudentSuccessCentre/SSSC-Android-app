@@ -11,7 +11,7 @@ public class MainApplication extends Application {
     private boolean enableEmailMentorRegistration = true;
     private String studentName = "";
     private String studentId = "";
-    private String degree  = "";
+    private String email  = "";
 
 
     public boolean isEnableEmailEventRegistration() {
@@ -47,14 +47,14 @@ public class MainApplication extends Application {
     }
 
     public boolean hasStudentInformation(){
-        return !studentId.isEmpty() && !studentName.isEmpty() && !degree.isEmpty();
+        return !studentId.isEmpty() && !studentName.isEmpty() && !email.isEmpty();
     }
 
-    public String getDegree() {
-        return degree;
+    public String getEmail() {
+        return email;
     }
 
-    public void setDegree(String degree) {
-        this.degree = degree;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

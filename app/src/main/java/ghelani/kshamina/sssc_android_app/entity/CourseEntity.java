@@ -1,13 +1,11 @@
 package ghelani.kshamina.sssc_android_app.entity;
 
-import android.os.Parcelable;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.UUID;

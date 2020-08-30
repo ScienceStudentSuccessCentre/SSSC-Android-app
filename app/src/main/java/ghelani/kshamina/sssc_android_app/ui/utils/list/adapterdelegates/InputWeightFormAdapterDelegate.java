@@ -46,12 +46,14 @@ public class InputWeightFormAdapterDelegate extends AdapterDelegate<List<DiffIte
         if (!item.getName().isEmpty()) {
             weightItemViewHolder.name.setText(item.getName());
         } else {
+            weightItemViewHolder.name.setText(item.getName());
             weightItemViewHolder.name.setHint("Final Exam");
         }
 
         if (!item.getValue().isEmpty()) {
             weightItemViewHolder.value.setText(item.getValue());
         } else {
+            weightItemViewHolder.value.setText(item.getValue());
             weightItemViewHolder.value.setHint("30%");
         }
 
@@ -78,7 +80,7 @@ public class InputWeightFormAdapterDelegate extends AdapterDelegate<List<DiffIte
         });
     }
 
-    static class InputWeightViewHolder extends RecyclerView.ViewHolder {
+    public static class InputWeightViewHolder extends RecyclerView.ViewHolder {
 
         public EditText name;
         public EditText value;

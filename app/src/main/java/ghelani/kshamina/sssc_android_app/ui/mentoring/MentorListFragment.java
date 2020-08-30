@@ -82,7 +82,7 @@ public class MentorListFragment extends Fragment { ;
 
         mentorListViewModel = new ViewModelProvider(this).get(MentorListViewModel.class);
 
-        mentorListViewModel.getMentors().observe(this, mentors -> {
+        mentorListViewModel.getMentors().observe(getViewLifecycleOwner(), mentors -> {
             if (mentors.isEmpty()) {
                 emptyListMessage.setVisibility(View.VISIBLE);
                 mentorRecyclerView.setVisibility(View.GONE);
@@ -93,7 +93,7 @@ public class MentorListFragment extends Fragment { ;
             }
         });
 
-        mentorListViewModel.getNavigationEvent().observe(this, newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
+        mentorListViewModel.getNavigationEvent().observe(getViewLifecycleOwner(), newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
 
         mentorListViewModel.fetchMentors();
     }

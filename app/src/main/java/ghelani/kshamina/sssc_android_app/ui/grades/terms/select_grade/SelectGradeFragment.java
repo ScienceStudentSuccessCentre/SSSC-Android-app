@@ -30,10 +30,6 @@ public class SelectGradeFragment extends Fragment {
 
     private SelectItemViewModel<String> selectItemViewModel;
 
-    private MainListAdapter adapter;
-
-    private TextView title;
-
     private RecyclerView recyclerView;
 
     private Button submitButton;
@@ -58,7 +54,7 @@ public class SelectGradeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            selectItemViewModel = (SelectItemViewModel) getArguments().getSerializable(ARG_VIEW_MODEL);
+            selectItemViewModel = (SelectItemViewModel<String>) getArguments().getSerializable(ARG_VIEW_MODEL);
         }
     }
 
@@ -69,14 +65,14 @@ public class SelectGradeFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.inputRecyclerView);
         submitButton = view.findViewById(R.id.submitButton);
-        title = view.findViewById(R.id.title);
+        TextView title = view.findViewById(R.id.title);
         cancelButton = view.findViewById(R.id.cancelButton);
 
         DividerItemDecoration decoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
 
         recyclerView.addItemDecoration(decoration);
 
-        adapter = new MainListAdapter(getActivity(), Collections.emptyList());
+        MainListAdapter adapter = new MainListAdapter(getActivity(), Collections.emptyList());
         recyclerView.setAdapter(adapter);
 
         title.setText("Select a Grade");
@@ -96,15 +92,15 @@ public class SelectGradeFragment extends Fragment {
         selectFinalGradeViewModel = new ViewModelProvider(this).get(SelectFinalGradeViewModel.class);
         selectFinalGradeViewModel.createItemsList();
 
-        selectFinalGradeViewModel.getInputItems().observe(this, items -> recyclerView.setAdapter(new MainListAdapter(requireActivity(), items)));
-        selectFinalGradeViewModel.isSubmitEnabled().observe(this, isEnabled -> submitButton.setEnabled(isEnabled));
-        selectFinalGradeViewModel.getNavigationEvent().observe(this, newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
-        selectFinalGradeViewModel.isSubmitted().observe(this, isComplete -> {
+        selectFinalGradeViewModel.getInputItems().observe(getViewLifecycleOwner(), items -> recyclerView.setAdapter(new MainListAdapter(requireActivity(), items)));
+        selectFinalGradeViewModel.isSubmitEnabled().observe(getViewLifecycleOwner(), isEnabled -> submitButton.setEnabled(isEnabled));
+        selectFinalGradeViewModel.getNavigationEvent().observe(getViewLifecycleOwner(), newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
+        selectFinalGradeViewModel.isSubmitted().observe(getViewLifecycleOwner(), isComplete -> {
             if (isComplete) {
                 returnToPreviousScreen();
             }
         });
-        selectFinalGradeViewModel.getSelectedGrade().observe(this, grade -> {
+        selectFinalGradeViewModel.getSelectedGrade().observe(getViewLifecycleOwner(), grade -> {
             selectItemViewModel.setSelectedItem(grade);
             returnToPreviousScreen();
         });
@@ -113,7 +109,7 @@ public class SelectGradeFragment extends Fragment {
     }
 
     private void returnToPreviousScreen() {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.popBackStackImmediate();
     }
 

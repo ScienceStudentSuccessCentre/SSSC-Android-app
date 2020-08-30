@@ -14,13 +14,13 @@ public class EventAlert extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        this.createNotificationChannel(context);
+        this.createNotificationChannel();
 
         Notification notification = intent.getParcelableExtra("notification");
         notificationManager.notify(001, notification);
     }
 
-    private void createNotificationChannel(Context context) {
+    private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "channel name";
             String description = "channel description";

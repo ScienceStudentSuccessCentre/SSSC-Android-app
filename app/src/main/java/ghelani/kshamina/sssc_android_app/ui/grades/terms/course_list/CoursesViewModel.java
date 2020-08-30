@@ -11,18 +11,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import ghelani.kshamina.sssc_android_app.database.CourseDao;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
+import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments.AssignmentListFragment;
 import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
 import ghelani.kshamina.sssc_android_app.ui.utils.events.SingleLiveEvent;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.ViewState;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.ListItem;
-import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments.AssignmentListFragment;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
@@ -97,12 +95,12 @@ public class CoursesViewModel extends ViewModel {
 
             @Override
             public void deleteItem(int index) {
-                deleteItem(index);
+                deleteCourse(index);
             }
         });
     }
 
-    public void deleteItem(int index) {
+    public void deleteCourse(int index) {
         CourseEntity course = courseItemList.get(index);
         Completable.fromAction(() -> courseDao.deleteCourse(course.courseId))
                 .subscribeOn(Schedulers.io())
@@ -123,10 +121,6 @@ public class CoursesViewModel extends ViewModel {
 
                     }
                 });
-    }
-
-    public boolean isDeleteMode() {
-        return isDeleteMode;
     }
 
     public void setIsDeleteMode(boolean value) {

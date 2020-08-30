@@ -56,8 +56,8 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
                 inputItemViewHolder.textInput.setHint(item.getHint());
                 inputItemViewHolder.textInput.setText(item.getValue());
                 inputItemViewHolder.textInput.setInputType(item.getKeyboardType());
-                inputItemViewHolder.itemLayout.setOnClickListener(v ->  inputItemViewHolder.textInput.requestFocus());
-                if(item.getName().equals("Code")) {
+                inputItemViewHolder.itemView.setOnClickListener(v -> inputItemViewHolder.textInput.requestFocus());
+                if (item.getName().equals("Code")) {
                     inputItemViewHolder.textInput.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
                 }
                 inputItemViewHolder.switchInput.setVisibility(View.GONE);
@@ -94,17 +94,20 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
                 inputItemViewHolder.name.setText(item.getName());
                 inputItemViewHolder.textInput.setHint(item.getHint());
                 inputItemViewHolder.textInput.setText(item.getValue());
-                inputItemViewHolder.textInput.setCompoundDrawablesRelativeWithIntrinsicBounds(0,0,R.drawable.ic_arrow_right_24,0);
+                inputItemViewHolder.textInput.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_right_24, 0);
+                inputItemViewHolder.textInput.setOnClickListener(v ->
+                        item.getListener().onValueChanged(item, inputItemViewHolder.textInput.getText().toString()));
                 inputItemViewHolder.textInput.setEnabled(false);
                 inputItemViewHolder.switchInput.setVisibility(View.GONE);
-                inputItemViewHolder.itemLayout.setOnClickListener(v ->
+                inputItemViewHolder.itemView.setOnClickListener(v ->
                         item.getListener().onValueChanged(item, inputItemViewHolder.textInput.getText().toString()));
                 break;
         }
     }
 
-    static class InputItemViewHolder extends RecyclerView.ViewHolder {
+    public static class InputItemViewHolder extends RecyclerView.ViewHolder {
 
+        public View itemView;
         public TextView name;
         public EditText textInput;
         public SwitchMaterial switchInput;
@@ -114,6 +117,7 @@ public class InputFormAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
 
         public InputItemViewHolder(View itemView) {
             super(itemView);
+            this.itemView = itemView;
             name = itemView.findViewById(R.id.inputPrompt);
             itemLayout = itemView.findViewById(R.id.itemLayout);
             textInput = itemView.findViewById(R.id.userInputField);

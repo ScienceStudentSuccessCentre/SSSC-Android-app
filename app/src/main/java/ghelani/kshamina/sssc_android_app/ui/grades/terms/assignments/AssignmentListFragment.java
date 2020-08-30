@@ -32,7 +32,7 @@ import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentFragment;
-import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.UpdateCourseFragment;
+import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.required_final_grade.RequiredFinalGradeFragment;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.SwipeToDeleteCallback;
@@ -94,7 +94,7 @@ public class AssignmentListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_assignment_list, container, false);
         ButterKnife.bind(this, view);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
         return view;
     }
 
@@ -106,11 +106,11 @@ public class AssignmentListFragment extends Fragment {
         assignmentViewModel = new ViewModelProvider(this).get(AssignmentViewModel.class);
 
         MainListAdapter adapter = new MainListAdapter(getActivity(), Collections.emptyList());
-        ItemTouchHelper swipeHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(), adapter, assignmentRecyclerView, (index -> assignmentViewModel.deleteAssignment(index))));
+        ItemTouchHelper swipeHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(), (index -> assignmentViewModel.deleteAssignment(index))));
         swipeHelper.attachToRecyclerView(assignmentRecyclerView);
         assignmentRecyclerView.setAdapter(adapter);
 
-        assignmentViewModel.getState().observe(this, assignmentViewState -> {
+        assignmentViewModel.getState().observe(getViewLifecycleOwner(), assignmentViewState -> {
             if (assignmentViewState.isLoading()) {
                 System.out.println("Courses Loading");
             } else if (assignmentViewState.isError()) {
@@ -130,8 +130,8 @@ public class AssignmentListFragment extends Fragment {
             }
         });
 
-        assignmentViewModel.getCourseGrade().observe(this, grade -> {
-            if (!assignmentViewModel.getCourse().courseFinalGrade.isEmpty()) {
+        assignmentViewModel.getCourseGrade().observe(getViewLifecycleOwner(), grade -> {
+            if (!assignmentViewModel.getCourse().courseFinalGrade.isEmpty() || adapter.getItems().isEmpty()) {
                 calculateDesiredGrade.setVisibility(View.GONE);
                 ViewGroup.LayoutParams params = courseGradeText.getLayoutParams();
                 params.height = MATCH_PARENT;
@@ -145,17 +145,14 @@ public class AssignmentListFragment extends Fragment {
             courseGradeText.setText("Overall Grade: " + grade);
         });
 
-        assignmentViewModel.getNavigationEvent().observe(this, this::replaceFragment);
+        assignmentViewModel.getNavigationEvent().observe(getViewLifecycleOwner(), this::replaceFragment);
 
-        calculateDesiredGrade.setOnClickListener(v -> {
-            replaceFragment(RequiredFinalGradeFragment.newInstance(assignmentViewModel.getCourseData()));
-        });//replaceFragment(InputFormFragment.newInstance(courseID, InputFormFragment.FormType.REQUIRED_FINAL_GRADE.toString())));
+        calculateDesiredGrade.setOnClickListener(v -> replaceFragment(RequiredFinalGradeFragment.newInstance(assignmentViewModel.getCourseData())));
 
         addAssignmentFab.setOnClickListener(v -> {
             if (assignmentViewModel.assignmentWeightsAvailable()) {
                 Assignment newAssignment = new Assignment("", -1, 0, "", courseID);
                 replaceFragment(AddAssignmentFragment.newInstance(newAssignment));
-                ///replaceFragment(InputFormFragment.newInstance(courseID , InputFormFragment.FormType.ADD_ASSIGNMENT.toString()));
             } else {
                 showNoWeightsDialog();
             }
@@ -165,7 +162,7 @@ public class AssignmentListFragment extends Fragment {
     }
 
     private void showNoWeightsDialog() {
-        new MaterialAlertDialogBuilder(getContext())
+        new MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Unable to create assignment!")
                 .setMessage("You must add a weight to your course before you can create an assignment.")
                 .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
@@ -189,7 +186,7 @@ public class AssignmentListFragment extends Fragment {
         // Handle item selection
         if (item.getItemId() == R.id.deleteActionItem) {
             if (assignmentViewModel.isDeleteMode()) {
-                item.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_delete));
+                item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete));
                 assignmentViewModel.setDeleteMode(false);
             } else {
                 item.setIcon(R.drawable.ic_close);
@@ -199,8 +196,7 @@ public class AssignmentListFragment extends Fragment {
 
             return true;
         } else if (item.getItemId() == R.id.editCourseAction) {
-           //replaceFragment(InputFormFragment.newInstance(courseID, InputFormFragment.FormType.UPDATE_COURSE.toString()));
-           replaceFragment(UpdateCourseFragment.newInstance(assignmentViewModel.getCourse()));
+            replaceFragment(AddCourseFragment.newInstance(assignmentViewModel.getCourse(), true));
         }
         return super.onOptionsItemSelected(item);
     }

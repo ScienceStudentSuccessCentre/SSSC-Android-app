@@ -36,8 +36,8 @@
                 android:id="@+id/courseGrade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Overall Grade: "
                 android:gravity="center"
+                android:text="Overall Grade: "
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -45,20 +45,21 @@
                 android:id="@+id/calculateDesiredGrade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?android:attr/selectableItemBackground"
                 android:text="Required Exam Grade for Desired Mark"
                 android:textAlignment="center"
                 android:textColor="@android:color/holo_blue_dark"
-                android:visibility="visible"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="visible" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/assignmentsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </LinearLayout>
@@ -67,11 +68,10 @@
         android:id="@+id/emptyAssignmentListText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
         android:layout_gravity="center_horizontal|center_vertical"
         android:text="Add assignments to your course!"
-        android:visibility="gone"
-        />
+        android:textAlignment="center"
+        android:visibility="gone" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addAssignmentFab"

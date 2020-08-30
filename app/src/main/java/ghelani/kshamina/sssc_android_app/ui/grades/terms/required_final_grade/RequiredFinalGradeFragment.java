@@ -32,13 +32,7 @@ public class RequiredFinalGradeFragment extends Fragment {
 
     private MainListAdapter adapter;
 
-    private TextView title;
-
-    private RecyclerView recyclerView;
-
     private Button doneButton;
-
-    private Button cancelButton;
 
     private RequiredFinalGradeViewModel requiredFinalGradeViewModel;
 
@@ -67,10 +61,12 @@ public class RequiredFinalGradeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_input_form, container, false);
-        recyclerView = view.findViewById(R.id.inputRecyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.inputRecyclerView);
         doneButton = view.findViewById(R.id.submitButton);
-        title = view.findViewById(R.id.title);
-        cancelButton = view.findViewById(R.id.cancelButton);
+        doneButton.setVisibility(View.GONE);
+        TextView title = view.findViewById(R.id.title);
+        Button cancelButton = view.findViewById(R.id.cancelButton);
+        cancelButton.setText("Back");
 
         DividerItemDecoration decoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
 
@@ -80,8 +76,6 @@ public class RequiredFinalGradeFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         title.setText("");
-
-        doneButton.setOnClickListener(v -> requiredFinalGradeViewModel.onSubmit());
 
         cancelButton.setOnClickListener(v -> returnToPreviousScreen());
 
@@ -94,13 +88,13 @@ public class RequiredFinalGradeFragment extends Fragment {
 
         requiredFinalGradeViewModel = new ViewModelProvider(this).get(RequiredFinalGradeViewModel.class);
         requiredFinalGradeViewModel.setCourse(course);
-        requiredFinalGradeViewModel.getInputItems().observe(this, items -> {
+        requiredFinalGradeViewModel.getInputItems().observe(getViewLifecycleOwner(), items -> {
             adapter.setItems(items);
             adapter.notifyDataSetChanged();
         });
-        requiredFinalGradeViewModel.isSubmitEnabled().observe(this, isEnabled -> doneButton.setEnabled(isEnabled));
-        requiredFinalGradeViewModel.getNavigationEvent().observe(this, newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
-        requiredFinalGradeViewModel.isSubmitted().observe(this, isComplete -> {
+        requiredFinalGradeViewModel.isSubmitEnabled().observe(getViewLifecycleOwner(), isEnabled -> doneButton.setEnabled(isEnabled));
+        requiredFinalGradeViewModel.getNavigationEvent().observe(getViewLifecycleOwner(), newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
+        requiredFinalGradeViewModel.isSubmitted().observe(getViewLifecycleOwner(), isComplete -> {
             if (isComplete) {
                 returnToPreviousScreen();
             }
@@ -110,7 +104,7 @@ public class RequiredFinalGradeFragment extends Fragment {
     }
 
     private void returnToPreviousScreen() {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.popBackStackImmediate();
     }
 
