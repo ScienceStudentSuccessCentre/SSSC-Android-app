@@ -34,6 +34,7 @@ import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
 import ghelani.kshamina.sssc_android_app.entity.TermEntity;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseFragment;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.SwipeToDeleteCallback;
 
@@ -98,8 +99,6 @@ public class CourseListFragment extends Fragment {
 
 
         MainListAdapter adapter = new MainListAdapter(getActivity(), Collections.emptyList());
-        ItemTouchHelper swipeHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(), (index) -> courseViewModel.deleteCourse(index)));
-        swipeHelper.attachToRecyclerView(courseRecyclerView);
         courseRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         courseRecyclerView.setAdapter(adapter);
 
@@ -131,33 +130,6 @@ public class CourseListFragment extends Fragment {
 
     private void replaceFragment(Fragment newFragment) {
         ((MainActivity) requireActivity()).replaceFragment(newFragment);
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.course_list_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        if (item.getItemId() == R.id.deleteActionItem) {
-            if (courseViewModel.isDeleteMode) {
-                item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete));
-                courseViewModel.setIsDeleteMode(false);
-            } else {
-                item.setIcon(R.drawable.ic_close);
-                courseViewModel.setIsDeleteMode(true);
-            }
-            courseViewModel.fetchCoursesByTermId(term.termId);
-
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 }

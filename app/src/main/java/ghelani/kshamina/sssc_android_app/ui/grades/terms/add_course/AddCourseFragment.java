@@ -27,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.SwipeToDeleteCallback;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
@@ -92,7 +93,7 @@ public class AddCourseFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         ItemTouchHelper swipeHelper = new ItemTouchHelper(
-                new SwipeToDeleteCallback(getContext(), (index) -> addCourseViewModel.removeWeight(index)));
+                new SwipeToDeleteCallback(getContext(), index -> addCourseViewModel.removeWeight(index)));
         swipeHelper.attachToRecyclerView(recyclerView);
 
         title.setText(updating ? "Update Course" : "New Course");

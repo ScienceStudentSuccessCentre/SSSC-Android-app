@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -20,7 +21,7 @@ import ghelani.kshamina.sssc_android_app.ui.utils.list.adapterdelegates.ListAdap
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
     private Drawable icon;
-    private ColorDrawable background = new ColorDrawable(Color.RED);
+    private ColorDrawable background = new ColorDrawable(Color.parseColor("#f44336"));
     private EventListener.SwipeEventListener listener;
 
     public SwipeToDeleteCallback(Context context, EventListener.SwipeEventListener listener) {
@@ -43,25 +44,23 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
         View itemView = viewHolder.itemView;
+        ImageView deleteIcon = null;
+        if(viewHolder instanceof ListAdapterDelegate.ListViewHolder) {
+            deleteIcon = itemView.findViewById(R.id.deleteButton);
+        }
+
         double backgroundCornerOffset = 20;
 
         int iconMargin = (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
         int iconTop =
                 itemView.getTop() + (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
         int iconBottom = iconTop + icon.getIntrinsicHeight();
-        if (dX > 0) { // Swiping to the right
-            int iconLeft = itemView.getLeft() + iconMargin + icon.getIntrinsicWidth();
-            int iconRight = itemView.getLeft() + iconMargin;
-            icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
-            background.setBounds(
-                    itemView.getLeft(), itemView.getTop(),
-                    (int) (itemView.getLeft() + dX + backgroundCornerOffset),
-                    itemView.getBottom()
-            );
-        } else if (dX < 0) { // Swiping to the left
+       if (dX < 0) { // Swiping to the left
             int iconLeft = itemView.getRight() - iconMargin - icon.getIntrinsicWidth();
             int iconRight = itemView.getRight() - iconMargin;
-            icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+            if(deleteIcon == null || deleteIcon.getVisibility() == View.GONE) {
+                icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+            }
             background.setBounds(
                     (int) (itemView.getRight() + dX - backgroundCornerOffset),
                     itemView.getTop(), itemView.getRight(), itemView.getBottom()
@@ -83,6 +82,8 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         int position = viewHolder.getAdapterPosition();
 
-        listener.onItemSwiped(position);
+        if(direction == ItemTouchHelper.LEFT) {
+            listener.onItemSwipedLeft(position);
+        }
     }
 }

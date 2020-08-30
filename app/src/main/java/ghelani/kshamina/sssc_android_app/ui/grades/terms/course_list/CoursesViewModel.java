@@ -88,8 +88,10 @@ public class CoursesViewModel extends ViewModel {
             }
 
             @Override
-            public boolean onItemLongClicked() {
-                setIsDeleteMode(!isDeleteMode);
+            public boolean onItemLongClicked(int index) {
+                ListItem item = ((ListItem)state.getValue().getItems().get(index));
+                item.setDeleteIconVisible(!item.isDeleteIconVisible());
+                state.setValue(state.getValue());
                 return true;
             }
 
@@ -121,10 +123,6 @@ public class CoursesViewModel extends ViewModel {
 
                     }
                 });
-    }
-
-    public void setIsDeleteMode(boolean value) {
-        isDeleteMode = value;
     }
 }
 

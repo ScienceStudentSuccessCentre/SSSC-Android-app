@@ -97,9 +97,10 @@ public class TermsViewModel extends ViewModel {
             }
 
             @Override
-            public boolean onItemLongClicked() {
-                setDeleteMode(!isDeleteMode);
-                fetchTerms();
+            public boolean onItemLongClicked(int index) {
+                ListItem item = ((ListItem)state.getValue().getItems().get(index));
+                item.setDeleteIconVisible(!item.isDeleteIconVisible());
+                state.setValue(state.getValue());
                 return true;
             }
 
@@ -130,19 +131,6 @@ public class TermsViewModel extends ViewModel {
 
                     }
                 });
-    }
-
-    public void toggleDeleteMode() {
-        setDeleteMode(!isDeleteMode);
-        fetchTerms();
-    }
-
-    public boolean isDeleteMode() {
-        return isDeleteMode;
-    }
-
-    public void setDeleteMode(boolean deleteMode) {
-        isDeleteMode = deleteMode;
     }
 }
 

@@ -1,5 +1,6 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course;
 
+import android.os.AsyncTask;
 import android.text.InputType;
 
 import androidx.hilt.Assisted;
@@ -22,6 +23,7 @@ import ghelani.kshamina.sssc_android_app.ui.grades.terms.select_grade.SelectGrad
 import ghelani.kshamina.sssc_android_app.ui.utils.events.SingleLiveEvent;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.InputItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.ListItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.TextItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.WeightItem;
 import io.reactivex.Completable;
@@ -167,18 +169,20 @@ public class AddCourseViewModel extends SelectItemViewModel<String> {
 
                     @Override
                     public void onSuccess(List<Assignment> assignments) {
-
-                        items.getValue().remove(index);
-                        Weight weight = weights.remove(index - 6);
-                        removeWeightItem.setValue(index);
+                        Weight weight = weights.get(index - 6);
+                        boolean hasAssignment = false;
                         for (Assignment assignment : assignments) {
                             if (assignment.assignmentWeightId.equals(weight.weightId)) {
-                                items.getValue().add(index, removeWeight);
-                                weights.add(index - 6, weight);
-                                addWeightItem.setValue(removeWeight);
-                                showDialog.setValue(removeWeight);
+                                hasAssignment = true;
                                 break;
                             }
+                        }
+
+                        if(!hasAssignment){
+                            items.getValue().remove(index);
+                            weights.remove(weight);
+                            removeWeightItem.setValue(index);
+                            AsyncTask.execute(() -> weightDao.deleteWeight(weight));
                         }
                         isSubmitAvailable();
                     }

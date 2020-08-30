@@ -1,6 +1,7 @@
 package ghelani.kshamina.sssc_android_app.ui.utils.events;
 
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.ListItem;
 
 public interface EventListener {
     interface FormInputItemListener {
@@ -12,7 +13,7 @@ public interface EventListener {
 
         void onItemClicked(String id);
 
-        boolean onItemLongClicked();
+        boolean onItemLongClicked(int index);
 
         void deleteItem(int index);
     }
@@ -26,6 +27,6 @@ public interface EventListener {
     }
 
     interface SwipeEventListener{
-        void onItemSwiped(int index);
+        void onItemSwipedLeft(int index);
     }
 }

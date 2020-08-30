@@ -34,6 +34,7 @@ import ghelani.kshamina.sssc_android_app.entity.Assignment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_assignment.AddAssignmentFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_course.AddCourseFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.required_final_grade.RequiredFinalGradeFragment;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.SwipeToDeleteCallback;
 
@@ -95,6 +96,9 @@ public class AssignmentListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_assignment_list, container, false);
         ButterKnife.bind(this, view);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
+
+        assignmentRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+
         return view;
     }
 
@@ -102,12 +106,9 @@ public class AssignmentListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        assignmentRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         assignmentViewModel = new ViewModelProvider(this).get(AssignmentViewModel.class);
 
         MainListAdapter adapter = new MainListAdapter(getActivity(), Collections.emptyList());
-        ItemTouchHelper swipeHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(), (index -> assignmentViewModel.deleteAssignment(index))));
-        swipeHelper.attachToRecyclerView(assignmentRecyclerView);
         assignmentRecyclerView.setAdapter(adapter);
 
         assignmentViewModel.getState().observe(getViewLifecycleOwner(), assignmentViewState -> {
@@ -184,18 +185,7 @@ public class AssignmentListFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        if (item.getItemId() == R.id.deleteActionItem) {
-            if (assignmentViewModel.isDeleteMode()) {
-                item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete));
-                assignmentViewModel.setDeleteMode(false);
-            } else {
-                item.setIcon(R.drawable.ic_close);
-                assignmentViewModel.setDeleteMode(true);
-            }
-            assignmentViewModel.fetchCourseAssignments(courseID);
-
-            return true;
-        } else if (item.getItemId() == R.id.editCourseAction) {
+        if (item.getItemId() == R.id.editCourseAction) {
             replaceFragment(AddCourseFragment.newInstance(assignmentViewModel.getCourse(), true));
         }
         return super.onOptionsItemSelected(item);

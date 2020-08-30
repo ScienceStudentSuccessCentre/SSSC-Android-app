@@ -72,8 +72,8 @@ public class EventListViewModel extends ViewModel {
             }
 
             @Override
-            public boolean onItemLongClicked() {
-                return false;
+            public boolean onItemLongClicked(int index) {
+                return true;
             }
 
             @Override

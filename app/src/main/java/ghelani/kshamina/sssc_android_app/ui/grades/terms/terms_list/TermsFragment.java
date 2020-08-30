@@ -30,6 +30,7 @@ import ghelani.kshamina.sssc_android_app.MainActivity;
 import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term.AddTermFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list.CourseListFragment;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.MainListAdapter;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.SwipeToDeleteCallback;
 
@@ -45,7 +46,6 @@ public class TermsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_terms, container, false);
     }
 
@@ -68,16 +68,12 @@ public class TermsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.termsRecyclerView);
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
         MainListAdapter adapter = new MainListAdapter(getActivity(), Collections.emptyList());
-        ItemTouchHelper swipeHelper = new ItemTouchHelper(new SwipeToDeleteCallback(getContext(), (index -> termsViewModel.deleteTerm(index))));
-        swipeHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(adapter);
 
         termsViewModel = new ViewModelProvider(this).get(TermsViewModel.class);
         termsViewModel.state.observe(getViewLifecycleOwner(), termViewState -> {
             if (termViewState.isLoading()) {
-                System.out.println("Terms Loading");
             } else if (termViewState.isError()) {
-                System.out.println("Terms ERROR: " + termViewState.getError());
             } else if (termViewState.isSuccess()) {
                 if (termViewState.getItems().isEmpty()) {
                     emptyTermsMessage.setVisibility(View.VISIBLE);
@@ -92,34 +88,10 @@ public class TermsFragment extends Fragment {
         });
 
         termsViewModel.termSelected.observe(getViewLifecycleOwner(), term -> {
-            setHasOptionsMenu(false);
             ((MainActivity) requireActivity()).replaceFragment(CourseListFragment.newInstance(term));
         });
 
         termsViewModel.fetchTerms();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NotNull Menu menu, @NotNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-        inflater.inflate(R.menu.term_list_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        if (item.getItemId() == R.id.deleteActionItem) {
-            if (termsViewModel.isDeleteMode()) {
-                item.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete));
-
-            } else {
-                item.setIcon(R.drawable.ic_close);
-            }
-
-            termsViewModel.toggleDeleteMode();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void openAddTermScreen() {
@@ -128,7 +100,6 @@ public class TermsFragment extends Fragment {
 
     @Override
     public void onResume() {
-        setHasOptionsMenu(true);
         termsViewModel.fetchTerms();
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Terms");
         super.onResume();
@@ -136,7 +107,6 @@ public class TermsFragment extends Fragment {
 
     @Override
     public void onPause() {
-        setHasOptionsMenu(false);
         super.onPause();
     }
 

@@ -44,7 +44,7 @@ public class ListAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
         ListViewHolder listViewHolder = (ListViewHolder) holder;
 
         listViewHolder.itemCard.setOnClickListener(v -> item.getClickListener().onItemClicked(item.getId()));
-        listViewHolder.itemCard.setOnLongClickListener(v -> item.getClickListener().onItemLongClicked());
+        listViewHolder.itemCard.setOnLongClickListener(v -> item.getClickListener().onItemLongClicked(position));
         listViewHolder.deleteIcon.setOnClickListener(v -> item.getClickListener().deleteItem(position));
         listViewHolder.deleteIcon.setVisibility(item.isDeleteIconVisible() ? View.VISIBLE : View.GONE);
         listViewHolder.shortForm.setText((item.getShortFormText() == null || item.getShortFormText().isEmpty()) ? "N/A" : item.getShortFormText());
@@ -53,7 +53,7 @@ public class ListAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
         listViewHolder.heading.setVisibility(item.getHeaderText().isEmpty() ? View.GONE : View.VISIBLE);
     }
 
-    public static class ListViewHolder extends RecyclerView.ViewHolder {
+    public class ListViewHolder extends RecyclerView.ViewHolder {
 
         public MaterialCardView itemCard;
         public ImageView deleteIcon;
