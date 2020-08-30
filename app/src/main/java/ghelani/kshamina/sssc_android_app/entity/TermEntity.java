@@ -6,10 +6,11 @@ import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity(tableName = "terms")
-public class TermEntity implements Comparable<TermEntity> {
+public class TermEntity implements Comparable<TermEntity>, Serializable {
 
     public enum Season {
         WINTER(1),

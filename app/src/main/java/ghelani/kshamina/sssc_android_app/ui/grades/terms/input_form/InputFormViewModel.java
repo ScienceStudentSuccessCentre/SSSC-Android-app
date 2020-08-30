@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import java.util.List;
-import ghelani.kshamina.sssc_android_app.ui.common.events.SingleLiveEvent;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.SingleLiveEvent;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 
 public abstract class InputFormViewModel extends ViewModel {
 

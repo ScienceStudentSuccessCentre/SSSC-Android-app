@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity(tableName = "assignments",
@@ -16,7 +17,7 @@ import java.util.UUID;
                 childColumns = "assignment_course_id",
                 onDelete = ForeignKey.CASCADE
         ))
-public class Assignment {
+public class Assignment implements Serializable{
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "assignment_id")

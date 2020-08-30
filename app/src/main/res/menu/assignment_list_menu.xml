@@ -7,9 +7,5 @@
         android:icon="@drawable/ic_edit_24"
         android:title="edit"
         app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/deleteActionItem"
-        android:icon="@drawable/ic_delete"
-        android:title="delete"
-        app:showAsAction="always"/>
+
 </menu>

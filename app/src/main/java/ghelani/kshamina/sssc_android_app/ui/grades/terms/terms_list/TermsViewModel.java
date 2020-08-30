@@ -1,21 +1,22 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list;
 
+import androidx.hilt.Assisted;
+import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.database.TermDao;
 import ghelani.kshamina.sssc_android_app.entity.TermEntity;
-import ghelani.kshamina.sssc_android_app.ui.common.events.ListItemEventListener;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.ViewState;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.ListItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.ViewState;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.ListItem;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
@@ -27,33 +28,18 @@ import io.reactivex.schedulers.Schedulers;
 public class TermsViewModel extends ViewModel {
 
     private TermDao termDao;
-    public MutableLiveData<ViewState<ListItem>> state = new MutableLiveData<>();
+    public MutableLiveData<ViewState<DiffItem>> state = new MutableLiveData<>();
     public MutableLiveData<TermEntity> termSelected = new MutableLiveData<>();
+    private List<TermEntity> termsList = Collections.emptyList();
     private boolean isDeleteMode;
+    private final SavedStateHandle savedStateHandle;
 
-    @Inject
-    public TermsViewModel(GradesDatabase db) {
+    @ViewModelInject
+    public TermsViewModel(GradesDatabase db, @Assisted SavedStateHandle savedStateHandle) {
         super();
         this.termDao = db.getTermDao();
         isDeleteMode = false;
-    }
-
-    public void insertTerm(TermEntity newTerm){
-        Completable.fromAction(() -> termDao.insertTerm(newTerm))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {}
-
-                    @Override
-                    public void onComplete() {
-                        fetchTerms();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {}
-                });
+        this.savedStateHandle = savedStateHandle;
     }
 
     public void fetchTerms() {
@@ -70,8 +56,9 @@ public class TermsViewModel extends ViewModel {
                     public void onSuccess(@NonNull List<TermEntity> terms) {
                         Collections.sort(terms);
                         Collections.reverse(terms);
-                        List<ListItem> items = new ArrayList<>();
-                        for(TermEntity term : terms){
+                        termsList = terms;
+                        List<DiffItem> items = new ArrayList<>();
+                        for (TermEntity term : terms) {
                             items.add(createListItem(term));
                         }
                         state.setValue(new ViewState<>(false, false, true, "", items));
@@ -84,8 +71,8 @@ public class TermsViewModel extends ViewModel {
                 });
     }
 
-    private ListItem createListItem(TermEntity term){
-        return new ListItem(term.getTermId(),term.asShortString(),"",term.toString(), isDeleteMode, new ListItemEventListener() {
+    private ListItem createListItem(TermEntity term) {
+        return new ListItem(term.getTermId(), term.asShortString(), "", term.toString(), isDeleteMode, new EventListener.ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
                 termDao.getTermById(id)
@@ -110,44 +97,40 @@ public class TermsViewModel extends ViewModel {
             }
 
             @Override
-            public void deleteItem(String id) {
-                Completable.fromAction(() -> termDao.deleteTerm(id))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new CompletableObserver() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
+            public boolean onItemLongClicked(int index) {
+                ListItem item = ((ListItem)state.getValue().getItems().get(index));
+                item.setDeleteIconVisible(!item.isDeleteIconVisible());
+                state.setValue(state.getValue());
+                return true;
+            }
 
-                            }
-
-                            @Override
-                            public void onComplete() {
-                                fetchTerms();
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-                        });
+            @Override
+            public void deleteItem(int index) {
+             deleteTerm(index);
             }
         });
     }
 
-    public List<DiffItem> getTermItems(){
-        List<DiffItem> termItems = new ArrayList<>();
-        for(ListItem listItem : state.getValue().getItems()){
-            termItems.add(listItem);
-        }
-        return termItems;
-    }
+    public void deleteTerm(int index) {
+        Completable.fromAction(() -> termDao.deleteTerm(termsList.get(index).termId))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-    public boolean isDeleteMode() {
-        return isDeleteMode;
-    }
+                    }
 
-    public void setDeleteMode(boolean deleteMode) {
-        isDeleteMode = deleteMode;
+                    @Override
+                    public void onComplete() {
+                        fetchTerms();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 }
 

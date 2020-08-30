@@ -1,20 +1,22 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.add_term;
 
+import androidx.hilt.Assisted;
+import androidx.hilt.lifecycle.ViewModelInject;
+import androidx.lifecycle.SavedStateHandle;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.database.TermDao;
 import ghelani.kshamina.sssc_android_app.entity.TermEntity;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.DiffItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.SelectionItem;
-import ghelani.kshamina.sssc_android_app.ui.common.list.model.TextItem;
 import ghelani.kshamina.sssc_android_app.ui.grades.GradesFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.input_form.InputFormViewModel;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.SelectionItem;
+import ghelani.kshamina.sssc_android_app.ui.utils.list.model.TextItem;
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -28,14 +30,16 @@ public class AddTermViewModel extends InputFormViewModel {
     private int selectedYearIndex;
     private int selectedSeasonIndex;
     private TermDao termDao;
+    private final SavedStateHandle savedStateHandle;
 
-    @Inject
-    public AddTermViewModel(GradesDatabase db) {
+    @ViewModelInject
+    public AddTermViewModel(GradesDatabase db, @Assisted SavedStateHandle savedStateHandle) {
         season = "";
         year = "";
         selectedSeasonIndex = -1;
         selectedYearIndex = -1;
         this.termDao = db.getTermDao();
+        this.savedStateHandle = savedStateHandle;
     }
 
     @Override

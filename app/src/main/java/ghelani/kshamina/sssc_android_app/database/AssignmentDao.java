@@ -9,10 +9,12 @@ import androidx.room.Update;
 import java.util.List;
 
 import ghelani.kshamina.sssc_android_app.entity.Assignment;
+import ghelani.kshamina.sssc_android_app.entity.AssignmentWithWeight;
 import io.reactivex.Single;
 
 @Dao
 public interface AssignmentDao {
+
     @Insert
     void insertAssignment(Assignment assignment);
 
@@ -28,9 +30,12 @@ public interface AssignmentDao {
     @Query("SELECT * FROM assignments")
     List<Assignment> getAllAssignments();
 
+    @Query("SELECT * FROM assignments WHERE assignment_weight_id = :weightId")
+    Single<List<Assignment>> getAssignmentsByWeight(String weightId);
+
     @Query("SELECT * From assignments WHERE assignment_id = :id")
     Single<Assignment> getAssignmentByID(String id);
 
     @Query("SELECT * FROM assignments WHERE assignment_course_id = :courseId")
-    Single<List<Assignment>> getAssignmentsByCourseId(String courseId);
+    Single<List<AssignmentWithWeight>> getAssignmentsByCourseId(String courseId);
 }
