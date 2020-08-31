@@ -1,9 +1,14 @@
 package ghelani.kshamina.sssc_android_app.ui.email_dialog;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
+import android.widget.Button;
 
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -70,35 +75,63 @@ public class EmailBuilder {
         View dialogView = context.getLayoutInflater().inflate(R.layout.dialog_student_information, null);
         TextInputEditText studentNameInput = dialogView.findViewById(R.id.inputStudentName);
         TextInputEditText studentIdInput = dialogView.findViewById(R.id.inputStudentId);
-        TextInputEditText degreeInput = dialogView.findViewById(R.id.inputEmail);
+        TextInputEditText emailInput = dialogView.findViewById(R.id.inputEmail);
 
-
-        new MaterialAlertDialogBuilder(context)
-                .setTitle("Email Information")
-                .setMessage("Enter your name, student number, and degree")
+        AlertDialog emailDialog = new MaterialAlertDialogBuilder(context)
+                .setMessage("Enter your name, student number, and Carleton email")
                 .setView(dialogView)
-                .setPositiveButton("Submit", (dialog, which) -> {
-                    dialog.dismiss();
-                    MainApplication appSettings = (MainApplication) context.getApplication();
-                    appSettings.setStudentName(studentNameInput.getText().toString());
-                    appSettings.setStudentId(studentIdInput.getText().toString());
-                    appSettings.setEmail(degreeInput.getText().toString());
-                    createEmail(context, type, emailItem);
-                })
+                .setPositiveButton("Submit", null)
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
-                .create()
-                .show();
+                .create();
+
+        emailDialog.show();
+
+        Button positiveButton = emailDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+
+        positiveButton.setOnClickListener(v -> {
+            String studentName = studentNameInput.getText().toString();
+            String studentId = studentIdInput.getText().toString();
+            String studentEmail = emailInput.getText().toString();
+            boolean error = false;
+
+            if(studentName.isEmpty()){
+                studentNameInput.setError("Enter your name.");
+                error = true;
+            }
+
+            if(studentId.isEmpty()){
+                studentIdInput.setError("Enter your student number.");
+                error = true;
+            }else if(!studentId.matches("[0-9]+")){
+                studentIdInput.setError("Student number cannot contain text.");
+                error = true;
+            }
+
+            if(studentEmail.isEmpty()){
+                emailInput.setError("Enter your Carleton email");
+                error = true;
+            }
+
+            if(!error) {
+                emailDialog.dismiss();
+                MainApplication appSettings = (MainApplication) context.getApplication();
+                appSettings.setStudentName(studentNameInput.getText().toString());
+                appSettings.setStudentId(studentIdInput.getText().toString());
+                appSettings.setEmail(emailInput.getText().toString());
+                createEmail(context, type, emailItem);
+            }
+        });
+                emailDialog.show();
     }
 
     public static void confirmSendEmail(Activity context, EmailType type, Object emailItem) {
         MainApplication appSettings = (MainApplication) context.getApplication();
 
         new MaterialAlertDialogBuilder(context)
-                .setTitle("Email Information")
-                .setMessage("Do you want to continue to send an email with these credentials?\n" +
+                .setMessage("Do you want to continue to send an email?\n" +
                         "\nName: " + appSettings.getStudentName() +
                         "\nStudent Number: " + appSettings.getStudentId() +
-                        "\nDegree: " + appSettings.getEmail()
+                        "\nCarleton Email: " + appSettings.getEmail()
                 )
                 .setPositiveButton("Continue", (dialog, which) -> {
                     dialog.dismiss();

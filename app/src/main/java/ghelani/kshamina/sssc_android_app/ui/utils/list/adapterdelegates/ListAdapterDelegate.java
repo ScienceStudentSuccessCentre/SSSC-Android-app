@@ -47,7 +47,7 @@ public class ListAdapterDelegate extends AdapterDelegate<List<DiffItem>> {
         listViewHolder.itemCard.setOnLongClickListener(v -> item.getClickListener().onItemLongClicked(position));
         listViewHolder.deleteIcon.setOnClickListener(v -> item.getClickListener().deleteItem(position));
         listViewHolder.deleteIcon.setVisibility(item.isDeleteIconVisible() ? View.VISIBLE : View.GONE);
-        listViewHolder.shortForm.setText((item.getShortFormText() == null || item.getShortFormText().isEmpty()) ? "N/A" : item.getShortFormText());
+        listViewHolder.shortForm.setText((item.getShortFormText() == null || item.getShortFormText().toString().isEmpty()) ? "N/A" : item.getShortFormText());
         listViewHolder.description.setText(item.getDescriptionText());
         listViewHolder.heading.setText(item.getHeaderText());
         listViewHolder.heading.setVisibility(item.getHeaderText().isEmpty() ? View.GONE : View.VISIBLE);

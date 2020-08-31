@@ -38,36 +38,45 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:id="@+id/heading"
+        <LinearLayout
+            android:layout_margin="12dp"
+            android:id="@+id/listItemContent"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:text=""
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/description"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             app:layout_constraintStart_toEndOf="@+id/termCard"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Heading" />
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text=""
-            android:textAlignment="viewStart"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/deleteButton"
-            app:layout_constraintStart_toEndOf="@+id/termCard"
-            app:layout_constraintTop_toBottomOf="@id/heading"
-            tools:text="Description" />
+            <TextView
+                android:id="@+id/heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/termCard"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Heading" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textAlignment="viewStart"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/deleteButton"
+                app:layout_constraintStart_toEndOf="@+id/termCard"
+                app:layout_constraintTop_toBottomOf="@id/heading"
+                tools:text="Description" />
+
+        </LinearLayout>
+
 
         <ImageView
             android:id="@+id/deleteButton"

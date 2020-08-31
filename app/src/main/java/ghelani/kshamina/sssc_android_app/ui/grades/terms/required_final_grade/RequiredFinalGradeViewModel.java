@@ -84,9 +84,11 @@ public class RequiredFinalGradeViewModel extends SelectItemViewModel<Weight> {
 
         inputItems.add(new TextItem("MINIMUM FINAL GRADE REQUIRED"));
 
-        inputItems.add(new InputItem(isFormFilled() ? String.valueOf(requiredExamGrade) : "", "Enter Info Above", "Grade", InputType.TYPE_CLASS_TEXT, (item, value) -> {
+        InputItem finalGrade = new InputItem(isFormFilled() ? String.valueOf(requiredExamGrade) : "", "Enter Info Above", "Grade", InputType.TYPE_CLASS_TEXT,(item, value) -> {
+        });
+        finalGrade.setEnabled(false);
 
-        }));
+        inputItems.add(finalGrade);
 
         items.setValue(inputItems);
     }

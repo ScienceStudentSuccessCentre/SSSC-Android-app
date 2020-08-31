@@ -51,7 +51,7 @@ public class InputWeightFormAdapterDelegate extends AdapterDelegate<List<DiffIte
         }
 
         if (!item.getValue().isEmpty()) {
-            weightItemViewHolder.value.setText(item.getValue());
+            weightItemViewHolder.value.setText(item.getValue()+"%");
         } else {
             weightItemViewHolder.value.setText(item.getValue());
             weightItemViewHolder.value.setHint("30%");
@@ -59,24 +59,48 @@ public class InputWeightFormAdapterDelegate extends AdapterDelegate<List<DiffIte
 
         weightItemViewHolder.name.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                item.getNameListener().onValueChanged(item,s.toString());
+                item.getNameListener().onValueChanged(item, s.toString());
             }
+
             @Override
-            public void afterTextChanged(Editable s) { }
+            public void afterTextChanged(Editable s) {
+            }
         });
 
+        weightItemViewHolder.value.setOnFocusChangeListener((v, hasFocus) -> {
+            String editTextValue =  weightItemViewHolder.value.getText().toString();
+            if(hasFocus){
+                if(editTextValue.contains("%")){
+                    weightItemViewHolder.value.setText(editTextValue.replace("%",""));
+                }
+            }else{
+                if(!editTextValue.endsWith("%")){
+                    weightItemViewHolder.value.setText(editTextValue + "%");
+                }
+            }
+        });
         weightItemViewHolder.value.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                item.getValueListener().onValueChanged(item,s.toString());
+                if(s.toString().contains("%")){
+                    s = s.toString().replace("%", "");
+                }
+                item.getValueListener().onValueChanged(item, s.toString());
             }
+
             @Override
-            public void afterTextChanged(Editable s) { }
+            public void afterTextChanged(Editable s) {
+            }
         });
     }
 

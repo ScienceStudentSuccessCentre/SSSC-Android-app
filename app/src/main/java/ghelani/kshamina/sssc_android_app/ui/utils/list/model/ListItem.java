@@ -1,5 +1,7 @@
 package ghelani.kshamina.sssc_android_app.ui.utils.list.model;
 
+import android.text.SpannableString;
+
 import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
 
 /**
@@ -7,13 +9,13 @@ import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
  */
 public class ListItem implements DiffItem {
     private String id;
-    private String shortFormText;
+    private SpannableString shortFormText;
     private String headerText;
     private String descriptionText;
     private boolean deleteIconVisible;
     private EventListener.ListItemEventListener clickListener;
 
-    public ListItem(String id, String shortFormText, String headerText, String descriptionText, boolean deleteIconVisible, EventListener.ListItemEventListener clickListener) {
+    public ListItem(String id, SpannableString shortFormText, String headerText, String descriptionText, boolean deleteIconVisible, EventListener.ListItemEventListener clickListener) {
         this.id = id;
         this.shortFormText = shortFormText;
         this.headerText = headerText;
@@ -30,11 +32,11 @@ public class ListItem implements DiffItem {
         this.id = id;
     }
 
-    public String getShortFormText() {
+    public SpannableString getShortFormText() {
         return shortFormText;
     }
 
-    public void setShortFormText(String shortFormText) {
+    public void setShortFormText(SpannableString shortFormText) {
         this.shortFormText = shortFormText;
     }
 

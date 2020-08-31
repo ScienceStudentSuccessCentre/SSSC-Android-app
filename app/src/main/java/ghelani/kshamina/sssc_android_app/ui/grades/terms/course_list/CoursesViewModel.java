@@ -1,5 +1,7 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.course_list;
 
+import android.text.SpannableString;
+
 import androidx.fragment.app.Fragment;
 import androidx.hilt.Assisted;
 import androidx.hilt.lifecycle.ViewModelInject;
@@ -81,7 +83,7 @@ public class CoursesViewModel extends ViewModel {
     }
 
     private DiffItem createListItem(CourseEntity course) {
-        return new ListItem(course.courseId, course.courseFinalGrade, course.courseCode, course.courseName, isDeleteMode, new EventListener.ListItemEventListener() {
+        return new ListItem(course.courseId, new SpannableString(course.courseFinalGrade), course.courseCode, course.courseName, isDeleteMode, new EventListener.ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
                 navigationEvent.setValue(AssignmentListFragment.newInstance(id));

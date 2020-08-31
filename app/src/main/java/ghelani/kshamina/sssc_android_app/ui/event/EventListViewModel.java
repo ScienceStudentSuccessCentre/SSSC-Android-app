@@ -1,5 +1,8 @@
 package ghelani.kshamina.sssc_android_app.ui.event;
 
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+
 import androidx.fragment.app.Fragment;
 import androidx.hilt.Assisted;
 import androidx.hilt.lifecycle.ViewModelInject;
@@ -65,7 +68,11 @@ public class EventListViewModel extends ViewModel {
     }
 
     private DiffItem createListItem(Event event) {
-        return new ListItem(event.getId(), event.getDateDisplayString(), "", event.getName(), false, new EventListener.ListItemEventListener() {
+        String date = event.getDateDisplayString();
+        SpannableString dateSize = new SpannableString(date);
+        dateSize.setSpan(new RelativeSizeSpan(0.65f), 0,dateSize.length() - 2, 0);
+
+        return new ListItem(event.getId(), dateSize, "", event.getName(), false, new EventListener.ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
                 navigationEvent.setValue(EventSingleFragment.newInstance(event));
