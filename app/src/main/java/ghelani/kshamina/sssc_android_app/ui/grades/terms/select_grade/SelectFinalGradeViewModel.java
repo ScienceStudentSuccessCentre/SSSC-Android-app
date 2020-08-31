@@ -37,7 +37,7 @@ public class SelectFinalGradeViewModel extends InputFormViewModel {
                 if(selectedIndex != -1){
                     ((SelectionItem) items.getValue().get(selectedIndex)).setSelected(false);
                 }
-                ((SelectionItem)items.getValue().get(index)).setSelected(false);
+                ((SelectionItem)items.getValue().get(index)).setSelected(true);
                 items.setValue(items.getValue());
                 switch(selectedGrade){
                     case "None":
