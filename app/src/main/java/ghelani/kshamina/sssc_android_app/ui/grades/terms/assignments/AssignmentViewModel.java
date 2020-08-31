@@ -1,6 +1,7 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments;
 
 import android.os.AsyncTask;
+import android.text.SpannableString;
 
 import androidx.fragment.app.Fragment;
 import androidx.hilt.Assisted;
@@ -94,7 +95,7 @@ public class AssignmentViewModel extends ViewModel {
 
     private ListItem createListItem(AssignmentWithWeight assignment) {
         int percentage = (int) ((assignment.getAssignment().assignmentGradeEarned / assignment.getAssignment().assignmentGradeTotal) * 100);
-        return new ListItem(assignment.getAssignment().assignmentId, Grading.gradeToLetter.floorEntry(percentage).getValue(),
+        return new ListItem(assignment.getAssignment().assignmentId, new SpannableString(Grading.gradeToLetter.floorEntry(percentage).getValue()),
                 assignment.getAssignment().assignmentName, percentage + "%",
                 deleteMode, new EventListener.ListItemEventListener() {
             @Override

@@ -42,12 +42,14 @@
 
         <EditText
             android:id="@+id/userInputField"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:background="@null"
             android:hint="Operating Systems"
             android:textAlignment="viewEnd"
+            android:clickable="false"
+            app:layout_constraintStart_toEndOf="@id/inputPrompt"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

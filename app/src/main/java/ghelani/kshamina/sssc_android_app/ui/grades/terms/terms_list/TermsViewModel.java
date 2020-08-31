@@ -1,5 +1,7 @@
 package ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list;
 
+import android.text.SpannableString;
+
 import androidx.hilt.Assisted;
 import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.MutableLiveData;
@@ -72,7 +74,7 @@ public class TermsViewModel extends ViewModel {
     }
 
     private ListItem createListItem(TermEntity term) {
-        return new ListItem(term.getTermId(), term.asShortString(), "", term.toString(), isDeleteMode, new EventListener.ListItemEventListener() {
+        return new ListItem(term.getTermId(), new SpannableString(term.asShortString()), "", term.toString(), isDeleteMode, new EventListener.ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
                 termDao.getTermById(id)
