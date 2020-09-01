@@ -44,7 +44,8 @@ public class AddCourseViewModel extends SelectItemViewModel<String> {
     private List<Weight> weights;
     private SingleLiveEvent<DiffItem> addWeightItem = new SingleLiveEvent<>();
     private SingleLiveEvent<Integer> removeWeightItem = new SingleLiveEvent<>();
-    private SingleLiveEvent<DiffItem> showDialog = new SingleLiveEvent<>();
+    private SingleLiveEvent<DiffItem> updateWeightItem = new SingleLiveEvent<>();
+    private SingleLiveEvent<Boolean> showDialog = new SingleLiveEvent<>();
     private CourseEntity newCourse;
     private boolean updating;
     private final SavedStateHandle savedStateHandle;
@@ -83,7 +84,7 @@ public class AddCourseViewModel extends SelectItemViewModel<String> {
         }));
 
         inputItems.add(new InputItem(newCourse.courseCredits == -1 ? "" : String.valueOf(newCourse.courseCredits), "0.5", "Credits", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
-            if(value.equals(".")){
+            if (value.equals(".")) {
                 value = "0.";
             }
             newCourse.courseCredits = value.isEmpty() ? -1 : Double.parseDouble(value);
@@ -107,7 +108,7 @@ public class AddCourseViewModel extends SelectItemViewModel<String> {
                         isSubmitAvailable();
                     },
                     (item, weightValue) -> {
-                        if(weightValue.equals(".")){
+                        if (weightValue.equals(".")) {
                             weightValue = "0.";
                         }
                         weight.weightValue = weightValue.isEmpty() ? -1 : Double.parseDouble(weightValue);
@@ -158,8 +159,7 @@ public class AddCourseViewModel extends SelectItemViewModel<String> {
     }
 
     public void removeWeight(int index) {
-        WeightItem removeWeight = (WeightItem) items.getValue().get(index);
-        assignmentDao.getAssignmentsByWeight(weights.get(removeWeight.getIndex()).weightId)
+        assignmentDao.getAssignmentsByWeight(weights.get(index - 6).weightId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<List<Assignment>>() {
@@ -178,11 +178,14 @@ public class AddCourseViewModel extends SelectItemViewModel<String> {
                             }
                         }
 
-                        if(!hasAssignment){
+                        if (!hasAssignment) {
                             items.getValue().remove(index);
                             weights.remove(weight);
                             removeWeightItem.setValue(index);
                             AsyncTask.execute(() -> weightDao.deleteWeight(weight));
+                        }else{
+                            updateWeightItem.setValue(items.getValue().get(index));
+                            showDialog.setValue(true);
                         }
                         isSubmitAvailable();
                     }
@@ -318,7 +321,11 @@ public class AddCourseViewModel extends SelectItemViewModel<String> {
         return removeWeightItem;
     }
 
-    public SingleLiveEvent<DiffItem> getShowDialog() {
+    public SingleLiveEvent<DiffItem> getUpdateWeightItem() {
+        return updateWeightItem;
+    }
+
+    public SingleLiveEvent<Boolean> getShowDialog() {
         return showDialog;
     }
 

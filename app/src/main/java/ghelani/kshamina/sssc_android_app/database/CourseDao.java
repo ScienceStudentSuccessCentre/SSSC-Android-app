@@ -32,5 +32,5 @@ public interface CourseDao {
     Single<CourseWithAssignmentsAndWeights>getCourseWithWeightsByID(String id);
 
     @Query("SELECT * FROM courses WHERE course_term_id = :courseTermId")
-    Single<List<CourseEntity>> getCoursesByTermId(String courseTermId);
+    Single<List<CourseWithAssignmentsAndWeights>> getCoursesByTermId(String courseTermId);
 }

@@ -11,6 +11,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,8 @@ import ghelani.kshamina.sssc_android_app.ui.utils.events.SingleLiveEvent;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.ViewState;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.DiffItem;
 import ghelani.kshamina.sssc_android_app.ui.utils.list.model.ListItem;
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -42,6 +46,7 @@ public class AssignmentViewModel extends ViewModel {
     private CourseWithAssignmentsAndWeights course;
     private boolean deleteMode;
     private final SavedStateHandle savedStateHandle;
+    private DecimalFormat df;
 
     @ViewModelInject
     public AssignmentViewModel(GradesDatabase gradesDatabase, @Assisted SavedStateHandle savedStateHandle) {
@@ -49,6 +54,7 @@ public class AssignmentViewModel extends ViewModel {
         this.assignmentDao = gradesDatabase.getAssignmentDao();
         this.courseDao = gradesDatabase.getCourseDao();
         this.savedStateHandle = savedStateHandle;
+        df = new DecimalFormat("#0.0");
     }
 
     public void fetchCourseAssignments(String courseID) {
@@ -90,13 +96,15 @@ public class AssignmentViewModel extends ViewModel {
             courseGradeText.setValue("N/A");
             return;
         }
-        courseGradeText.setValue(percentage + "%");
+        String courseGrade = Grading.gradeToLetter.floorEntry((int) percentage).getValue();
+
+        courseGradeText.setValue(df.format(percentage) + "% (" + courseGrade + ")");
     }
 
     private ListItem createListItem(AssignmentWithWeight assignment) {
-        int percentage = (int) ((assignment.getAssignment().assignmentGradeEarned / assignment.getAssignment().assignmentGradeTotal) * 100);
-        return new ListItem(assignment.getAssignment().assignmentId, new SpannableString(Grading.gradeToLetter.floorEntry(percentage).getValue()),
-                assignment.getAssignment().assignmentName, percentage + "%",
+        double percentage = (assignment.getAssignment().assignmentGradeEarned / assignment.getAssignment().assignmentGradeTotal) * 100;
+        return new ListItem(assignment.getAssignment().assignmentId, new SpannableString(Grading.gradeToLetter.floorEntry((int) percentage).getValue()),
+                assignment.getAssignment().assignmentName, df.format(percentage) + "%",
                 deleteMode, new EventListener.ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
@@ -106,7 +114,7 @@ public class AssignmentViewModel extends ViewModel {
 
             @Override
             public boolean onItemLongClicked(int index) {
-                ListItem item = ((ListItem)state.getValue().getItems().get(index));
+                ListItem item = ((ListItem) state.getValue().getItems().get(index));
                 item.setDeleteIconVisible(!item.isDeleteIconVisible());
                 state.setValue(state.getValue());
                 return true;
@@ -118,6 +126,10 @@ public class AssignmentViewModel extends ViewModel {
                 deleteAssignment(index);
             }
         });
+    }
+
+    private void updateCourse(CourseEntity course) {
+        AsyncTask.execute(() -> courseDao.updateCourse(course));
     }
 
     public void deleteAssignment(int index) {

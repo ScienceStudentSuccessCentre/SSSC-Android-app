@@ -6,6 +6,7 @@ import androidx.hilt.Assisted;
 import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.SavedStateHandle;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +34,11 @@ public class RequiredFinalGradeViewModel extends SelectItemViewModel<Weight> {
     private Weight finalExamWeight;
     private double requiredExamGrade;
     private final SavedStateHandle savedStateHandle;
+    private DecimalFormat df;
 
     @ViewModelInject
     public RequiredFinalGradeViewModel(@Assisted SavedStateHandle savedStateHandle) {
+        df = new DecimalFormat("#0.0");
         desiredFinalGrade = -1;
         this.savedStateHandle = savedStateHandle;
     }
@@ -60,8 +63,8 @@ public class RequiredFinalGradeViewModel extends SelectItemViewModel<Weight> {
 
         inputItems.add(new TextItem("COURSE DETAILS - " + course.courseCode));
 
-        inputItems.add(new InputItem(String.valueOf(currentCourseGrade == -1 ? "" : currentCourseGrade), "90", "Current Course Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
-            if(value.equals(".")){
+        inputItems.add(new InputItem(String.valueOf(currentCourseGrade == -1 ? "" : df.format(currentCourseGrade)), "90", "Current Course Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
+            if (value.equals(".")) {
                 value = "0.";
             }
             currentCourseGrade = value.isEmpty() ? -1 : Double.parseDouble(value);
@@ -70,7 +73,7 @@ public class RequiredFinalGradeViewModel extends SelectItemViewModel<Weight> {
         }));
 
         inputItems.add(new InputItem(String.valueOf(desiredFinalGrade == -1 ? "" : desiredFinalGrade), "90%", "Desired Final Grade", (InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL), (item, value) -> {
-            if(value.equals(".")){
+            if (value.equals(".")) {
                 value = "0.";
             }
             desiredFinalGrade = value.isEmpty() ? -1 : Double.parseDouble(value);
@@ -84,7 +87,7 @@ public class RequiredFinalGradeViewModel extends SelectItemViewModel<Weight> {
 
         inputItems.add(new TextItem("MINIMUM FINAL GRADE REQUIRED"));
 
-        InputItem finalGrade = new InputItem(isFormFilled() ? String.valueOf(requiredExamGrade) : "", "Enter Info Above", "Grade", InputType.TYPE_CLASS_TEXT,(item, value) -> {
+        InputItem finalGrade = new InputItem(isFormFilled() ? String.valueOf(df.format(requiredExamGrade)) : "", "Enter Info Above", "Grade", InputType.TYPE_CLASS_TEXT, (item, value) -> {
         });
         finalGrade.setEnabled(false);
 

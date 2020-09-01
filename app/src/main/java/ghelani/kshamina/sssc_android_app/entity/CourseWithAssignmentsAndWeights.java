@@ -42,7 +42,6 @@ public class CourseWithAssignmentsAndWeights implements Serializable {
         }
 
         double percentage = totalEarned / totalWeight * 100;
-        percentage = Math.round(percentage * 10) / 10.0;
         return percentage;
     }
 }

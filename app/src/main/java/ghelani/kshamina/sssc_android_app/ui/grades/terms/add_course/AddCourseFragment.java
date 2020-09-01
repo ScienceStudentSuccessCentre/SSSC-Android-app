@@ -118,6 +118,12 @@ public class AddCourseFragment extends Fragment {
 
         });
 
+        addCourseViewModel.getUpdateWeightItem().observe(getViewLifecycleOwner(), diffItem -> {
+            int position = ((WeightItem) diffItem).getIndex() + 6;
+            listItems.set(position, diffItem);
+            adapter.notifyItemChanged(position);
+        });
+
         addCourseViewModel.getRemoveWeightItem().observe(getViewLifecycleOwner(), index -> {
             listItems.remove(index.intValue());
             adapter.notifyItemRemoved(index);
@@ -129,7 +135,7 @@ public class AddCourseFragment extends Fragment {
             adapter.notifyItemInserted(position);
         });
 
-        addCourseViewModel.getShowDialog().observe(getViewLifecycleOwner(), diffItem -> showDialog());
+        addCourseViewModel.getShowDialog().observe(getViewLifecycleOwner(), show -> showDialog());
 
         addCourseViewModel.isSubmitEnabled().observe(getViewLifecycleOwner(), isEnabled -> submitButton.setEnabled(isEnabled));
         addCourseViewModel.getNavigationEvent().observe(getViewLifecycleOwner(), newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
