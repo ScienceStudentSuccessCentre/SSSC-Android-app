@@ -27,6 +27,7 @@ import ghelani.kshamina.sssc_android_app.ui.grades.terms.terms_list.TermsFragmen
 
 public class GradesFragment extends Fragment {
     private String[] tabTitles;
+    private ViewPager2 viewPager;
 
     public GradesFragment() {
         // Required empty public constructor
@@ -54,7 +55,7 @@ public class GradesFragment extends Fragment {
         };
 
         //Create viewpager to add swipe navigation
-        ViewPager2 viewPager = view.findViewById(R.id.grades_viewpager);
+        viewPager = view.findViewById(R.id.grades_viewpager);
         FragmentStateAdapter pagerAdapter = new ScreenSlidePagerAdapter(getActivity());
         viewPager.setAdapter(pagerAdapter);
 
@@ -90,5 +91,10 @@ public class GradesFragment extends Fragment {
         public int getItemCount() {
             return 3;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

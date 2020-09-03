@@ -23,7 +23,7 @@ public interface CourseDao {
     void deleteCourse(String id);
 
     @Query("SELECT * FROM courses")
-    List<CourseEntity> getAllCourses();
+    List<CourseWithAssignmentsAndWeights> getAllCourses();
 
     @Query("SELECT * From courses WHERE course_id = :id")
     Single<CourseEntity>getCourseByID(String id);

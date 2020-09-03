@@ -24,8 +24,6 @@ public abstract class RoomModule {
         GradesDatabase database = Room.databaseBuilder(context, GradesDatabase.class, "grades-database")
                 .fallbackToDestructiveMigration()
                 .build();
-        // Thread thread = new Thread(() -> database.clearAllTables());
-        // thread.start();
         return database;
     }
 
