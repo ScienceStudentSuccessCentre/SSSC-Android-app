@@ -31,6 +31,7 @@ import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.database.CourseDao;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
+import ghelani.kshamina.sssc_android_app.entity.CourseWithAssignmentsAndWeights;
 import ghelani.kshamina.sssc_android_app.ui.SettingsFragment;
 import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments.AssignmentListFragment;
@@ -40,7 +41,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
 
     // Data model
     private FilteredCourseList filteredCourseList;
-    private List<CourseEntity> adapterList;    // Need to keep a reference to the list used by the adapter,
+    private List<CourseWithAssignmentsAndWeights> adapterList;    // Need to keep a reference to the list used by the adapter,
 
     @Inject
     GradesDatabase gradesDatabase;                                     // and add to/remove from it as needed
@@ -54,7 +55,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
     private View.OnClickListener onItemClickListener = view -> {
         RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
         int position = viewHolder.getAdapterPosition();
-        CourseEntity courseEntity = filteredCourseList.get(position);
+        CourseWithAssignmentsAndWeights courseEntity = filteredCourseList.get(position);
         openCourseSingle(courseEntity);
     };
 
@@ -124,8 +125,8 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
         calculatedOverallCGPA.setText(overallCGPA == -1 ?
                 "Overall CGPA: N/A" : String.format(Locale.CANADA, "Overall CGPA: %.1f", overallCGPA));
 
-        List<CourseEntity> majorCourses = filteredCourseList.getCurrentCourseList().stream()
-                .filter(course -> course.courseIsMajorCourse)
+        List<CourseWithAssignmentsAndWeights> majorCourses = filteredCourseList.getCurrentCourseList().stream()
+                .filter(course -> course.course.courseIsMajorCourse)
                 .collect(Collectors.toList());
 
         double overallMajorCGPA = Grading.calculateOverallCGPA(majorCourses);
@@ -133,8 +134,8 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
                 "Major CGPA: N/A" : String.format(Locale.CANADA, "Major CGPA: %.1f", overallMajorCGPA));
     }
 
-    private void openCourseSingle(CourseEntity courseEntity) {
-        ((MainActivity) requireActivity()).replaceFragment(AssignmentListFragment.newInstance(courseEntity.courseId));
+    private void openCourseSingle(CourseWithAssignmentsAndWeights courseEntity) {
+        ((MainActivity) requireActivity()).replaceFragment(AssignmentListFragment.newInstance(courseEntity.course.courseId));
     }
 
 
@@ -154,6 +155,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
         ((AppCompatActivity) requireActivity()).getSupportActionBar().setTitle("Calculator");
         setHasOptionsMenu(true);
         loadCourseData();
+        updateCGPAs();
     }
 
     @Override
@@ -175,17 +177,17 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
      * A List, except it can switch between filtered and non-filtered mode
      */
     private static class FilteredCourseList {
-        private List<CourseEntity> allCourses = new ArrayList<>();
-        private List<CourseEntity> filteredCourses = new ArrayList<>();
+        private List<CourseWithAssignmentsAndWeights> allCourses = new ArrayList<>();
+        private List<CourseWithAssignmentsAndWeights> filteredCourses = new ArrayList<>();
 
         private boolean isFiltered;
 
-        public FilteredCourseList(List<CourseEntity> allCourses, boolean shouldShow) {
+        public FilteredCourseList(List<CourseWithAssignmentsAndWeights> allCourses, boolean shouldShow) {
             this.addAll(allCourses);
             this.isFiltered = !shouldShow;
         }
 
-        public CourseEntity get(int index) {
+        public CourseWithAssignmentsAndWeights get(int index) {
             if (isFiltered) return filteredCourses.get(index);
             return allCourses.get(index);
         }
@@ -199,7 +201,7 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
             this.isFiltered = !shouldShow;
         }
 
-        public List<CourseEntity> getCurrentCourseList() {
+        public List<CourseWithAssignmentsAndWeights> getCurrentCourseList() {
             if (isFiltered) return this.filteredCourses;
             return this.allCourses;
         }
@@ -209,11 +211,11 @@ public class CalculatorFragment extends Fragment implements SharedPreferences.On
             filteredCourses.clear();
         }
 
-        public void addAll(Collection<? extends CourseEntity> courses) {
+        public void addAll(Collection<? extends CourseWithAssignmentsAndWeights> courses) {
             allCourses.addAll(courses);
             filteredCourses.addAll(
                     courses.stream()
-                            .filter(course -> course.courseFinalGrade != null && !course.courseFinalGrade.isEmpty())
+                            .filter(course -> !course.getCourseLetterGrade().equals("N/A"))
                             .collect(Collectors.toList())
             );
         }

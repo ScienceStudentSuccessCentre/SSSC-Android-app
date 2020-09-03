@@ -18,6 +18,7 @@ import ghelani.kshamina.sssc_android_app.R;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.database.TermDao;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
+import ghelani.kshamina.sssc_android_app.entity.CourseWithAssignmentsAndWeights;
 import ghelani.kshamina.sssc_android_app.entity.TermEntity;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -26,15 +27,15 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHolder> {
 
-    private List<CourseEntity> courseEntity;
+    private List<CourseWithAssignmentsAndWeights> courseList;
     private Context activityContext;
     private View.OnClickListener onItemClickListener;
     private TermDao termDao;
 
     private static int colourIndex = 0;  // To scroll through colours
 
-    public CoursesAdapter(List<CourseEntity> courseEntity, Context activityContext, GradesDatabase db) {
-        this.courseEntity = courseEntity;
+    public CoursesAdapter(List<CourseWithAssignmentsAndWeights> courseList, Context activityContext, GradesDatabase db) {
+        this.courseList = courseList;
         this.activityContext = activityContext;
         this.onItemClickListener = null;
         this.termDao = db.getTermDao();
@@ -50,12 +51,12 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        final CourseEntity courseEntity = this.courseEntity.get(position);
+        final CourseEntity courseEntity = this.courseList.get(position).course;
 
         // Fill in TextFields (leaving term as ...)
         holder.courseRowCode.setText(String.format(Locale.CANADA, "[...] %s", courseEntity.courseCode));
         holder.courseRowName.setText(courseEntity.courseName);
-        holder.letterGrade.setText(courseEntity.courseFinalGrade == null || courseEntity.courseFinalGrade.isEmpty() ? "N/A" : courseEntity.courseFinalGrade);
+        holder.letterGrade.setText(courseList.get(position).getCourseLetterGrade());
 
         // Retrieve term from database
         termDao.getTermById(courseEntity.courseTermId)
@@ -82,7 +83,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return courseEntity.size();
+        return courseList.size();
     }
 
     public void setOnItemClickListener(View.OnClickListener itemClickListener) {

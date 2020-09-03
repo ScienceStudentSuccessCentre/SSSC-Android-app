@@ -6,6 +6,8 @@ import androidx.room.Relation;
 import java.io.Serializable;
 import java.util.List;
 
+import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
+
 public class CourseWithAssignmentsAndWeights implements Serializable {
 
     @Embedded
@@ -42,7 +44,18 @@ public class CourseWithAssignmentsAndWeights implements Serializable {
         }
 
         double percentage = totalEarned / totalWeight * 100;
-        percentage = Math.round(percentage * 10) / 10.0;
         return percentage;
+    }
+
+    public String getCourseLetterGrade(){
+        if((course.courseFinalGrade == null || course.courseFinalGrade.isEmpty()) && calculateGradePercentage() == -1){
+            return "N/A";
+        }
+
+        if(course.courseFinalGrade != null && !course.courseFinalGrade.isEmpty()){
+            return course.courseFinalGrade;
+        }else{
+            return Grading.gradeToLetter.floorEntry((int) calculateGradePercentage()).getValue();
+        }
     }
 }

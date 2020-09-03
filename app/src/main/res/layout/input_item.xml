@@ -7,7 +7,7 @@
     android:layout_height="48dp"
     android:background="@color/white"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="false">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/standardInputLayout"
@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:text="Name"
             android:textSize="18sp"
+            android:focusable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -36,6 +37,7 @@
             android:layout_height="wrap_content"
             android:minHeight="0dp"
             android:visibility="gone"
+            android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -49,6 +51,8 @@
             android:hint="Operating Systems"
             android:textAlignment="viewEnd"
             android:clickable="false"
+            android:focusable="true"
+            android:imeOptions="actionNext"
             app:layout_constraintStart_toEndOf="@id/inputPrompt"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -63,6 +67,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
+        android:focusable="true"
+        android:imeOptions="actionDone"
         android:backgroundTint="@color/white"
         android:elevation="0dp"
         android:minWidth="0dp"

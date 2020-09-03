@@ -16,6 +16,7 @@ import java.util.List;
 import ghelani.kshamina.sssc_android_app.database.CourseDao;
 import ghelani.kshamina.sssc_android_app.database.GradesDatabase;
 import ghelani.kshamina.sssc_android_app.entity.CourseEntity;
+import ghelani.kshamina.sssc_android_app.entity.CourseWithAssignmentsAndWeights;
 import ghelani.kshamina.sssc_android_app.ui.grades.Grading;
 import ghelani.kshamina.sssc_android_app.ui.grades.terms.assignments.AssignmentListFragment;
 import ghelani.kshamina.sssc_android_app.ui.utils.events.EventListener;
@@ -35,7 +36,7 @@ public class CoursesViewModel extends ViewModel {
     private CourseDao courseDao;
     public MutableLiveData<ViewState<DiffItem>> state = new MutableLiveData<>();
     public boolean isDeleteMode;
-    private List<CourseEntity> courseItemList = new ArrayList<>();
+    private List<CourseWithAssignmentsAndWeights> courseItemList = new ArrayList<>();
     public MutableLiveData<Double> creditsState = new MutableLiveData<>();
     public MutableLiveData<Double> termGPA = new MutableLiveData<>();
     public final SingleLiveEvent<Fragment> navigationEvent = new SingleLiveEvent<>();
@@ -54,25 +55,25 @@ public class CoursesViewModel extends ViewModel {
         courseDao.getCoursesByTermId(termId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<CourseEntity>>() {
+                .subscribe(new SingleObserver<List<CourseWithAssignmentsAndWeights>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         state.setValue(new ViewState<>(true, false, false, "", Collections.emptyList()));
                     }
 
                     @Override
-                    public void onSuccess(List<CourseEntity> courses) {
+                    public void onSuccess(List<CourseWithAssignmentsAndWeights> courses) {
                         courseItemList = courses;
                         double credits = 0;
                         double gpa = Grading.calculateTermGPA(courses);
                         List<DiffItem> items = new ArrayList<>();
-                        for (CourseEntity course : courses) {
-                            credits += course.courseCredits;
+                        for (CourseWithAssignmentsAndWeights course : courses) {
+                            credits += course.course.courseCredits;
                             items.add(createListItem(course));
                         }
                         state.setValue(new ViewState<>(false, false, true, "", items));
                         creditsState.setValue(credits);
-                        termGPA.setValue(gpa);
+                        termGPA.setValue((Math.round(gpa * 10.0) / 10.0));
                     }
 
                     @Override
@@ -82,8 +83,21 @@ public class CoursesViewModel extends ViewModel {
                 });
     }
 
-    private DiffItem createListItem(CourseEntity course) {
-        return new ListItem(course.courseId, new SpannableString(course.courseFinalGrade), course.courseCode, course.courseName, isDeleteMode, new EventListener.ListItemEventListener() {
+    private String calculateCourseGrade(CourseWithAssignmentsAndWeights course) {
+        if (!course.course.courseFinalGrade.isEmpty()) {
+            return course.course.courseFinalGrade;
+        }
+        double percentage = course.calculateGradePercentage();
+        if (percentage == -1) {
+             return("N/A");
+        }
+        String courseGrade = Grading.gradeToLetter.floorEntry((int) percentage).getValue();
+        return  courseGrade;
+    }
+
+    private DiffItem createListItem(CourseWithAssignmentsAndWeights course) {
+        CourseEntity courseData = course.course;
+        return new ListItem(courseData.courseId, new SpannableString(calculateCourseGrade(course)), courseData.courseCode, courseData.courseName, isDeleteMode, new EventListener.ListItemEventListener() {
             @Override
             public void onItemClicked(String id) {
                 navigationEvent.setValue(AssignmentListFragment.newInstance(id));
@@ -91,7 +105,7 @@ public class CoursesViewModel extends ViewModel {
 
             @Override
             public boolean onItemLongClicked(int index) {
-                ListItem item = ((ListItem)state.getValue().getItems().get(index));
+                ListItem item = ((ListItem) state.getValue().getItems().get(index));
                 item.setDeleteIconVisible(!item.isDeleteIconVisible());
                 state.setValue(state.getValue());
                 return true;
@@ -105,7 +119,7 @@ public class CoursesViewModel extends ViewModel {
     }
 
     public void deleteCourse(int index) {
-        CourseEntity course = courseItemList.get(index);
+        CourseEntity course = courseItemList.get(index).course;
         Completable.fromAction(() -> courseDao.deleteCourse(course.courseId))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

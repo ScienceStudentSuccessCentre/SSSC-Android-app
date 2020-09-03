@@ -185,7 +185,7 @@ public class EventSingleFragment extends Fragment {
             alarmManager.set(AlarmManager.RTC_WAKEUP, event.getNotificationTime(), pendingIntent);
 
 //          Uncomment to send alert right away
-            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 3000, pendingIntent);
+          //  alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 3000, pendingIntent);
         } else {
             alarmManager.cancel(pendingIntent);
         }

@@ -22,28 +22,28 @@ public class EmailBuilder {
         MENTOR_BOOKING, EVENT_REGISTRATION
     }
 
-    public static void sendEventBookingEmail(Activity context, String studentName, String studentId, String degree, Event event) {
+    public static void sendEventBookingEmail(Activity context, String studentName, String studentId, String email, Event event) {
         String[] recipients = {"sssc@carleton.ca"};
         String subject = "SSSC Event Booking: " + event.getName();
         String message = "Hello," +
                 "\n\nI would like to register for " + event.getName() + " on" + event.getDateDisplayStringSingle() + "." + "\n\n" +
                 "\nName: " + studentName +
                 "\nStudent Number: " + studentId +
-                "\nDegree: " + degree +
+                "\nEmail: " + email +
                 "\nThank you!" +
                 "\n" + studentName +
                 "\n" + studentId;
         sendEmail(context, recipients, subject, message);
     }
 
-    public static void sendMentorBookingEmail(Activity context, String studentName, String studentId, String degree) {
+    public static void sendMentorBookingEmail(Activity context, String studentName, String studentId, String email) {
         String[] recipients = {"sssc@carleton.ca"};
         String subject = "SSSC Mentor Appointment";
         String message = "Hello," +
                 "\n\nI would like to book an appointment with an SSSC mentor for.\n" +
                 "\nName: " + studentName +
                 "\nStudent Number: " + studentId +
-                "\nDegree: " + degree +
+                "\nEmail: " + email +
                 "\nThank you!" +
                 "\n" + studentName +
                 "\n" + studentId;
@@ -78,7 +78,7 @@ public class EmailBuilder {
         TextInputEditText emailInput = dialogView.findViewById(R.id.inputEmail);
 
         AlertDialog emailDialog = new MaterialAlertDialogBuilder(context)
-                .setMessage("Enter your name, student number, and Carleton email")
+                .setMessage("Tell us a bit about yourself...")
                 .setView(dialogView)
                 .setPositiveButton("Submit", null)
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())

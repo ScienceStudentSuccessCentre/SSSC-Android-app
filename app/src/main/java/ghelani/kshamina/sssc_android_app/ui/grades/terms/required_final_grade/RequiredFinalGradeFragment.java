@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
 import java.util.Collections;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -35,6 +36,8 @@ public class RequiredFinalGradeFragment extends Fragment {
     private Button doneButton;
 
     private RequiredFinalGradeViewModel requiredFinalGradeViewModel;
+
+    private RecyclerView recyclerView;
 
     public RequiredFinalGradeFragment() {
         // Required empty public constructor
@@ -61,7 +64,7 @@ public class RequiredFinalGradeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_input_form, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.inputRecyclerView);
+        recyclerView = view.findViewById(R.id.inputRecyclerView);
         doneButton = view.findViewById(R.id.submitButton);
         doneButton.setVisibility(View.GONE);
         TextView title = view.findViewById(R.id.title);
@@ -73,7 +76,7 @@ public class RequiredFinalGradeFragment extends Fragment {
         recyclerView.addItemDecoration(decoration);
 
         adapter = new MainListAdapter(getActivity(), Collections.emptyList());
-        recyclerView.setAdapter(adapter);
+
 
         title.setText("");
 
@@ -89,8 +92,7 @@ public class RequiredFinalGradeFragment extends Fragment {
         requiredFinalGradeViewModel = new ViewModelProvider(this).get(RequiredFinalGradeViewModel.class);
         requiredFinalGradeViewModel.setCourse(course);
         requiredFinalGradeViewModel.getInputItems().observe(getViewLifecycleOwner(), items -> {
-            adapter.setItems(items);
-            adapter.notifyDataSetChanged();
+            recyclerView.setAdapter(new MainListAdapter(getActivity(), items));
         });
         requiredFinalGradeViewModel.isSubmitEnabled().observe(getViewLifecycleOwner(), isEnabled -> doneButton.setEnabled(isEnabled));
         requiredFinalGradeViewModel.getNavigationEvent().observe(getViewLifecycleOwner(), newFragment -> ((MainActivity) requireActivity()).replaceFragment(newFragment));
