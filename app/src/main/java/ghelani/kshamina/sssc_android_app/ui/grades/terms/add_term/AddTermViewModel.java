@@ -45,7 +45,7 @@ public class AddTermViewModel extends InputFormViewModel {
     @Override
     protected void createItemsList() {
         List<DiffItem> selectionItems = new ArrayList<>();
-        selectionItems.add(new TextItem("SELECT A TERM"));
+        selectionItems.add(new TextItem("SELECT A SEASON"));
 
         for (String seasonOption : Arrays.asList("Fall", "Summer", "Winter")) {
             selectionItems.add(new SelectionItem(selectionItems.size(), seasonOption, false, index -> {
@@ -60,7 +60,7 @@ public class AddTermViewModel extends InputFormViewModel {
             }));
         }
 
-        selectionItems.add(new TextItem("SELECT A SEASON"));
+        selectionItems.add(new TextItem("SELECT A YEAR"));
 
         int currentYear = Calendar.getInstance().get(Calendar.YEAR) + 1;
         for (int i = 0; i < 10; i++) {
