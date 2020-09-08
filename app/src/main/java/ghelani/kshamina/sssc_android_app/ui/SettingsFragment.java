@@ -33,11 +33,11 @@ public class SettingsFragment extends Fragment {
         // Inflate components
         // Components
         Switch inProgressCoursesFilterSwitch = settingsView.findViewById(R.id.include_in_progress_switch);
-        Button backupGradesButton = settingsView.findViewById(R.id.backup_grades_button);
+      //  Button backupGradesButton = settingsView.findViewById(R.id.backup_grades_button);
 
         // Add action listeners
         inProgressCoursesFilterSwitch.setOnCheckedChangeListener(this::handleInProgressCoursesFilterSwitchChanged);
-        backupGradesButton.setOnClickListener(this::backupGrades);
+      //  backupGradesButton.setOnClickListener(this::backupGrades);
 
         // Load settings defaults from last saved
         settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
