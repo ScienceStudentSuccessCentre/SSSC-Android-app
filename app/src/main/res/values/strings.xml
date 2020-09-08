@@ -34,9 +34,9 @@
     <string name="settings_in_progress_description">If toggled on, courses without a Final Grade specified will be included in your CGPA calculations on the CGPA Calculator page.</string>
     <string name="settings_backup_label">BACK UP GRADES</string>
     <string name="settings_backup_button">Back Up Grades</string>
-    <string name="settings_backup_description">Open the exported attachment on your device to launch the Science Student Success Center app and restore your data.</string>
+    <string name="settings_backup_description">Open the exported attachment on your device to launch the Science Student Success Centre app and restore your data.</string>
     <string name="settings_acknowledgements_title">ACKNOWLEDGEMENTS</string>
-    <string name="settings_acknowledgements_body">This app was developed for the Carleton University Science Student Success Center by Avery Vine, Special thanks to Kshamina Ghelani, Selasi Kudolo, Gina Bak, Anisha Ghelani, Lily Visanuvimol, Divin Kang, and everyone else at the SSSC whoe helped out along the way.</string>
+    <string name="settings_acknowledgements_body">This app was developed for the Carleton University Science Student Success Centre by Avery Vine, Special thanks to Kshamina Ghelani, Selasi Kudolo, Gina Bak, Anisha Ghelani, Lily Visanuvimol, Divin Kang, Ian Beitz and everyone else at the SSSC who helped out along the way.</string>
     <string name="settings_copyright">Released under GNU General Public License v3.0 |\nCopyright @ 2019</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>

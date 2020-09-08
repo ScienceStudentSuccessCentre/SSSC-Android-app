@@ -57,7 +57,6 @@ public class TermsViewModel extends ViewModel {
                     @Override
                     public void onSuccess(@NonNull List<TermEntity> terms) {
                         Collections.sort(terms);
-                        Collections.reverse(terms);
                         termsList = terms;
                         List<DiffItem> items = new ArrayList<>();
                         for (TermEntity term : terms) {

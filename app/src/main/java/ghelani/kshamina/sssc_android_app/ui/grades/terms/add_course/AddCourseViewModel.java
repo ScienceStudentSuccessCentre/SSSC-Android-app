@@ -60,6 +60,7 @@ public class AddCourseViewModel extends SelectItemViewModel<String> {
         this.mainScheduler = AndroidSchedulers.mainThread();
         weights = new ArrayList<>();
         newCourse = new CourseEntity();
+        newCourse.courseCredits = 0.5;
         updating = false;
         this.savedStateHandle = savedStateHandle;
     }
