@@ -13,9 +13,9 @@ import java.util.UUID;
 public class TermEntity implements Comparable<TermEntity>, Serializable {
 
     public enum Season {
-        WINTER(1),
-        SUMMER(2),
-        FALL(3);
+        FALL(1),
+        WINTER(2),
+        SUMMER(3);
 
         private final int seasonValue;
 
