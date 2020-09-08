@@ -64,24 +64,24 @@
             android:layout_height="wrap_content"
             android:text="@string/settings_in_progress_description" />
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_backup_label"
-            android:layout_marginTop="20dp"/>
+<!--        <TextView-->
+<!--            android:id="@+id/textView5"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/settings_backup_label"-->
+<!--            android:layout_marginTop="20dp"/>-->
 
-        <Button
-            android:id="@+id/backup_grades_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_backup_button" />
+<!--        <Button-->
+<!--            android:id="@+id/backup_grades_button"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/settings_backup_button" />-->
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_backup_description" />
+<!--        <TextView-->
+<!--            android:id="@+id/textView6"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/settings_backup_description" />-->
 
         <TextView
             android:id="@+id/textView7"
