@@ -47,7 +47,7 @@ public class AddTermViewModel extends InputFormViewModel {
         List<DiffItem> selectionItems = new ArrayList<>();
         selectionItems.add(new TextItem("SELECT A SEASON"));
 
-        for (String seasonOption : Arrays.asList("Fall", "Summer", "Winter")) {
+        for (String seasonOption : Arrays.asList("Fall", "Winter", "Summer")) {
             selectionItems.add(new SelectionItem(selectionItems.size(), seasonOption, false, index -> {
                 season = seasonOption;
                 if (selectedSeasonIndex != -1) {
