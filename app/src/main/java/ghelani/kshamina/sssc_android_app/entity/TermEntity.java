@@ -14,8 +14,8 @@ public class TermEntity implements Comparable<TermEntity>, Serializable {
 
     public enum Season {
         FALL(3),
-        WINTER(2),
-        SUMMER(1);
+        SUMMER(2),
+        WINTER(1);
 
         private final int seasonValue;
 
