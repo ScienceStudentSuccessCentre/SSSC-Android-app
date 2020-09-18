@@ -94,9 +94,9 @@ public class MentorDetailFragment extends Fragment {
     private void sendMentorRegistrationEmail() {
         MainApplication appSettings = (MainApplication) getActivity().getApplication();
         if (appSettings.hasStudentInformation()) {
-            EmailBuilder.confirmSendEmail(getActivity(), EmailBuilder.EmailType.MENTOR_BOOKING, null);
+            EmailBuilder.confirmSendEmail(getActivity(), EmailBuilder.EmailType.SPECIFIC_MENTOR_BOOKING, mentor);
         } else {
-            EmailBuilder.showStudentNameDialog(getActivity(), EmailBuilder.EmailType.MENTOR_BOOKING, null);
+            EmailBuilder.showStudentNameDialog(getActivity(), EmailBuilder.EmailType.SPECIFIC_MENTOR_BOOKING, mentor);
         }
     }
 }
