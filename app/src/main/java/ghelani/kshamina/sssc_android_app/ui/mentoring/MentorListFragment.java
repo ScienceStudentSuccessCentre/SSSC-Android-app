@@ -58,7 +58,7 @@ public class MentorListFragment extends Fragment { ;
         super.onViewCreated(view, savedInstanceState);
 
         FloatingActionButton emailFab = view.findViewById(R.id.sendEmailFab);
-        MainApplication appSettings = (MainApplication) getActivity().getApplication();
+        MainApplication appSettings = (MainApplication) requireActivity().getApplication();
         if (appSettings.isEnableEmailMentorRegistration()) {
             emailFab.setImageDrawable(getResources().getDrawable(R.drawable.ic_email_24, null));
         } else {
@@ -89,7 +89,7 @@ public class MentorListFragment extends Fragment { ;
             } else {
                 emptyListMessage.setVisibility(View.GONE);
                 mentorRecyclerView.setVisibility(View.VISIBLE);
-                mentorRecyclerView.setAdapter(new MainListAdapter(getActivity(), mentors));
+                mentorRecyclerView.setAdapter(new MainListAdapter(requireActivity(), mentors));
             }
         });
 
@@ -99,11 +99,11 @@ public class MentorListFragment extends Fragment { ;
     }
 
     private void sendMentorRegistrationEmail() {
-        MainApplication appSettings = (MainApplication) getActivity().getApplication();
+        MainApplication appSettings = (MainApplication) requireActivity().getApplication();
         if (appSettings.hasStudentInformation()) {
-            EmailBuilder.confirmSendEmail(getActivity(), EmailBuilder.EmailType.MENTOR_BOOKING, null);
+            EmailBuilder.confirmSendEmail(requireActivity(), EmailBuilder.EmailType.GENERAL_MENTOR_BOOKING, null);
         } else {
-            EmailBuilder.showStudentNameDialog(getActivity(), EmailBuilder.EmailType.MENTOR_BOOKING, null);
+            EmailBuilder.showStudentNameDialog(requireActivity(), EmailBuilder.EmailType.GENERAL_MENTOR_BOOKING, null);
         }
     }
 }
