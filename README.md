@@ -41,9 +41,7 @@ If you plan to use an emulator follow this [tutorial](https://developer.android.
 
 ### Uploading to the Play Store
 
-When you are satisfied with the new features you have added it's time to release your update to the Play Store. Here is a quick sumnary of the steps you'll need to take in order to upload a new build to the Play Store and release it.
-
->Quick note: you can save time taking screenshots by checking out the [App Store screenshots](#app-store-screenshots) section below!
+When you are satisfied with the new features you have added it's time to release your update to the Play Store. Here is a quick sumnary of the steps you'll need to take in order to upload a new build to the Play Store and release it. The official guide can be found [here](https://developer.android.com/studio/publish)
 
 ## Part 1: Generating a Signed APK
 
